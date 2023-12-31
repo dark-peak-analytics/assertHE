@@ -1,0 +1,15 @@
+Package: assertHE
+Title: An R package designed to aid in verification of health economic decision models
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Robert", "Smith", , "rsmith@darkpeakanalytics.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-0245-3217"))
+  )
+Description: An R package designed to help health economic modellers when writing unit tests for their models. The asserts contained in this package include black-box and white-box tests for common errors in health economic models. They are not designed to be exhaustive, but rather to provide a starting point with a set of 'standard' tests to free up modellers to focus on tests specific to the individual model in development or review.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
