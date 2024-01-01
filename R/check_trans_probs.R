@@ -229,11 +229,11 @@ check_array_names_complete <- function(a_P, stop_if_not = F){
 #'   diag(a_P[,,x]) <- 1 - rowSums(a_P[,,x])
 #' }
 #'
-#' check_trans_prob_array(a_P = a_P, confirm_ok = F)
+#' check_trans_prob_array(a_P = a_P, stop_if_not = F)
 #' # introduce error
 #' a_P["H", "S", 1:10] <- 0
 #'
-#' check_trans_prob_array(a_P = a_P, confirm_ok = F)
+#' check_trans_prob_array(a_P = a_P, stop_if_not = F)
 #'
 #' }
 #'
