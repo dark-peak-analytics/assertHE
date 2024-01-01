@@ -7,6 +7,8 @@
 # assertHE
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/dark-peak-analytics/assertHE/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dark-peak-analytics/assertHE/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of assertHE is to identify errors and bugs in health economic
