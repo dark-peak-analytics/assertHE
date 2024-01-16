@@ -46,20 +46,13 @@ check_markov_trace <- function(m_TR,
   # check the trace is named!
   m_TR_colnames <- colnames(m_TR)
   if(any(is.na(m_TR_colnames)) | any(is.null(m_TR_colnames))) warning("m_TR is missing one or more column names")
+  if(length(unique(m_TR_colnames)) != ncol(m_TR)) stop("m_TR has duplicate column names")
 
   # Start with no warnings
   no_warnings <- T
 
   # Check that the matrix contains numeric values
-  if (!is.numeric(m_TR)) {
-    message <- "Markov trace is not numeric"
-    no_warnings <- F
-    if (stop_if_not) {
-      stop(message)
-    } else{
-      warning(message)
-    }
-  }
+  if (!is.numeric(m_TR))  stop("Markov trace is not numeric")
 
   # Check that matrix values are between 0 and 1
   if (!all(m_TR >= 0 & m_TR <= 1)) {
@@ -87,8 +80,13 @@ check_markov_trace <- function(m_TR,
   if(!is.null(dead_state)){
     # Check that rows sum to 1, indicating valid transition probabilities
     if(!all(diff(x = m_TR[, dead_state]) >= 0)){
-      message("Warning: Decreasing proportion in the dead state of trace, is this correct?")
-      confirm_ok <- F
+      no_warnings <- F
+      message <- "Decreasing proportion in the dead state of trace, is this correct?"
+      if (stop_if_not) {
+        stop(message)
+      } else{
+        warning(message)
+      }
     }
   }
 
