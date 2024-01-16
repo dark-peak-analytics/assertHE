@@ -51,15 +51,7 @@ check_markov_trace <- function(m_TR,
   no_warnings <- T
 
   # Check that the matrix contains numeric values
-  if (!is.numeric(m_TR)) {
-    message <- "Markov trace is not numeric"
-    no_warnings <- F
-    if (stop_if_not) {
-      stop(message)
-    } else{
-      warning(message)
-    }
-  }
+  if (!is.numeric(m_TR))  stop("Markov trace is not numeric")
 
   # Check that matrix values are between 0 and 1
   if (!all(m_TR >= 0 & m_TR <= 1)) {
