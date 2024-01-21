@@ -18,6 +18,14 @@ tabulate_functions_in_script(
 A data-frame of functions and the package the function is from.
 }
 \description{
-This function tabulates all of the functions in a script. It expects the script to be
-an R file, and requires that package libraries are loaded when identifying packages.
+This function tabulates all of the functions in a script with the name of the
+package next to it. It expects the script to be an R file, and requires that
+package libraries are loaded when identifying packages.
+}
+\examples{
+\dontrun{
+tabulate_functions_in_script(filename = "./R/check_functions.R")
+tabulate_functions_in_script(filename = "./R/check_functions.R",
+                             packages_to_exclude = NULL)
+}
 }

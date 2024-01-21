@@ -6,12 +6,16 @@
 \usage{
 tabulate_functions_in_folder(
   path = ".",
+  path_exclude = "testthat/",
   collapse = T,
   packages_to_exclude = c("base", "stats", "utils")
 )
 }
 \arguments{
 \item{path}{The path to the folder to be checked.}
+
+\item{path_exclude}{A string which if found in file path removes file from analysis.
+Defaults to 'testthat/' to exclude functions only found in tests.}
 
 \item{collapse}{If TRUE, return a single data-frame of all functions. Else return a list by file.}
 
@@ -30,6 +34,7 @@ a function's package.
 \dontrun{
 tabulate_functions_in_folder(
     path = ".",
+    path_exclude = "testthat/",
     collapse = T,
     packages_to_exclude = c("base", "stats", "utils")
     )

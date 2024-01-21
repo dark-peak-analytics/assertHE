@@ -4,10 +4,12 @@
 \alias{list_functions_in_script}
 \title{List all of the functions in a script}
 \usage{
-list_functions_in_script(filename, alphabetic = TRUE)
+list_functions_in_script(filename, by_package = TRUE, alphabetic = TRUE)
 }
 \arguments{
 \item{filename}{The name of the file to be checked.}
+
+\item{by_package}{If TRUE, return a list of functions by package. Else return a vector of functions.}
 
 \item{alphabetic}{If TRUE, return the functions in alphabetic order.}
 }
@@ -17,4 +19,12 @@ A named list of functions in the script, by package.
 \description{
 This function lists all of the functions in a script. It expects the script to be
 an R file, and requires that package libraries are loaded when identifying packages.
+}
+\examples{
+\dontrun{
+list_functions_in_script(filename = "./R/check_functions.R")
+
+list_functions_in_script(filename = "./R/check_functions.R", by_package = FALSE)
+
+}
 }
