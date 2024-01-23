@@ -8,7 +8,9 @@
 #' @param by_package If TRUE, return a list of functions by package. Else return a vector of functions.
 #'
 #' @return A named list of functions in the script, by package.
-#' @importFrom utils find getParseData stack
+#'
+#' @family checking_functions
+#'
 #' @export
 #' @examples
 #' \dontrun{
@@ -56,6 +58,8 @@ list_functions_in_script <- function(filename,
 #'
 #' @return A data-frame of functions and the package the function is from.
 #'
+#' @family checking_functions
+#'
 #' @export
 #' @examples
 #' \dontrun{
@@ -70,7 +74,7 @@ tabulate_functions_in_script <- function(filename,
 
   # convert nested list to a dataframe where each row gives the function name
   # and the package it belongs to:
-  df <- stack(my_packages)
+  df <- utils::stack(my_packages)
   colnames(df) <- c("foo", "package")
 
   # remove 'package:' from the strings
@@ -98,6 +102,8 @@ tabulate_functions_in_script <- function(filename,
 #' @param packages_to_exclude A vector of packages to exclude from the output (e.g. "base")
 #' @param path_exclude A string which if found in file path removes file from analysis.
 #' Defaults to 'testthat/' to exclude functions only found in tests.
+#'
+#' @family checking_functions
 #'
 #' @return Either a data-frame of functions and the package the function is from, or a list of functions by file.
 #' @export
@@ -153,6 +159,11 @@ tabulate_functions_in_folder <- function(path = ".",
 #' @param v_functions A vector of functions to search for.
 #' @param path The path to the folder to be checked.
 #' @param test_path The relative path to the test folder from the project folder (path).
+#'
+#' @family checking_functions
+#'
+#' @return A vector of file paths to the test scripts for each function.
+#' Returns NA where no script can be found.
 #'
 #' @examples
 #' \dontrun{

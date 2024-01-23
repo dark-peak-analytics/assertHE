@@ -13,6 +13,10 @@ find_test(v_functions, path = ".", test_path = "tests/testthat")
 
 \item{test_path}{The relative path to the test folder from the project folder (path).}
 }
+\value{
+A vector of file paths to the test scripts for each function.
+Returns NA where no script can be found.
+}
 \description{
 This function finds the test for each in a vector of functions in a specified
 testing folder, default = tests/testthat as the relative path from the project folder (path).
@@ -25,3 +29,10 @@ testing folder, default = tests/testthat as the relative path from the project f
 }
 
 }
+\seealso{
+Other checking_functions: 
+\code{\link{list_functions_in_script}()},
+\code{\link{tabulate_functions_in_folder}()},
+\code{\link{tabulate_functions_in_script}()}
+}
+\concept{checking_functions}

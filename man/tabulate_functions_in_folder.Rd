@@ -40,3 +40,10 @@ tabulate_functions_in_folder(
     )
 }
 }
+\seealso{
+Other checking_functions: 
+\code{\link{find_test}()},
+\code{\link{list_functions_in_script}()},
+\code{\link{tabulate_functions_in_script}()}
+}
+\concept{checking_functions}

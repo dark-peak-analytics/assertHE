@@ -28,3 +28,10 @@ list_functions_in_script(filename = "./R/check_functions.R", by_package = FALSE)
 
 }
 }
+\seealso{
+Other checking_functions: 
+\code{\link{find_test}()},
+\code{\link{tabulate_functions_in_folder}()},
+\code{\link{tabulate_functions_in_script}()}
+}
+\concept{checking_functions}
