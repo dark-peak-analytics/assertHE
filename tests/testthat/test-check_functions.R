@@ -1,5 +1,10 @@
 test_that("test no error when running folder function", {
-  path <- dirname(dirname(getwd()))
+
+  if (testthat::testing_package() != ""){
+    path <- dirname(dirname(getwd()))
+  }else{
+    path <- getwd()
+  }
   #if (testthat::testing_package() == "") {
     testthat::expect_silent(
       assertHE::tabulate_functions_in_folder(
@@ -45,7 +50,11 @@ test_that("test no error when running folder function", {
 
 test_that("find_test can identify a test where it exists", {
 
-  path <- dirname(dirname(getwd()))
+  if (testthat::testing_package() != ""){
+    path <- dirname(dirname(getwd()))
+  }else{
+    path <- getwd()
+  }
 
   #if(testthat::testing_package() == ""){
     path_to_test1 <-
@@ -76,64 +85,68 @@ test_that("find_test can identify a test where it exists", {
 
 
 
-test_that("tabulate_functions_in_folder_with_tests can identify functions, packages and test locations",
-          {
-
-           path <- dirname(dirname(getwd()))
+test_that(
+  "tabulate_functions_in_folder_with_tests can identify functions, packages and test locations",
+  {
+    if (testthat::testing_package() != "") {
+      path <- dirname(dirname(getwd()))
+    } else{
+      path <- getwd()
+    }
 
     #if(testthat::testing_package() == ""){
-      testthat::expect_silent(
-        assertHE:::tabulate_functions_in_folder_with_tests(
-          path = path,
-          path_exclude = "tests/testthat",
-          packages_to_exclude = c("base", "stats", "utils"),
-          test_path = "tests/testthat"
-        )
+    testthat::expect_silent(
+      assertHE:::tabulate_functions_in_folder_with_tests(
+        path = path,
+        path_exclude = "tests/testthat",
+        packages_to_exclude = c("base", "stats", "utils"),
+        test_path = "tests/testthat"
+      )
+    )
+
+    testthat::expect_silent(
+      assertHE:::tabulate_functions_in_folder_with_tests(
+        path = path,
+        path_exclude = "tests/testthat",
+        packages_to_exclude = NULL,
+        test_path = "tests/testthat"
+      )
+    )
+
+
+    df_tests <-
+      assertHE:::tabulate_functions_in_folder_with_tests(
+        path = path,
+        path_exclude = "tests/testthat",
+        packages_to_exclude = c("base", "stats", "utils"),
+        test_path = "tests/testthat"
       )
 
-      testthat::expect_silent(
-        assertHE:::tabulate_functions_in_folder_with_tests(
-          path = path,
-          path_exclude = "tests/testthat",
-          packages_to_exclude = NULL,
-          test_path = "tests/testthat"
-        )
+    df_tests2 <-
+      assertHE:::tabulate_functions_in_folder_with_tests(
+        path = path,
+        path_exclude = "tests/testthat",
+        packages_to_exclude = NULL,
+        test_path = "tests/testthat"
       )
 
+    testthat::expect_s3_class(df_tests,
+                              "data.frame")
 
-      df_tests <-
-        assertHE:::tabulate_functions_in_folder_with_tests(
-          path = path,
-          path_exclude = "tests/testthat",
-          packages_to_exclude = c("base", "stats", "utils"),
-          test_path = "tests/testthat"
-        )
+    testthat::expect_s3_class(df_tests2,
+                              "data.frame")
 
-      df_tests2 <-
-        assertHE:::tabulate_functions_in_folder_with_tests(
-          path = path,
-          path_exclude = "tests/testthat",
-          packages_to_exclude = NULL,
-          test_path = "tests/testthat"
-        )
+    testthat::expect_equal(object = ncol(df_tests2),
+                           expected = ncol(df_tests))
+    testthat::expect_gt(object = nrow(df_tests2),
+                        expected = nrow(df_tests))
 
-      testthat::expect_s3_class(df_tests,
-                                "data.frame")
-
-      testthat::expect_s3_class(df_tests2,
-                                "data.frame")
-
-      testthat::expect_equal(object = ncol(df_tests2),
-                             expected = ncol(df_tests))
-      testthat::expect_gt(object = nrow(df_tests2),
-                          expected = nrow(df_tests))
-
-      testthat::expect_false(object = {
-        "base" %in% df_tests$package
-      })
-      testthat::expect_true(object = {
-        "base" %in% df_tests2$package
-      })
+    testthat::expect_false(object = {
+      "base" %in% df_tests$package
+    })
+    testthat::expect_true(object = {
+      "base" %in% df_tests2$package
+    })
 
     #}
   }
