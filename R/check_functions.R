@@ -1,6 +1,6 @@
-#' List all of the functions in a script
+#' @title List all of the functions in a script
 #'
-#' This function lists all of the functions in a script. It expects the script to be
+#' @description This function lists all of the functions in a script. It expects the script to be
 #' an R file, and requires that package libraries are loaded when identifying packages.
 #'
 #' @param filename The name of the file to be checked.
@@ -14,17 +14,21 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' list_functions_in_script(filename = "./R/check_functions.R")
+#' list_functions_in_script(filename = "./R/check_trans_probs.R")
 #'
 #' list_functions_in_script(filename = "./R/check_functions.R", by_package = FALSE)
+#' list_functions_in_script(filename =
+#' paste0("https://raw.githubusercontent.com/dark-peak-analytics/",
+#' "sicksickerPack/main/R/create_Markov_trace.R"), by_package = FALSE)
 #'
 #' }
-list_functions_in_script <- function(filename,
-                                     by_package = TRUE,
-                                     alphabetic=TRUE) {
+list_functions_in_script <-
+  function(filename,
+           by_package = TRUE,
+           alphabetic=TRUE) {
 
   # from hrbrmstr, StackExchange 3/1/2015
-  if(!file.exists(filename)) { stop("couldn't find file ",filename) }
+  #if(!file.exists(filename)) { stop("couldn't find file ",filename) }
   if(!tools::file_ext(filename) == "R") { warning("expecting *.R file, will try to proceed") }
   # read in parsed data from script
   tmp <- utils::getParseData(parse(filename, keep.source=TRUE))
@@ -39,7 +43,9 @@ list_functions_in_script <- function(filename,
   }
 
   # return a list of functions and the file they were found in
-  src <- paste(as.vector(sapply(funs, utils::find)))
+  # take the first only
+  v_packages <- as.vector(sapply(funs, utils::find))
+  src <- paste(sapply(X = v_packages, FUN = function(x) x[1]))
   outlist <- tapply(funs, factor(src), c)
 
   return(outlist)
@@ -64,8 +70,11 @@ list_functions_in_script <- function(filename,
 #' @examples
 #' \dontrun{
 #' tabulate_functions_in_script(filename = "./R/check_functions.R")
-#' tabulate_functions_in_script(filename = "./R/check_functions.R",
+#' tabulate_functions_in_script(filename = "./R/check_trans_probs.R",
 #'                              packages_to_exclude = NULL)
+#' tabulate_functions_in_script(filename =
+#' paste0("https://raw.githubusercontent.com/dark-peak-analytics/",
+#' "sicksickerPack/main/R/create_Markov_trace.R"), packages_to_exclude = NULL)
 #' }
 tabulate_functions_in_script <- function(filename,
                                          packages_to_exclude = c("base", "stats", "utils")) {
@@ -274,51 +283,57 @@ tabulate_functions_in_folder_with_tests <-
   }
 
 
+#' @title Summarise project functions with details on packages and existence of unit-tests.
+#' @description Creates a summary table containing the name of each function in the project,
+#' the package it is from, whether it has a unit-test and the file in which it is tested.
+#' @param path The path to the folder to be checked.
+#' @param path_exclude A set of strings that will exclude any files if it is present in the file path.
+#' @param packages_to_exclude A vector of packages to exclude from the search.
+#' @param test_path The relative path to the test folder from the project folder (path).
+#' @param cheers_pattern A string that will be used to identify the cheers tag.
+#' @return A dataframe with the following columns:
+#' * function_name: The name of the function.
+#' * package: The package the function is from.
+#' * file_name: The file in which the function is defined.
+#' * test_location: The file in which the function is tested.
+#' @export
+#' @examples
+#' \dontrun{
+#' get_summary_table()
+#' }
+#'
+get_summary_table <- function(path = ".",
+                              path_exclude = "testthat/",
+                              test_path = "tests/",
+                              cheers_pattern = "@family",
+                              packages_to_exclude = c("base",  "stats", "utils")) {
+
+  # table with list of functions, packages and tests.
+  df_tests <- tabulate_functions_in_folder_with_tests(path = path,
+                                                      path_exclude = path_exclude,
+                                                      test_path = test_path,
+                                                      packages_to_exclude = packages_to_exclude)
+
+  # tags relating to classifications and file paths
+  df_cheers <- get_folder_cheers_classifications(path = path,
+                                                 cheers_pattern = cheers_pattern,
+                                                 path_ignore = path_exclude)
+
+  # merge dataframes together to get one summary dataframe
+  df_merged <- merge(df_tests,
+                     df_cheers,
+                     by.x = "foo",
+                     by.y = "function_name",
+                     all = T)
+
+  # sort by tag in base R
+  column_names <-
+    c("foo", "tag", "package", "script", "test_location")
+  df_summary <- df_merged[order(df_merged$tag), column_names]
+
+  return(df_summary)
+
+}
 
 
 
-
-
-
-
-
-# list scripts in which a function exists.
-# list_scripts_with_function <- function(function_name,
-#                                        path = ".",
-#                                        path_exclude = "testthat/",
-#                                        packages_to_exclude = c("base", "stats", "utils"),
-#                                        collapse = TRUE){
-#   # get all files from the path folder, i.e. everything in repo.
-#   my_R_scripts <- list.files(
-#     path = path,
-#     pattern = "\\.R$",
-#     recursive = TRUE,
-#     full.names = TRUE
-#   )
-#
-#   # exclude those in the testthat folder
-#   my_R_scripts <- my_R_scripts[!grepl(path_exclude, my_R_scripts)]
-#
-#   # get the functions in each script
-#   l_foo <- lapply(X = my_R_scripts,
-#                   FUN = tabulate_functions_in_script,
-#                   packages_to_exclude = packages_to_exclude)
-#
-#   names(l_foo) <- my_R_scripts
-#
-#   # collapse the list into a single dataframe
-#   if (collapse) {
-#     df_foo <- do.call(what = rbind, args = l_foo)
-#     # remove duplicates
-#     df_foo <- unique(df_foo)
-#     df_foo$file_name <- rownames(df_foo)
-#     rownames(df_foo) <- NULL
-#     return(df_foo)
-#   } else{
-#     names(l_foo) <- my_R_scripts
-#     return(l_foo)
-#   }
-#
-# }
-#
-# list_scripts_with_function(path = ".", collapse = T)

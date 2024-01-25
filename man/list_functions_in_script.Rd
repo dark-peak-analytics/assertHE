@@ -22,9 +22,12 @@ an R file, and requires that package libraries are loaded when identifying packa
 }
 \examples{
 \dontrun{
-list_functions_in_script(filename = "./R/check_functions.R")
+list_functions_in_script(filename = "./R/check_trans_probs.R")
 
 list_functions_in_script(filename = "./R/check_functions.R", by_package = FALSE)
+list_functions_in_script(filename =
+paste0("https://raw.githubusercontent.com/dark-peak-analytics/",
+"sicksickerPack/main/R/create_Markov_trace.R"), by_package = FALSE)
 
 }
 }

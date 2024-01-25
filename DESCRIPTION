@@ -17,4 +17,5 @@ Imports:
     assertthat,
     ggplot2,
     scales,
-    tidyr
+    tidyr,
+    stringr

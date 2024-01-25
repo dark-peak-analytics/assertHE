@@ -25,8 +25,11 @@ package libraries are loaded when identifying packages.
 \examples{
 \dontrun{
 tabulate_functions_in_script(filename = "./R/check_functions.R")
-tabulate_functions_in_script(filename = "./R/check_functions.R",
+tabulate_functions_in_script(filename = "./R/check_trans_probs.R",
                              packages_to_exclude = NULL)
+tabulate_functions_in_script(filename =
+paste0("https://raw.githubusercontent.com/dark-peak-analytics/",
+"sicksickerPack/main/R/create_Markov_trace.R"), packages_to_exclude = NULL)
 }
 }
 \seealso{
