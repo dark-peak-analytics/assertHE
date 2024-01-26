@@ -106,7 +106,7 @@ extract_function_name <- function(string) {
 #'
 extract_function_name2 <- function(string){
 
-  foo_def_start <- stringr::str_locate_all(pattern = "function\\s*\\(",
+  foo_def_start <- stringr::str_locate_all(pattern = "(\\s|=|-)function\\s*\\(",
                                            string = string)[[1]][1,1]
 
   assign_operand_locations <- stringr::str_locate_all(pattern = c("=|<-"),
@@ -148,7 +148,7 @@ extract_function_name2 <- function(string){
 #'
 get_file_cheers_classifications <- function(filename,
                                             cheers_pattern,
-                                            function_pattern = "function\\("){
+                                            function_pattern = "(\\s|=|-)function\\("){
 lines <- NULL
 # check files exists
 #if(file.exists(filename))

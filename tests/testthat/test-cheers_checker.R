@@ -20,17 +20,33 @@ test_that("Extracting function names works as intended",
   example4 <- "extract_function_name = function(string) {
   # does the string 'function' exist in the string
 "
+
+  example5 <- "function_name <-function(a){}"
+  example6 <- "function_name =function(a){}"
+  example7 <- "function_name<-function(a){}"
+  example8 <- "function_name=function(a){}"
+
   # run through all four examples.
   expect_equal(extract_function_name(example1), ".function.name.")
   expect_equal(extract_function_name(example2), "function_name")
   expect_equal(extract_function_name(example3), "__function.name__")
   expect_equal(extract_function_name(example4), "extract_function_name")
+  
+  expect_equal(extract_function_name(example5), "function_name")
+  expect_equal(extract_function_name(example6), "function_name")
+  expect_equal(extract_function_name(example7), "function_name")
+  expect_equal(extract_function_name(example8), "function_name")
 
   # run through all four examples.
   expect_equal(extract_function_name2(example1), ".function.name.")
   expect_equal(extract_function_name2(example2), "function_name")
   expect_equal(extract_function_name2(example3), "__function.name__")
   expect_equal(extract_function_name2(example4), "extract_function_name")
+
+  expect_equal(extract_function_name2(example5), "function_name")
+  expect_equal(extract_function_name2(example6), "function_name")
+  expect_equal(extract_function_name2(example7), "function_name")
+  expect_equal(extract_function_name2(example8), "function_name")
 
 
 })
