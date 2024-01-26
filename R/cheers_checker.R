@@ -142,13 +142,6 @@ extract_function_name2 <- function(string){
 
 }
 
-extract_function_name2(string = "  # hi this is silly ...
-myFoo <-
-function () {
-print('hi')
-}
-                       ")
-
 
 
 
