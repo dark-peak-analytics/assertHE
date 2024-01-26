@@ -106,27 +106,48 @@ extract_function_name <- function(string) {
 #'
 extract_function_name2 <- function(string){
 
-  foo_def_start <- stringr::str_locate_all(pattern = "(\\s|=|-)function\\s*\\(",
-                                           string = string)[[1]][1,1]
+  string <- stringr::str_replace_all(string,
+                           pattern = c("\n"),
+                           replacement = " ")
 
-  assign_operand_locations <- stringr::str_locate_all(pattern = c("=|<-"),
-                                                string = string)[[1]][, "start"]
+  foo_assign_operand_location <- stringr::str_locate_all(pattern = "(\\s|=|<-)function\\s*\\(",
+                                           string = string) |>
+                                  unlist() |>
+                                  head(1)
 
-  foo_assign_operand_location <- find_previous_vector_element(value  = foo_def_start,
-                                                              vector = assign_operand_locations)
+  #assign_operand_locations <- stringr::str_locate_all(pattern = c("=|<-"),
+  #                                                    string = string)[[1]][, "start"]
 
-  foo_name <- substr(string, 1, foo_assign_operand_location-1) |>
+  #foo_assign_operand_location <- find_previous_vector_element(value  = foo_def_start,
+  #                                                            vector = assign_operand_locations)
+
+  v_chars <- substr(x = string,
+                     start = 1,
+                     stop =  foo_assign_operand_location - 1) |>
     stringr::str_replace_all(pattern = c("\n"),
                              replacement = " ") |>
     strsplit(split = " ") |>
-    unlist() |>
-    utils::tail(n = 1)
+    unlist()
+
+
+    foo_name <- v_chars[which(!(v_chars %in% c("", "=", "<-")))] |>
+                  utils::tail(n = 1)
+
+    # replace any persisting assignment
+    foo_name <- stringr::str_replace_all(pattern = c("=|<-"),
+                             string = foo_name,
+                             replacement = "")
 
  return(foo_name)
 
 }
 
-
+extract_function_name2(string = "  # hi this is silly ...
+myFoo <-
+function () {
+print('hi')
+}
+                       ")
 
 
 
