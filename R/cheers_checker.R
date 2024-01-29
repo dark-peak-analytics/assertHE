@@ -9,17 +9,21 @@
 #' find_next_vector_element(value = 5, vector = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
 #' }
 #'
-find_next_vector_element <- function(value, vector){
-  greater_than <- vector[vector > value]
+find_next_vector_element <- function(value, vector) {
+  # Find the elements in the vector that are greater than the specified value
+  greater_than_value <- vector[vector > value]
 
-  if(length(greater_than) == 0){
-    return(NA)
+  # If there are no elements greater than the specified value, return NULL or a default value
+  if (length(greater_than_value) == 0) {
+    return(max(vector))  # or return a default value as needed
   }
 
-  next_one <- min(greater_than, na.rm = T)
+  # Find the minimum value among the elements greater than the specified value
+  next_element <- min(greater_than_value)
 
-  return(next_one)
+  return(next_element)
 }
+
 
 #' @title Find the previous element of the vector before a value
 #' @description Find the previous element of the vector before a value
