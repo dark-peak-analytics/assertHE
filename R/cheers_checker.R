@@ -33,11 +33,19 @@ find_next_vector_element <- function(value, vector){
 #' }
 #'
 find_previous_vector_element <- function(value, vector){
-  greater_than <- vector[vector < value]
-  previous_one <- max(greater_than)
-  return(previous_one)
-}
+   # Find the elements in the vector that are less than the specified value
+   less_than_value <- vector[vector < value]
 
+  # If there are no elements less than the specified value, return the value
+   if (length(less_than_value) == 0) {
+     return(value)
+   }
+
+  # Find the maximum value among the elements less than the specified value
+   previous_element <- max(less_than_value)
+
+   return(previous_element)
+ }
 
 
 
@@ -115,12 +123,11 @@ extract_function_name2 <- function(string){
   foo_assign_operand_location <- find_previous_vector_element(value  = foo_def_start,
                                                               vector = assign_operand_locations)
 
-  foo_name <- substr(string, 1, foo_assign_operand_location-1) |>
-    stringr::str_replace_all(pattern = c("\n"),
-                             replacement = " ") |>
-    strsplit(split = " ") |>
-    unlist() |>
-    utils::tail(n = 1)
+  foo_name <- substr(string, 1, foo_assign_operand_location-1)
+  foo_name <- stringr::str_replace_all(string = foo_name, pattern = c("\n"), replacement = " ") 
+  foo_name <- strsplit(x = foo_name, split = " ")
+  foo_name <- unlist(x = foo_name)
+  foo_name <- utils::tail(x = foo_name, n = 1)
 
  return(foo_name)
 
