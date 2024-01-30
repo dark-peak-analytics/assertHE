@@ -26,43 +26,19 @@ test_that("Extracting function names works as intended",
   example7 <- "function_name<-function(a){}"
   example8 <- "function_name=function(a){}"
 
-  
-  expect_equal(extract_function_name(example1), ".function.name.")
-  expect_equal(extract_function_name(example2), "function_name")
-  expect_equal(extract_function_name(example3), "__function.name__")
-  expect_equal(extract_function_name(example4), "extract_function_name")
-  
-  expect_equal(extract_function_name(example5), "function_name")
-  expect_equal(extract_function_name(example6), "function_name")
-  expect_equal(extract_function_name(example7), "function_name")
-  expect_equal(extract_function_name(example8), "function_name")
-
-  # run through all four examples.
-  expect_equal(extract_function_name2(example1), ".function.name.")
-  expect_equal(extract_function_name2(example2), "function_name")
-  expect_equal(extract_function_name2(example3), "__function.name__")
-  expect_equal(extract_function_name2(example4), "extract_function_name")
-
-  expect_equal(extract_function_name2(example5), "function_name")
-  expect_equal(extract_function_name2(example6), "function_name")
-  expect_equal(extract_function_name2(example7), "function_name")
-  expect_equal(extract_function_name2(example8), "function_name")
-
   exampleHORRID <- " .function.name. =  #comment
     function       # more comment
        (a)   # yet more comment
           {}"
-  expect_equal(extract_function_name2(exampleHORRID), ".function.name.")
 
-  
   exampleComplicated <- "# Here are some comments for foo
     #' @family test
 
-      foo <- 
-  
+      foo <-
+
     #a comment here - function indented by whitespace too !
 
-      function  ( a ) 
+      function  ( a )
 
   {
 
@@ -71,10 +47,7 @@ test_that("Extracting function names works as intended",
 
           }"
 
-
-# expect_equal(extract_function_name2(exampleComplicated), "foo")
-
-  simple <- "   test4  <-
+  simple <- "   test_4  <-
   #' adding text here
 
         function(   x)   {y <- x/2
@@ -82,14 +55,41 @@ test_that("Extracting function names works as intended",
 
   }"
 
-  expect_equal(extract_function_name2(simple), "test4")
-
 
     function_commented <- "#' test_my_foo <-  function(){}
       myfoo <- function(){
 
     }"
-  expect_equal(extract_function_name2(function_commented), "myfoo")   # NOT test_my_foo
+
+
+  double_function <- "#' double function
+  # two functions here, damn.
+
+  myfoo1 <-
+
+
+  function(){
+
+  hello_function(a)
+  }
+
+
+  myfoo2 <- functon(){}"
+
+  expect_equal(extract_function_name(example1), ".function.name.")
+  expect_equal(extract_function_name(example2), "function_name")
+  expect_equal(extract_function_name(example3), "__function.name__")
+  expect_equal(extract_function_name(example4), "extract_function_name")
+  expect_equal(extract_function_name(example5), "function_name")
+  expect_equal(extract_function_name(example6), "function_name")
+  expect_equal(extract_function_name(example7), "function_name")
+  expect_equal(extract_function_name(example8), "function_name")
+  expect_equal(extract_function_name(exampleHORRID), ".function.name.")
+  expect_equal(extract_function_name(simple), "test_4")
+  expect_equal(extract_function_name(exampleComplicated), "foo")
+  expect_equal(extract_function_name(function_commented), "myfoo")   # NOT test_my_foo
+  expect_equal(extract_function_name(double_function), "myfoo1")
+
   })
 
 

@@ -56,56 +56,6 @@ find_previous_vector_element <- function(value, vector){
 #' @title Extract function name from a string
 #'
 #' @description Extract function name from a long string. This works by
-#' splitting the string by "<-", "=", and " " and then keeping the word
-#' before the first of these characters.
-#'
-#' @param string A string containing a function definition, this must contain the word 'function'
-#'
-#' @return A string containing the function name
-#'
-#' @export
-#'
-extract_function_name <- function(string) {
-  # does the string 'function' exist in the string
-  if (!grepl(pattern = "function", x = string))
-    stop("No function found in string")
-
-  # trim whitespace and replace all punctuation except "_" and "." with " ".
-  tmp <- trimws(string) |>
-    gsub(pattern = "\n", replacement = "") |>
-    strsplit(split = c("<-", "=", " ")) |>
-    gsub(pattern = "[^_.[:^punct:]]",
-         replacement =  " ",
-         perl = T) |>
-    strsplit(split = c(" ")) |>
-    unlist()
-
-  tmp <- tmp[tmp != ""]
-
-  function_name <- tmp[min(which(tmp == "function")) - 1]
-
-  # check that the characters before are either "=" or "<-"
-  index_function_name <-
-    stringr::str_locate(pattern = function_name,
-                        string = trimws(string))[[2]]
-
-  index_operand_name <-
-    stringr::str_locate_all(pattern = c("<-|="),
-                            string = trimws(string))[[1]][[1]]
-
-  if((index_operand_name - index_function_name) < 0 | (index_operand_name - index_function_name) > 100){
-    return(NA)
-  }
-
-  return(function_name)
-
-}
-
-
-
-#' @title Extract function name from a string
-#'
-#' @description Extract function name from a long string. This works by
 #' identifying "function(" in the string and then finding the operand before and splitting
 #' on that before keeping the character there.
 #'
@@ -116,20 +66,20 @@ extract_function_name <- function(string) {
 #'
 #' @export
 #'
-#' 
-extract_function_name2 <- function(string){
+#'
+extract_function_name <- function(string){
 
    # regex pattern to match comments (note: greedy match with '?')
   # assumes comments won't appear in quoted strings  (i.e. print("this # will match") )
   pattern <- "#.*?\\n"
-  
+
   # Replace the comment (to end of line) with an empty string
   string <- gsub(pattern, "", string, perl = TRUE)
-  
+
   # Convert newlines to spaces (remove newlines)
   string <- stringr::str_replace_all(string, pattern = c("\n"), replacement = " ")
 
-  assign_op <- stringr::str_locate_all(string, pattern = "(=|<-)\\s*function\\s*\\(") 
+  assign_op <- stringr::str_locate_all(string, pattern = "(=|<-)\\s*function\\s*\\(")
   assign_op <- unlist(x = assign_op)
   assign_op <- assign_op[1]
 

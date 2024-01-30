@@ -14,6 +14,6 @@ A string containing the function name
 }
 \description{
 Extract function name from a long string. This works by
-splitting the string by "<-", "=", and " " and then keeping the word
-before the first of these characters.
+identifying "function(" in the string and then finding the operand before and splitting
+on that before keeping the character there.
 }
