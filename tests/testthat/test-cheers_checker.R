@@ -145,14 +145,44 @@ test_that("Previous element before integer in vector works as intended",
            })
 
 
+ test_that("get_file_cheers_classifications works for each script in a project folder",
+           {
+             v_files <-
+               list.files(testthat::test_path("example_project/R"), full.names = T)
 
-test_that("get_folder_cheers_classifications works for a few example folders",
+             v_target_tags <-
+               c(
+                 "calculate_costs",
+                 "calculate_discounting_weights",
+                 "calculate_QALYs",
+                 "create_Markov_trace",
+                 "define_transition_matrix",
+                 "run_sickSicker_model"
+               )
+
+             v_outcome_tags <- sapply(X = v_files,
+                                      FUN = get_file_cheers_classifications,
+                                      cheers_pattern = "@family") |> as.character()
+
+             expect_true(object = length(v_outcome_tags) > 1 && length(setdiff(v_outcome_tags, v_target_tags)) == 0)
+
+           })
+
+
+
+
+test_that("get_folder_cheers_classifications works for a simple set of example scripts",
           {
-            expect_silent({
-              get_folder_cheers_classifications(path = testthat::test_path("example_scripts"),
-                                                cheers_pattern =  "@family")
-            })
+          tmp <- get_folder_cheers_classifications(path = testthat::test_path("example_scripts"),
+                                                   cheers_pattern =  "@family") |> nrow()
+          expect_true(object = tmp > 0)
           })
 
 
 
+test_that("get_folder_cheers_classifications works for an example project",
+          {
+            tmp <- get_folder_cheers_classifications(path = testthat::test_path("example_project"),
+                                                     cheers_pattern =  "@family") |> nrow()
+            expect_true(object = tmp > 0)
+          })
