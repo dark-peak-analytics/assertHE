@@ -131,14 +131,11 @@ extract_function_name2 <- function(string){
   #                                                    string = string)[[1]][, "start"]
 
   foo_name <- substr(string, 1, foo_assign_operand_location-1)
-  foo_name <- stringr::str_replace_all(string = foo_name, pattern = c("\n"), replacement = " ") 
+  foo_name <- stringr::str_replace_all(string = foo_name, pattern = c("\n"), replacement = " ")
   foo_name <- strsplit(x = foo_name, split = " ")
   foo_name <- unlist(x = foo_name)
-  foo_name <- utils::tail(x = foo_name, n = 1)
-
-
-    foo_name <- v_chars[which(!(v_chars %in% c("", "=", "<-")))] |>
-                  utils::tail(n = 1)
+  foo_name <- foo_name[which(!(foo_name %in% c("", "=", "<-")))]
+  #foo_name <- utils::tail(x = foo_name, n = 1)
 
     # replace any persisting assignment
     foo_name <- stringr::str_replace_all(pattern = c("=|<-"),
