@@ -56,21 +56,19 @@ test_that("Extracting function names works as intended",
 
 
 test_that("Next element after integer in vector works as intended",
-          {
-            expect_equal(find_next_vector_element(10, 1:12), 11)
-            expect_equal(find_next_vector_element(4, seq(1, 120, 5)), 6)
+{
+  expect_equal(find_next_vector_element(10, 1:12), 11)
+  expect_equal(find_next_vector_element(4, seq(1, 120, 5)), 6)
+  expect_equal(find_next_vector_element(120, seq(1, 120, 5)), 116)
 })
 
 
-
-
-
-
 test_that("Previous element before integer in vector works as intended",
-          {
-            expect_equal(find_previous_vector_element(10, 1:12), 9)
-            expect_equal(find_previous_vector_element(4, seq(1, 120, 5)), 1)
-          })
+{
+  expect_equal(find_previous_vector_element(10, 1:12), 9)
+  expect_equal(find_previous_vector_element(4, seq(1, 120, 5)), 1)
+  expect_equal(find_previous_vector_element(1, seq(1, 120, 5)), 1)
+})
 
 
 

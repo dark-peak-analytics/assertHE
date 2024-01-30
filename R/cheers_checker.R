@@ -9,17 +9,21 @@
 #' find_next_vector_element(value = 5, vector = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
 #' }
 #'
-find_next_vector_element <- function(value, vector){
-  greater_than <- vector[vector > value]
+find_next_vector_element <- function(value, vector) {
+  # Find the elements in the vector that are greater than the specified value
+  greater_than_value <- vector[vector > value]
 
-  if(length(greater_than) == 0){
-    return(NA)
+  # If there are no elements greater than the specified value, return NULL or a default value
+  if (length(greater_than_value) == 0) {
+    return(max(vector))  # or return a default value as needed
   }
 
-  next_one <- min(greater_than, na.rm = T)
+  # Find the minimum value among the elements greater than the specified value
+  next_element <- min(greater_than_value)
 
-  return(next_one)
+  return(next_element)
 }
+
 
 #' @title Find the previous element of the vector before a value
 #' @description Find the previous element of the vector before a value
@@ -33,11 +37,19 @@ find_next_vector_element <- function(value, vector){
 #' }
 #'
 find_previous_vector_element <- function(value, vector){
-  greater_than <- vector[vector < value]
-  previous_one <- max(greater_than)
-  return(previous_one)
-}
+   # Find the elements in the vector that are less than the specified value
+   less_than_value <- vector[vector < value]
 
+  # If there are no elements less than the specified value, return the value
+   if (length(less_than_value) == 0) {
+     return(value)
+   }
+
+  # Find the maximum value among the elements less than the specified value
+   previous_element <- max(less_than_value)
+
+   return(previous_element)
+ }
 
 
 
@@ -118,16 +130,11 @@ extract_function_name2 <- function(string){
   #assign_operand_locations <- stringr::str_locate_all(pattern = c("=|<-"),
   #                                                    string = string)[[1]][, "start"]
 
-  #foo_assign_operand_location <- find_previous_vector_element(value  = foo_def_start,
-  #                                                            vector = assign_operand_locations)
-
-  v_chars <- substr(x = string,
-                     start = 1,
-                     stop =  foo_assign_operand_location - 1) |>
-    stringr::str_replace_all(pattern = c("\n"),
-                             replacement = " ") |>
-    strsplit(split = " ") |>
-    unlist()
+  foo_name <- substr(string, 1, foo_assign_operand_location-1)
+  foo_name <- stringr::str_replace_all(string = foo_name, pattern = c("\n"), replacement = " ") 
+  foo_name <- strsplit(x = foo_name, split = " ")
+  foo_name <- unlist(x = foo_name)
+  foo_name <- utils::tail(x = foo_name, n = 1)
 
 
     foo_name <- v_chars[which(!(v_chars %in% c("", "=", "<-")))] |>
