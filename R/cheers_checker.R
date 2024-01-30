@@ -90,8 +90,9 @@ extract_function_name <- function(string){
 
 }
 
-
-
+#assertHE::extract_function_name(string = "#' }
+#
+#create_Markov_trace <- function(transition_matrix_,")
 
 
 
@@ -159,7 +160,7 @@ v_function_names <- sapply(
 
     function_line <-
       lines[function_index_minus_one:function_index] |>
-      paste(collapse = "")
+      paste(collapse = "\n")
 
     return(extract_function_name(function_line))
 

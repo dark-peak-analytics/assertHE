@@ -119,57 +119,40 @@ test_that("Previous element before integer in vector works as intended",
 
 
 
-# test_that("get_file_cheers_classifications works for a few example scripts",
-#           {
-#           if (testthat::testing_package() != ""){
-#               path <- dirname(dirname(getwd()))
-#             }else{
-#               path <- getwd()
-#             }
-#
-#             expect_silent({
-#
-#               expect_equal(
-#                get_file_cheers_classifications(filename = paste0(path, "/inst/example_script/create_markov_trace.R"),
-#                                                cheers_pattern = "@family"),
-#                 stats::setNames(object = "create_Markov_trace", nm =  "simulation")
-#               )
-#
-#               expect_equal(
-#                 get_file_cheers_classifications(filename = paste0(path, "/inst/example_script/define_transition_matrix.R"),
-#                                                 cheers_pattern = "@family"),
-#                 stats::setNames(object = "define_transition_matrix", nm =  "transitions")
-#               )
-#
-#               #expect_equal(
-#               #  get_file_cheers_classifications(filename = paste0(path,"/inst/example_script/example_script.R"),
-#               #                                  cheers_pattern = "@family"),
-#               #  NA
-#               #)
-#
-#             })
-#           })
+ test_that("get_file_cheers_classifications works for a few example scripts",
+           {
+             expect_silent({
+
+               expect_equal(
+                get_file_cheers_classifications(filename = testthat::test_path("example_scripts/create_markov_trace.R"),
+                                                cheers_pattern = "@family"),
+                 stats::setNames(object = "create_Markov_trace", nm =  "simulation")
+               )
+
+               expect_equal(
+                 get_file_cheers_classifications(filename = testthat::test_path("example_scripts/define_transition_matrix.R"),
+                                                 cheers_pattern = "@family"),
+                 stats::setNames(object = "define_transition_matrix", nm =  "transitions")
+               )
+
+               expect_equal(
+                get_file_cheers_classifications(filename = testthat::test_path("example_scripts/example_script.R"),
+                                                cheers_pattern = "@family"),
+                NA
+               )
+
+             })
+           })
 
 
 
 test_that("get_folder_cheers_classifications works for a few example folders",
           {
-
-            if (testthat::testing_package() != ""){
-              path <- dirname(dirname(getwd()))
-            }else{
-              path <- getwd()
-            }
-
             expect_silent({
-
-              get_folder_cheers_classifications(path = "./inst",
+              get_folder_cheers_classifications(path = testthat::test_path("example_scripts"),
                                                 cheers_pattern =  "@family")
-
             })
           })
-
-
 
 
 

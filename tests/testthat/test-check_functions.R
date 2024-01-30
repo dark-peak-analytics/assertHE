@@ -5,7 +5,7 @@ test_that("test no error when running folder function", {
   }else{
     path <- getwd()
   }
-  #if (testthat::testing_package() == "") {
+
     testthat::expect_silent(
       assertHE::tabulate_functions_in_folder(
         path = path,
@@ -41,7 +41,6 @@ test_that("test no error when running folder function", {
       ),
       "list"
     )
-  #}
 
 })
 
