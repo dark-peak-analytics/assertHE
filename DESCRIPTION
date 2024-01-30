@@ -9,7 +9,7 @@ Description: An R package designed to help health economic modellers when writin
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
@@ -17,4 +17,5 @@ Imports:
     assertthat,
     ggplot2,
     scales,
-    tidyr
+    tidyr,
+    stringr
