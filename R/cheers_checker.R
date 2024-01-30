@@ -119,7 +119,7 @@ extract_function_name <- function(string) {
 #' 
 extract_function_name2 <- function(string){
 
-  # regex pattern to match comments (note: greedy match with '?')
+   # regex pattern to match comments (note: greedy match with '?')
   # assumes comments won't appear in quoted strings  (i.e. print("this # will match") )
   pattern <- "#.*?\\n"
   
@@ -133,12 +133,10 @@ extract_function_name2 <- function(string){
   assign_op <- unlist(x = assign_op)
   assign_op <- assign_op[1]
 
-  foo_name <- substr(string, 1, assign_op-1)
-  foo_name <- strsplit(x = foo_name, split = " ")
-  foo_name <- unlist(x = foo_name)
-  foo_name <- utils::tail(x = foo_name, n = 1)
+  string <- substr(string, 1, assign_op-1)
+  string <- gsub("\\s*", "", string, perl = TRUE)
 
-  return(foo_name)
+  return(string)
 
 }
 
