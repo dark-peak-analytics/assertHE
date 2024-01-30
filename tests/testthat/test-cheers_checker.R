@@ -26,7 +26,7 @@ test_that("Extracting function names works as intended",
   example7 <- "function_name<-function(a){}"
   example8 <- "function_name=function(a){}"
 
-  # run through all four examples.
+  
   expect_equal(extract_function_name(example1), ".function.name.")
   expect_equal(extract_function_name(example2), "function_name")
   expect_equal(extract_function_name(example3), "__function.name__")
@@ -48,6 +48,13 @@ test_that("Extracting function names works as intended",
   expect_equal(extract_function_name2(example7), "function_name")
   expect_equal(extract_function_name2(example8), "function_name")
 
+exampleHORRID <- " .function.name. =  #comment
+    function       # more comment
+       (a)   # yet more comment
+          {}"
+
+  # run through all four examples.
+  expect_equal(extract_function_name2(exampleHORRID), ".function.name.")
 
 })
 
