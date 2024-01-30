@@ -7,7 +7,7 @@
 get_file_cheers_classifications(
   filename,
   cheers_pattern,
-  function_pattern = "function\\\\("
+  function_pattern = "(\\\\s|=|-)function\\\\("
 )
 }
 \arguments{
