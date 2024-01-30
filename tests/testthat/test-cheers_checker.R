@@ -31,7 +31,7 @@ test_that("Extracting function names works as intended",
   expect_equal(extract_function_name(example2), "function_name")
   expect_equal(extract_function_name(example3), "__function.name__")
   expect_equal(extract_function_name(example4), "extract_function_name")
-  
+
   expect_equal(extract_function_name(example5), "function_name")
   expect_equal(extract_function_name(example6), "function_name")
   expect_equal(extract_function_name(example7), "function_name")
@@ -91,19 +91,19 @@ test_that("Previous element before integer in vector works as intended",
 #             expect_silent({
 #
 #               expect_equal(
-#                get_file_cheers_classifications(filename = paste0(path, "/inst/example_script/create_markov_trace.R"),
+#                get_file_cheers_classifications(filename = paste0(path, "/inst/example_project/create_markov_trace.R"),
 #                                                cheers_pattern = "@family"),
 #                 stats::setNames(object = "create_Markov_trace", nm =  "simulation")
 #               )
 #
 #               expect_equal(
-#                 get_file_cheers_classifications(filename = paste0(path, "/inst/example_script/define_transition_matrix.R"),
+#                 get_file_cheers_classifications(filename = paste0(path, "/inst/example_project/define_transition_matrix.R"),
 #                                                 cheers_pattern = "@family"),
 #                 stats::setNames(object = "define_transition_matrix", nm =  "transitions")
 #               )
 #
 #               #expect_equal(
-#               #  get_file_cheers_classifications(filename = paste0(path,"/inst/example_script/example_script.R"),
+#               #  get_file_cheers_classifications(filename = paste0(path,"/inst/example_project/example_script.R"),
 #               #                                  cheers_pattern = "@family"),
 #               #  NA
 #               #)

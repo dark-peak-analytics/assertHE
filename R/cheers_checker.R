@@ -113,7 +113,7 @@ extract_function_name2 <- function(string){
   foo_assign_operand_location <- stringr::str_locate_all(pattern = "(\\s|=|<-)function\\s*\\(",
                                            string = string) |>
                                   unlist() |>
-                                  head(1)
+                                  utils::head(1)
 
   #assign_operand_locations <- stringr::str_locate_all(pattern = c("=|<-"),
   #                                                    string = string)[[1]][, "start"]
