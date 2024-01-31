@@ -93,6 +93,43 @@ test_that("Extracting function names works as intended",
   })
 
 
+test_that("Extracting function names works as intended ON GITHUB",
+          {
+
+source_lines <- function(file, lines){
+  # read all lines of the file
+  all_lines <- readLines(file)
+  # filter selected lines only
+  selected_lines <- all_lines[lines]
+  # stitch them all together
+  string <- selected_lines |> stringr::str_flatten()
+
+  return(string)
+}
+
+# intialise empty list
+path_lines <- list()
+
+# fill in blanks FOR A GIVEN EXAMPLE
+path_lines$find_next_vector_element <- list("url" = "https://raw.githubusercontent.com/dark-peak-analytics/assertHE/main/R/cheers_checker.R",
+                                            "lines" = 1:20,
+                                            "expected" = "find_next_vector_element")
+
+for(i in length(path_lines)){
+  print(i)
+
+  string <- source_lines(file = path_lines[[i]][["url"]],
+                         lines = path_lines[[i]][["lines"]])
+
+  function_output <- assertHE::extract_function_name(string)
+  expected_output <- path_lines[[i]][["expected"]]
+
+  expect_equal(object = function_output,
+               expected = expected_output)
+
+}
+
+})
 
 
 
