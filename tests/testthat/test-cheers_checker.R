@@ -115,6 +115,11 @@ path_lines$find_next_vector_element <- list("url" = "https://raw.githubuserconte
                                             "lines" = 1:20,
                                             "expected" = "find_next_vector_element")
 
+
+path_lines$calculate_QALYs <- list("url" = "https://raw.githubusercontent.com/dark-peak-analytics/sicksickerPack/main/R/calculate_QALYs.R",
+                                            "lines" = 1:111,
+                                            "expected" = "calculate_QALYs")
+
 # for each test case, source from GitHub, run the function and test against expectation
 for(i in length(path_lines)){
 
