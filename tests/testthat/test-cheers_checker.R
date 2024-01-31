@@ -102,7 +102,7 @@ source_lines <- function(file, lines){
   # filter selected lines only
   selected_lines <- all_lines[lines]
   # stitch them all together
-  string <- selected_lines |> stringr::str_flatten()
+  string <- selected_lines |> stringr::str_flatten(collapse = "\n")
 
   return(string)
 }
