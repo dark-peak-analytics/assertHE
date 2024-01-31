@@ -116,7 +116,6 @@ path_lines$find_next_vector_element <- list("url" = "https://raw.githubuserconte
                                             "expected" = "find_next_vector_element")
 
 for(i in length(path_lines)){
-  print(i)
 
   string <- source_lines(file = path_lines[[i]][["url"]],
                          lines = path_lines[[i]][["lines"]])
