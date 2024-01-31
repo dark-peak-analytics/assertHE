@@ -115,6 +115,7 @@ path_lines$find_next_vector_element <- list("url" = "https://raw.githubuserconte
                                             "lines" = 1:20,
                                             "expected" = "find_next_vector_element")
 
+# for each test case, source from GitHub, run the function and test against expectation
 for(i in length(path_lines)){
 
   string <- source_lines(file = path_lines[[i]][["url"]],
