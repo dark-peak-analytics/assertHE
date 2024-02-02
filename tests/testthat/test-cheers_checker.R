@@ -187,6 +187,8 @@ test_that("Previous element before integer in vector works as intended",
            })
 
 
+
+
  test_that("get_file_cheers_classifications works for each script in a project folder",
            {
              v_files <-
@@ -228,3 +230,17 @@ test_that("get_folder_cheers_classifications works for an example project",
                                                      cheers_pattern =  "@family") |> nrow()
             expect_true(object = tmp > 0)
           })
+
+
+
+
+# additional test for find_function_definitions
+test_that("find_function_definitions works as intended",
+          {
+            expect_silent({
+              find_function_definitions(filename = testthat::test_path("example_scripts", "example_tricky_functions.R"))
+
+            })
+
+          }
+)
