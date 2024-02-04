@@ -103,6 +103,12 @@ extract_function_name <- function(string){
 #' @description Do not try to call this - it is only a help 
 #' and is only to keep find_function_definitions clean
 #' These two functions could really be combined - a task for another day
+#' 
+#' @param v_func_lnums A vector of "FUNCTION" line numbers
+#' @param v_assign_lnums A vector of "XXX_ASSIGN" line number
+#' @param v_symbol_lnums a vector of "SYMBOL" line numbers
+#' @param parsed_data the dataframe result of running utils::getParseData
+#' @return Filteresd vector of function line numbers
 #'
 filter_func_lnums <- function(v_func_lnums, v_assign_lnums, v_symbol_lnums, parsed_data) {
 
