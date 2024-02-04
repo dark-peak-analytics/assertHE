@@ -228,3 +228,23 @@ test_that("get_folder_cheers_classifications works for an example project",
                                                      cheers_pattern =  "@family") |> nrow()
             expect_true(object = tmp > 0)
           })
+
+test_that("find_function_definitions works as intended",
+    {
+      expect_equal(
+        object = find_function_definitions(
+                    filename = testthat::test_path("example_scripts", "example_tricky_functions.R")),
+        expected = c( 
+            "do_something_random"
+          , "calculate_something"
+          , "find_matches"
+          , "perform_task"
+          , "combine_strings"
+          , "process_data"
+          , "transform_data"
+          , "sort_values"
+          , "generate_output"
+          , "do_everything")
+      )
+    })
+

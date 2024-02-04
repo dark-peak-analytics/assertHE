@@ -29,6 +29,7 @@ find_next_vector_element <- function(value, vector) {
 #' @description Find the previous element of the vector before a value
 #' @param value A value of numeric values
 #' @param vector A vector of numeric values
+#' @param LTE a boolean to determine collection on "less than" or "less than equal"
 #' @return The previous element of the vector before the value
 #' @export
 #' @examples
@@ -36,13 +37,19 @@ find_next_vector_element <- function(value, vector) {
 #' find_previous_vector_element(value = 5, vector = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
 #' }
 #'
-find_previous_vector_element <- function(value, vector){
+find_previous_vector_element <- function(value, vector, LTE=FALSE){
+   
    # Find the elements in the vector that are less than the specified value
-   less_than_value <- vector[vector < value]
+   if(LTE==TRUE) {
+      less_than_value <- vector[vector <= value]
+   } else {
+      less_than_value <- vector[vector < value]
+   }
 
-  # If there are no elements less than the specified value, return the value
+  # If there are no elements less than the specified value, 
+  # return the minimum value found in the vector
    if (length(less_than_value) == 0) {
-     return(value)
+     return (min(vector))
    }
 
   # Find the maximum value among the elements less than the specified value
@@ -90,12 +97,136 @@ extract_function_name <- function(string){
 
 }
 
-#assertHE::extract_function_name(string = "#' }
-#
-#create_Markov_trace <- function(transition_matrix_,")
 
+#' @title Helper function for find_function_definitions
+#'
+#' @description Do not try to call this - it is only a help 
+#' and is only to keep find_function_definitions clean
+#' These two functions could really be combined - a task for another day
+#' 
+#' @param v_func_lnums A vector of "FUNCTION" line numbers
+#' 
+#' @param v_assign_lnums A vector of "XXX_ASSIGN" line number
+#' 
+#' @param v_symbol_lnums a vector of "SYMBOL" line numbers
+#' 
+#' @param parsed_data the dataframe result of running utils::getParseData
+#' 
+#' @return Filteresd vector of function line numbers
+#'
+filter_func_lnums <- function(v_func_lnums, v_assign_lnums, v_symbol_lnums, parsed_data) {
 
+  # Create an empty vector to store filtered v_func_lnums
+  filtered_v_func_lnums <- c()
 
+  # Iterate over each v_func_lnum
+  for (func_lnum in v_func_lnums) {
+
+    # Find the line number of the nearest v_assign_lnum before the v_func_lnum
+    assign_lnum <- max(v_assign_lnums[v_assign_lnums <= func_lnum])
+
+    # Find the line number of the nearest v_symbol_lnum before the v_func_lnum
+    symbol_lnum <- max(v_symbol_lnums[v_symbol_lnums <= func_lnum])
+
+    # Check if both assign_lnum and symbol_lnum exist 
+    # and that the assign doesn't come before the symbol.
+    #
+    # Ignoring uninteresting parse data like "expr", "NUM_CONST", etc
+    # R parse data for a function definition can only exist in this order:
+    # SYMBOL, ASSIGN, FUNCTION
+    if ( is.na(assign_lnum) || is.na(symbol_lnum)  || assign_lnum < symbol_lnum) {
+      next
+    }
+
+    # if assign_lnum == symbol_lnum, 
+    # Then we might have a single line like this:
+    #
+    # foo <- function(A){}   # i.e. a function definition
+    #
+    # or we may have the use of a Lambda (anonymous) function like this:
+    #
+    # result <- apply(data, 2, function(x) { sqrt(mean(x^2)) })
+    #
+    # This is NOT a funtion definition (well, it is, but, not one we care about) !
+    # in this case, there will (hopefully) always be a SYMBOL between 
+    # FUNCTION and XXX_ASSIGN.
+    #
+    # check that the col1 value for assign is greater than for symbol
+    if(assign_lnum == symbol_lnum){
+
+      assign_col1 <-  max(  parsed_data[ parsed_data$line1 == assign_lnum 
+                                        & (parsed_data$token == "LEFT_ASSIGN" 
+                                            | parsed_data$token == "EQ_ASSIGN") , 
+                                        "col1"] )
+
+      symbol_col1 <-  max(  parsed_data[ parsed_data$line1 == symbol_lnum 
+                                         & parsed_data$token == "SYMBOL" ,
+                                        "col1"] )
+
+      if(symbol_col1 >= assign_col1){
+        # These aren't the droids you're looking for.
+        next
+      }
+    }
+
+    # If we get this far, we're pretty confident we have a function definition.
+    # Add the v_func_lnum to the filtered vector
+    filtered_v_func_lnums <- c(filtered_v_func_lnums, func_lnum)
+
+  }
+
+  # Return the filtered vector
+  return(filtered_v_func_lnums)
+}
+
+#' @title Parses an R source file, returns function names defined within.
+#'
+#' @description Using utils::getParseData(), searches for function definitions
+#' by matching the FUNCTION keyword (i.e. "function") 
+#' with it's associated SYMBOL (i.e the function name)
+#'
+#' @param filename A string containing a path to an R source file
+#'
+#' @return A string containing the function names
+#'
+#' @importFrom stringr str_locate_all str_replace_all
+#'
+#' @export
+#'
+find_function_definitions <- function(filename) {
+
+  # Parse the R code
+  parsed_data <-
+    utils::getParseData(parse(filename, keep.source = TRUE))
+
+  # get the line numbers containing the function keyword 
+  # identified by token value "FUNCTION"
+  v_func_lnums <-  parsed_data[parsed_data$token == "FUNCTION", "line1"]
+
+# find line numbers which are identified as assignments 
+# named functions get assigned names - Lambdas (anonymous funcitons) don't !
+  v_assign_lnums <- parsed_data[parsed_data$token == "LEFT_ASSIGN" | parsed_data$token == "EQ_ASSIGN", "line1"]
+
+  # find line numbers which are identified as symbol definitions
+  # Function names are identiffied as SYMBOLs
+  v_symbol_lnums <- parsed_data[parsed_data$token == "SYMBOL", "line1"]
+
+  # Try to filter the use of the keyword "function" when it is used
+  # as a Lambda (anonymous) function.
+  v_func_lnums <- filter_func_lnums(v_func_lnums, v_assign_lnums, v_symbol_lnums, parsed_data)
+  
+  # for each function location find the immediately preceeding symbols location
+  v_symbols_preceding_functions <- sapply(X = v_func_lnums,
+                                          FUN = find_previous_vector_element, 
+                                          vector=v_symbol_lnums, LTE=TRUE)
+  
+  # Extract the symbol names (stored in the "text" element)
+  # from the data.frame located at the line numbers that identify symbols
+  function_symbols <- parsed_data[  parsed_data$line1 %in% v_symbols_preceding_functions 
+                                  & parsed_data$token == "SYMBOL", "text"]
+  return(function_symbols)
+
+}
 
 #' @title Get cheers classification tags from a given file
 #' @description For a provided filepath, identify the cheers classification tags
