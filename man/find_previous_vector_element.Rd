@@ -4,12 +4,14 @@
 \alias{find_previous_vector_element}
 \title{Find the previous element of the vector before a value}
 \usage{
-find_previous_vector_element(value, vector)
+find_previous_vector_element(value, vector, LTE = FALSE)
 }
 \arguments{
 \item{value}{A value of numeric values}
 
 \item{vector}{A vector of numeric values}
+
+\item{LTE}{a boolean to determine collection on "less than" or "less than equal"}
 }
 \value{
 The previous element of the vector before the value
