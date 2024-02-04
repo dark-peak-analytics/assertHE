@@ -4,12 +4,14 @@
 \alias{find_next_vector_element}
 \title{Find the next element of the vector after a value}
 \usage{
-find_next_vector_element(value, vector)
+find_next_vector_element(value, vector, LTE = FALSE)
 }
 \arguments{
 \item{value}{A value of numeric values}
 
 \item{vector}{A vector of numeric values}
+
+\item{LTE}{a boolean to determine collection on "greater than or equal"}
 }
 \value{
 The next element of the vector after the value
@@ -19,7 +21,10 @@ Find the next element of the vector after a value
 }
 \examples{
 \dontrun{
-find_next_vector_element(value = 5, vector = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+find_next_vector_element(value = 5, vector = 1:10)
+find_next_vector_element(value = 5, vector = 1:4)
+find_next_vector_element(value = 5, vector = 1:5, LTE = F)
+find_next_vector_element(value = 5, vector = 1:5, LTE = T)
 }
 
 }

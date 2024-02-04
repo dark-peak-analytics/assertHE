@@ -99,8 +99,13 @@ test_that("Extracting function names works as intended ON GITHUB",
 source_lines <- function(file, lines){
   # read all lines of the file
   all_lines <- readLines(file)
+
+  if(!is.null(lines)){
   # filter selected lines only
   selected_lines <- all_lines[lines]
+  }else{
+    selected_lines <- all_lines
+  }
   # stitch them all together
   string <- selected_lines |> stringr::str_flatten(collapse = "\n")
 
@@ -111,14 +116,14 @@ source_lines <- function(file, lines){
 path_lines <- list()
 
 # fill in blanks FOR A GIVEN EXAMPLE
-path_lines$find_next_vector_element <- list("url" = "https://raw.githubusercontent.com/dark-peak-analytics/assertHE/main/R/cheers_checker.R",
-                                            "lines" = 1:20,
-                                            "expected" = "find_next_vector_element")
+path_lines$create_Markov_trace <- list("url" = "https://raw.githubusercontent.com/dark-peak-analytics/sicksickerPack/v1.0/R/create_Markov_trace.R",
+                                       "lines" = NULL,
+                                        "expected" = "create_Markov_trace")
 
 
-path_lines$calculate_QALYs <- list("url" = "https://raw.githubusercontent.com/dark-peak-analytics/sicksickerPack/main/R/calculate_QALYs.R",
-                                            "lines" = 1:111,
-                                            "expected" = "calculate_QALYs")
+path_lines$calculate_QALYs <- list("url" = "https://raw.githubusercontent.com/dark-peak-analytics/sicksickerPack/v1.0/R/calculate_QALYs.R",
+                                   "lines" = NULL,
+                                   "expected" = "calculate_QALYs")
 
 # for each test case, source from GitHub, run the function and test against expectation
 for(i in 1:length(path_lines)){
@@ -305,6 +310,8 @@ test_that("find_function_definitions works as intended FROM GITHUB",
 
             # for each test case, source from GitHub, run the function and test against expectation
             for(i in 1:length(l_all_github_tests)){
+
+              Sys.sleep(2)
 
               function_output <- assertHE::find_function_definitions(filename = l_all_github_tests[[i]][["url"]])
               expected_output <- l_all_github_tests[[i]][["expected"]]

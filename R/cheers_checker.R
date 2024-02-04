@@ -2,6 +2,7 @@
 #' @description Find the next element of the vector after a value
 #' @param value A value of numeric values
 #' @param vector A vector of numeric values
+#' @param LTE a boolean to determine collection on "greater than or equal"
 #' @return The next element of the vector after the value
 #' @export
 #' @examples
