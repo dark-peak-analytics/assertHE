@@ -29,6 +29,7 @@ find_next_vector_element <- function(value, vector) {
 #' @description Find the previous element of the vector before a value
 #' @param value A value of numeric values
 #' @param vector A vector of numeric values
+#' @param LTE a boolean to determine collection on "less than" or "less than equal"
 #' @return The previous element of the vector before the value
 #' @export
 #' @examples
