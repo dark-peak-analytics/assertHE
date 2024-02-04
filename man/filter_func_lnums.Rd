@@ -6,6 +6,18 @@
 \usage{
 filter_func_lnums(v_func_lnums, v_assign_lnums, v_symbol_lnums, parsed_data)
 }
+\arguments{
+\item{v_func_lnums}{A vector of "FUNCTION" line numbers}
+
+\item{v_assign_lnums}{A vector of "XXX_ASSIGN" line number}
+
+\item{v_symbol_lnums}{a vector of "SYMBOL" line numbers}
+
+\item{parsed_data}{the dataframe result of running utils::getParseData}
+}
+\value{
+Filteresd vector of function line numbers
+}
 \description{
 Do not try to call this - it is only a help
 and is only to keep find_function_definitions clean
