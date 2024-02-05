@@ -99,8 +99,13 @@ test_that("Extracting function names works as intended ON GITHUB",
 source_lines <- function(file, lines){
   # read all lines of the file
   all_lines <- readLines(file)
+
+  if(!is.null(lines)){
   # filter selected lines only
   selected_lines <- all_lines[lines]
+  }else{
+    selected_lines <- all_lines
+  }
   # stitch them all together
   string <- selected_lines |> stringr::str_flatten(collapse = "\n")
 
@@ -111,17 +116,17 @@ source_lines <- function(file, lines){
 path_lines <- list()
 
 # fill in blanks FOR A GIVEN EXAMPLE
-path_lines$find_next_vector_element <- list("url" = "https://raw.githubusercontent.com/dark-peak-analytics/assertHE/main/R/cheers_checker.R",
-                                            "lines" = 1:20,
-                                            "expected" = "find_next_vector_element")
+path_lines$create_Markov_trace <- list("url" = "https://raw.githubusercontent.com/dark-peak-analytics/sicksickerPack/v1.0/R/create_Markov_trace.R",
+                                       "lines" = NULL,
+                                        "expected" = "create_Markov_trace")
 
 
-path_lines$calculate_QALYs <- list("url" = "https://raw.githubusercontent.com/dark-peak-analytics/sicksickerPack/main/R/calculate_QALYs.R",
-                                            "lines" = 1:111,
-                                            "expected" = "calculate_QALYs")
+path_lines$calculate_QALYs <- list("url" = "https://raw.githubusercontent.com/dark-peak-analytics/sicksickerPack/v1.0/R/calculate_QALYs.R",
+                                   "lines" = NULL,
+                                   "expected" = "calculate_QALYs")
 
 # for each test case, source from GitHub, run the function and test against expectation
-for(i in length(path_lines)){
+for(i in 1:length(path_lines)){
 
   string <- source_lines(file = path_lines[[i]][["url"]],
                          lines = path_lines[[i]][["lines"]])
@@ -140,17 +145,26 @@ for(i in length(path_lines)){
 
 test_that("Next element after integer in vector works as intended",
 {
-  expect_equal(find_next_vector_element(10, 1:12), 11)
-  expect_equal(find_next_vector_element(4, seq(1, 120, 5)), 6)
-  expect_equal(find_next_vector_element(120, seq(1, 120, 5)), 116)
+  expect_equal(find_next_vector_element(10, 1:12),
+               11)
+  expect_equal(find_next_vector_element(value = 4, vector = 1:4),
+               as.logical(NA))
+  expect_equal(find_next_vector_element(value = 4, vector = 1:4, LTE = T),
+               4)
+  expect_equal(find_next_vector_element(value = 4, vector = rep(NA, 10)),
+               as.integer(NA))
 })
 
 
-test_that("Previous element before integer in vector works as intended",
-{
-  expect_equal(find_previous_vector_element(10, 1:12), 9)
-  expect_equal(find_previous_vector_element(4, seq(1, 120, 5)), 1)
-  expect_equal(find_previous_vector_element(1, seq(1, 120, 5)), 1)
+test_that("Previous element before integer in vector works as intended", {
+  expect_equal(find_previous_vector_element(10, 1:12),
+               9)
+  expect_equal(find_previous_vector_element(4, 4:12),
+               as.logical(NA))
+  expect_equal(find_previous_vector_element(4, 1:12, LTE = T),
+               4)
+  expect_equal(find_next_vector_element(value = 4, vector = rep(NA, 10)),
+               as.integer(NA))
 })
 
 
@@ -229,12 +243,18 @@ test_that("get_folder_cheers_classifications works for an example project",
             expect_true(object = tmp > 0)
           })
 
+
+
+
+
+
+
 test_that("find_function_definitions works as intended",
     {
       expect_equal(
         object = find_function_definitions(
                     filename = testthat::test_path("example_scripts", "example_tricky_functions.R")),
-        expected = c( 
+        expected = c(
             "do_something_random"
           , "calculate_something"
           , "find_matches"
@@ -247,4 +267,60 @@ test_that("find_function_definitions works as intended",
           , "do_everything")
       )
     })
+
+
+
+
+test_that("find_function_definitions works as intended FROM GITHUB",
+          {
+
+            source_lines <- function(file, lines){
+              # read all lines of the file
+              all_lines <- readLines(file)
+              # filter selected lines only
+              selected_lines <- all_lines[lines]
+              # stitch them all together
+              string <- selected_lines |> stringr::str_flatten(collapse = "\n")
+
+              return(string)
+            }
+
+            # intialise empty list
+            l_all_github_tests <- list()
+
+            # fill in blanks FOR A GIVEN EXAMPLE
+            v_sicksickerPack_function_names <- c("create_Markov_trace", "calculate_QALYs", "calculate_discounting_weights", "calculate_costs", "run_sickSicker_model")
+
+            path_lines_sicksickerPack <-
+              lapply(
+                X = v_sicksickerPack_function_names,
+                FUN =  function(x) {
+                  list(
+                    url = paste0(
+                      "https://raw.githubusercontent.com/dark-peak-analytics/sicksickerPack/v1.0/R/",
+                      x,
+                      ".R"
+                    ),
+                    expected = x
+                  )
+                }
+              )
+
+            l_all_github_tests <- c(l_all_github_tests, path_lines_sicksickerPack)
+
+            # for each test case, source from GitHub, run the function and test against expectation
+            for(i in 1:length(l_all_github_tests)){
+
+              Sys.sleep(2)
+
+              function_output <- assertHE::find_function_definitions(filename = l_all_github_tests[[i]][["url"]])
+              expected_output <- l_all_github_tests[[i]][["expected"]]
+
+              expect_equal(object = function_output,
+                           expected = expected_output)
+
+            }
+
+
+          })
 
