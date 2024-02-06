@@ -18,4 +18,6 @@ Imports:
     ggplot2,
     scales,
     tidyr,
-    stringr
+    stringr,
+    dplyr,
+    utils
