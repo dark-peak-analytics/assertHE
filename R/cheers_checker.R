@@ -110,102 +110,6 @@ extract_function_name <- function(string){
 }
 
 
-
-#' @title Helper function for find_function_definitions
-#'
-#' @description Do not try to call this - it is only a help
-#' and is only to keep find_function_definitions clean
-#' These two functions could really be combined - a task for another day
-#'
-#' @param v_func_lnums A vector of "FUNCTION" line numbers
-#'
-#' @param v_assign_lnums A vector of "XXX_ASSIGN" line number
-#'
-#' @param v_symbol_lnums a vector of "SYMBOL" line numbers
-#'
-#' @param parsed_data the dataframe result of running utils::getParseData
-#'
-#' @return Filteresd vector of function line numbers
-#'
-filter_func_lnums <- function(v_func_lnums, v_assign_lnums, v_symbol_lnums, parsed_data) {
-
-  # Create an empty vector to store filtered v_func_lnums
-  filtered_v_func_lnums <- c()
-
-  # Iterate over each v_func_lnum
-  for (func_lnum in v_func_lnums) {
-
-    # Find the line number of the nearest v_assign_lnum before the v_func_lnum
-    assign_lnum <- max(v_assign_lnums[v_assign_lnums <= func_lnum])
-
-    # Find the line number of the nearest v_symbol_lnum before the v_func_lnum
-    symbol_lnum <- max(v_symbol_lnums[v_symbol_lnums <= func_lnum])
-
-    # Check if both assign_lnum and symbol_lnum exist
-    # and that the assign doesn't come before the symbol.
-    #
-    # Ignoring uninteresting parse data like "expr", "NUM_CONST", etc
-    # R parse data for a function definition can only exist in this order:
-    # SYMBOL, ASSIGN, FUNCTION
-    if ( is.na(assign_lnum) || is.na(symbol_lnum)  || assign_lnum < symbol_lnum) {
-      next
-    }
-
-    # if assign_lnum == symbol_lnum,
-    # Then we might have a single line like this:
-    #
-    # foo <- function(A){}   # i.e. a function definition
-    #
-    # or we may have the use of a Lambda (anonymous) function like this:
-    #
-    # result <- apply(data, 2, function(x) { sqrt(mean(x^2)) })
-    #
-    # This is NOT a funtion definition (well, it is, but, not one we care about) !
-    # in this case, there will (hopefully) always be a SYMBOL between
-    # FUNCTION and XXX_ASSIGN.
-    #
-    # check that the col1 value for assign is greater than for symbol
-    if(assign_lnum == symbol_lnum){
-
-      assign_col1 <-  max(  parsed_data[ parsed_data$line1 == assign_lnum
-                                        & (parsed_data$token == "LEFT_ASSIGN"
-                                            | parsed_data$token == "EQ_ASSIGN") ,
-                                        "col1"] )
-
-      symbol_col1 <-  max(  parsed_data[ parsed_data$line1 == symbol_lnum
-                                         & parsed_data$token == "SYMBOL" ,
-                                        "col1"] )
-
-      if(symbol_col1 >= assign_col1){
-        # These aren't the droids you're looking for.
-        next
-      }
-    }
-
-    # If we get this far, we're pretty confident we have a function definition.
-    # Add the v_func_lnum to the filtered vector
-    filtered_v_func_lnums <- c(filtered_v_func_lnums, func_lnum)
-
-  }
-
-  # Return the filtered vector
-  return(filtered_v_func_lnums)
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #' @title Parses an R source file, returns function names defined within.
 #'
 #' @description Using utils::getParseData(), searches for function definitions
@@ -214,56 +118,36 @@ filter_func_lnums <- function(v_func_lnums, v_assign_lnums, v_symbol_lnums, pars
 #'
 #' @param filename A string containing a path to an R source file
 #'
-#' @return A string containing the function names
+#' @return A dataframe with interesting information
 #'
-#' @importFrom stringr str_locate_all str_replace_all
+#' @importFrom utils  getParseData
+#' @importFrom dplyr  lead mutate
 #'
 #' @export
-#'
-find_function_definitions <-
+find_function_definitions <- function(filename){
 
-  function(filename) {
+  df <- utils::getParseData(parse(filename, keep.source = TRUE), includeText = TRUE)
+  
+  # Get the records of all the function and assign keywords 
+  left_assign <- (df$token == "EQ_ASSIGN" | df$token == "LEFT_ASSIGN")
+  fun_decs <- df$token == "FUNCTION"
 
-  # Parse the R code
-  parsed_data <-
-    utils::getParseData(parse(filename, keep.source = TRUE))
+  # This indicates a the current index (type SYMBOL) is followed by 
+  # an XXX_ASSIGN, then the FUNCTION keyword, anything else isn't a named function.
+  #
+  #  So, even though df is not directly referenced within which(), 
+  #  the logical vectors left_assign and fun_decs, which are derived 
+  #  from df$token, are used to determine the positions where the 
+  #  conditions are met. These positions are then used to subset df.
+  name_pos <- which(  dplyr::lead(left_assign, n = 2, default = FALSE) 
+                      & dplyr::lead(fun_decs, n = 4, default = FALSE)    )
 
-  # get the line numbers containing the function keyword
-  # identified by token value "FUNCTION"
-  # e.g. a line with sayHello <- function(){"hi"}
-  v_func_lnums <-  parsed_data[parsed_data$token == "FUNCTION", "line1"]
-
-# find line numbers which are identified as assignments
-# named functions get assigned names - Lambdas (anonymous funcitons) don't !
-  # e.g. "<-" or "="
-  v_assign_lnums <- parsed_data[parsed_data$token == "LEFT_ASSIGN" | parsed_data$token == "EQ_ASSIGN", "line1"]
-
-  # find line numbers which are identified as symbol definitions
-  # Function names are identified as SYMBOLs
-  v_symbol_lnums <- parsed_data[parsed_data$token == "SYMBOL", "line1"]
-
-  # Try to filter out the use of the keyword "function" when it is used
-  # as a Lambda (anonymous) function.
-  v_func_lnums <- filter_func_lnums(v_func_lnums = v_func_lnums,
-                                    v_assign_lnums = v_assign_lnums,
-                                    v_symbol_lnums = v_symbol_lnums,
-                                    parsed_data = parsed_data)
-
-  # for each function location find the immediately preceding symbols location
-  v_symbols_preceding_functions <- sapply(X = v_func_lnums,
-                                          FUN = find_previous_vector_element,
-                                          vector = v_symbol_lnums,
-                                          LTE = TRUE)
-
-  # Extract the symbol names (stored in the "text" element)
-  # from the data.frame located at the line numbers that identify symbols
-  row_index <- parsed_data$line1 %in% v_symbols_preceding_functions & parsed_data$token == "SYMBOL"
-  function_symbols <- parsed_data[row_index, "text"]
-
-  return(function_symbols)
-
+  # only return the pd rows matching name_pos IDs
+  funcs <- df[name_pos, ]
+  # Add in the source file name to the result set 
+  funcs <- dplyr::mutate(funcs, source = filename)
+  return(funcs)
 }
-
 
 #' @title Get cheers classification tags from a given file
 #' @description For a provided filepath, identify the cheers classification tags

@@ -82,3 +82,9 @@ do_everything <- function(data) {
   output <- generate_output(result)
   return(output)
 }
+
+# Example Lambda (anonymous) function
+# Tests that Lambdas are detected as named functions.
+output <- 
+  (function(x, y) x * y)(3, 4)
+print(output)
