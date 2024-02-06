@@ -251,10 +251,7 @@ test_that("get_folder_cheers_classifications works for an example project",
 
 test_that("find_function_definitions works as intended",
     {
-      expect_equal(
-        object = find_function_definitions(
-                    filename = testthat::test_path("example_scripts", "example_tricky_functions.R")),
-        expected = c(
+      expected = c(
             "do_something_random"
           , "calculate_something"
           , "find_matches"
@@ -265,7 +262,12 @@ test_that("find_function_definitions works as intended",
           , "sort_values"
           , "generate_output"
           , "do_everything")
-      )
+
+
+      object = find_function_definitions(
+                    filename = testthat::test_path("example_scripts", "example_tricky_functions.R"))
+      object <- object$text
+      expect_equal(object, expected )
     })
 
 
@@ -314,6 +316,7 @@ test_that("find_function_definitions works as intended FROM GITHUB",
               Sys.sleep(2)
 
               function_output <- assertHE::find_function_definitions(filename = l_all_github_tests[[i]][["url"]])
+              function_output <- function_output$text
               expected_output <- l_all_github_tests[[i]][["expected"]]
 
               expect_equal(object = function_output,
