@@ -10,7 +10,7 @@ find_function_definitions(filename)
 \item{filename}{A string containing a path to an R source file}
 }
 \value{
-A string containing the function names
+A dataframe with interesting information
 }
 \description{
 Using utils::getParseData(), searches for function definitions
