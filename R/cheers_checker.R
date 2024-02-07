@@ -124,27 +124,36 @@ extract_function_name <- function(string){
 #' @importFrom dplyr  lead mutate
 #'
 #' @export
+#'
+#' @example
+#' \dontrun{
+#' find_function_definitions(filename = "tests/testthat/example_scripts/example_tricky_functions.R")
+
+#' }
 find_function_definitions <- function(filename){
 
   df <- utils::getParseData(parse(filename, keep.source = TRUE), includeText = TRUE)
-  
-  # Get the records of all the function and assign keywords 
+
+  # remove comments before doing anything else
+  df <- df[df$token != "COMMENT",]
+
+  # Get the records of all the function and assign keywords
   left_assign <- (df$token == "EQ_ASSIGN" | df$token == "LEFT_ASSIGN")
   fun_decs <- df$token == "FUNCTION"
 
-  # This indicates a the current index (type SYMBOL) is followed by 
+  # This indicates a the current index (type SYMBOL) is followed by
   # an XXX_ASSIGN, then the FUNCTION keyword, anything else isn't a named function.
-  #
-  #  So, even though df is not directly referenced within which(), 
-  #  the logical vectors left_assign and fun_decs, which are derived 
-  #  from df$token, are used to determine the positions where the 
+
+  #  So, even though df is not directly referenced within which(),
+  #  the logical vectors left_assign and fun_decs, which are derived
+  #  from df$token, are used to determine the positions where the
   #  conditions are met. These positions are then used to subset df.
-  name_pos <- which(  dplyr::lead(left_assign, n = 2, default = FALSE) 
+  name_pos <- which(  dplyr::lead(left_assign, n = 2, default = FALSE)
                       & dplyr::lead(fun_decs, n = 4, default = FALSE)    )
 
   # only return the pd rows matching name_pos IDs
   funcs <- df[name_pos, ]
-  # Add in the source file name to the result set 
+  # Add in the source file name to the result set
   funcs <- dplyr::mutate(funcs, source = filename)
   return(funcs)
 }

@@ -74,8 +74,10 @@ generate_output <- function() {
   return(output)
 }
 
-# Messy function 10: Overly complex, hard to maintain
-do_everything <- function(data) {
+# Messy function 10: add comment between
+do_everything <-
+  # comment between equals and function call
+  function(data) {
   # Combine multiple steps, hard to follow
   result <- process_data(data)
   result <- transform_data(result)
@@ -85,6 +87,24 @@ do_everything <- function(data) {
 
 # Example Lambda (anonymous) function
 # Tests that Lambdas are detected as named functions.
-output <- 
+output <-
   (function(x, y) x * y)(3, 4)
 print(output)
+
+
+
+# Example function with lots of comments everywhere
+# Messy function 10: add comment between
+#' a comment
+     lots_of_comments_foo <- # comment here
+  # comment between equals and function call
+     function( # weirdly, a commment here
+    data # comment here
+           ) {
+    # Combine multiple steps, hard to follow
+    result <- process_data(data) # comment here
+    result <- transform_data(result) # comment here
+    output <- generate_output(result) # comment here
+    return(output) # another comment here
+    # final comment
+  }
