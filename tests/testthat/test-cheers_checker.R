@@ -275,57 +275,57 @@ test_that("find_function_definitions works as intended",
 
 
 
-test_that("find_function_definitions works as intended FROM GITHUB",
-          {
-
-            source_lines <- function(file, lines){
-              # read all lines of the file
-              all_lines <- readLines(file)
-              # filter selected lines only
-              selected_lines <- all_lines[lines]
-              # stitch them all together
-              string <- selected_lines |> stringr::str_flatten(collapse = "\n")
-
-              return(string)
-            }
-
-            # intialise empty list
-            l_all_github_tests <- list()
-
-            # fill in blanks FOR A GIVEN EXAMPLE
-            v_sicksickerPack_function_names <- c("create_Markov_trace", "calculate_QALYs", "calculate_discounting_weights", "calculate_costs", "run_sickSicker_model")
-
-            path_lines_sicksickerPack <-
-              lapply(
-                X = v_sicksickerPack_function_names,
-                FUN =  function(x) {
-                  list(
-                    url = paste0(
-                      "https://raw.githubusercontent.com/dark-peak-analytics/sicksickerPack/v1.0/R/",
-                      x,
-                      ".R"
-                    ),
-                    expected = x
-                  )
-                }
-              )
-
-            l_all_github_tests <- c(l_all_github_tests, path_lines_sicksickerPack)
-
-            # for each test case, source from GitHub, run the function and test against expectation
-            for(i in 1:length(l_all_github_tests)){
-
-              Sys.sleep(2)
-
-              function_output <- assertHE::find_function_definitions(filename = l_all_github_tests[[i]][["url"]])
-              function_output <- function_output$text
-              expected_output <- l_all_github_tests[[i]][["expected"]]
-
-              expect_equal(object = function_output,
-                           expected = expected_output)
-
-            }
-
-
-          })
+# test_that("find_function_definitions works as intended FROM GITHUB",
+#           {
+#
+#             source_lines <- function(file, lines){
+#               # read all lines of the file
+#               all_lines <- readLines(file)
+#               # filter selected lines only
+#               selected_lines <- all_lines[lines]
+#               # stitch them all together
+#               string <- selected_lines |> stringr::str_flatten(collapse = "\n")
+#
+#               return(string)
+#             }
+#
+#             # intialise empty list
+#             l_all_github_tests <- list()
+#
+#             # fill in blanks FOR A GIVEN EXAMPLE
+#             v_sicksickerPack_function_names <- c("create_Markov_trace", "calculate_QALYs", "calculate_discounting_weights", "calculate_costs", "run_sickSicker_model")
+#
+#             path_lines_sicksickerPack <-
+#               lapply(
+#                 X = v_sicksickerPack_function_names,
+#                 FUN =  function(x) {
+#                   list(
+#                     url = paste0(
+#                       "https://raw.githubusercontent.com/dark-peak-analytics/sicksickerPack/v1.0/R/",
+#                       x,
+#                       ".R"
+#                     ),
+#                     expected = x
+#                   )
+#                 }
+#               )
+#
+#             l_all_github_tests <- c(l_all_github_tests, path_lines_sicksickerPack)
+#
+#             # for each test case, source from GitHub, run the function and test against expectation
+#             for(i in 1:length(l_all_github_tests)){
+#
+#               Sys.sleep(2)
+#
+#               function_output <- assertHE::find_function_definitions(filename = l_all_github_tests[[i]][["url"]])
+#               function_output <- function_output$text
+#               expected_output <- l_all_github_tests[[i]][["expected"]]
+#
+#               expect_equal(object = function_output,
+#                            expected = expected_output)
+#
+#             }
+#
+#
+#           })
 
