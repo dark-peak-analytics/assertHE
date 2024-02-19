@@ -29,6 +29,13 @@ test_that(desc = "costs estimated correctly", {
     discounting_weights_ = c(0.9661836, 0.9335107, 0.901942, 0.871442, 0.841973)
   )
 
+
+  output2 <- calculate_costs(
+    Markov_trace_ = Markov_trace,
+    costs_ = c("c_H" = 3000, "c_S1" = 4000, "c_S2" = 15000, "c_Trt" = 12000),
+    discounting_weights_ = c(0.9661836, 0.9335107, 0.901942, 0.871442, 0.841973)
+  )
+
   ## Run tests:
   expect_equal(
     expected_output,
@@ -39,4 +46,5 @@ test_that(desc = "costs estimated correctly", {
     object = output,
     type = "double"
   )
+
 })
