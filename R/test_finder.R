@@ -2,7 +2,7 @@
 #'
 #' Searches through a file for function calls using SYMBOL_FUNCTION_CALL
 #'
-#' @param file_path path of file to search in
+#' @param relative_path path of file to search in
 #' @param foo_strings string vector of function names to search for
 #' @param filter_for_test_that whether to filter for only functions used after the call to test_that. Default FALSE.
 #'
@@ -15,17 +15,17 @@
 #' @examples
 #' \dontrun{
 #' function_calls_in_file(
-#' file_path = "tests/testthat/example_project/tests/testthat/test-calculate_costs.R",
+#' relative_path = "tests/testthat/example_project/tests/testthat/test-calculate_costs.R",
 #' foo_strings = "calculate_costs"
 #' )
 #' }
-function_calls_in_file <- function(file_path,
+function_calls_in_file <- function(relative_path = NULL,
                                    foo_strings,
                                    filter_for_test_that = FALSE){
 
   # quick checks
-  assertthat::assert_that(msg = paste("Can't find file at:", file_path),
-                          file.exists(file_path))
+  assertthat::assert_that(msg = paste("Can't find file at:", relative_path),
+                          file.exists(relative_path))
 
   assertthat::assert_that(msg = "No function names provided to 'foo_strings'",
                           is.character(foo_strings) & length(foo_strings) > 0)
@@ -34,7 +34,7 @@ function_calls_in_file <- function(file_path,
                           is.logical(filter_for_test_that))
 
   # parse file and check
-  parsed_file <- parse(file_path,
+  parsed_file <- parse(relative_path,
                        keep.source = TRUE)
 
   df <- utils::getParseData(parsed_file,
@@ -69,10 +69,10 @@ function_calls_in_file <- function(file_path,
   if(nrow(df) == 0) return(NULL)
 
   # combine file path & line number in single string
-  df$location <- paste0(file_path, ":L", df$line)
-  df$foo      <- df$text
+  df$location <- paste0(relative_path, ":L", df$line)
+  df$foo_string  <- df$text
 
-  return(df[, c("foo", "location")])
+  return(df[, c("foo_string", "location")])
 
 }
 
@@ -86,7 +86,7 @@ function_calls_in_file <- function(file_path,
 #'
 #'
 #' @param test_folder folder containing all tests
-#' @param foo_strings function names to search for
+#' @inheritParams function_calls_in_file
 #'
 #' @return dataframe with two columns. 'foo' contains function names, location
 #' contains the location of the tests for each function (file and line number).
@@ -101,10 +101,11 @@ function_calls_in_file <- function(file_path,
 #' test_folder = "./tests/testthat/example_project/tests/testthat")
 #' }
 function_calls_in_folder <- function(test_folder,
-                                     foo_strings) {
+                                     foo_strings,
+                                     filter_for_test_that = F) {
 
   # quick checks
-  assertthat::assert_that(msg = paste("Can't find file at:", file_path),
+  assertthat::assert_that(msg = paste("Can't find folder at:", test_folder),
                           file.exists(test_folder))
 
   assertthat::assert_that(msg = "No function names provided to 'foo_strings'",
@@ -120,25 +121,70 @@ function_calls_in_folder <- function(test_folder,
   # find function names in all files in test folder
   l_foo_test_paths <- lapply(X = v_test_file_paths,
                              FUN = function_calls_in_file,
-                             foo_strings = foo_strings)
+                             foo_strings = foo_strings,
+                             filter_for_test_that = filter_for_test_that)
 
   # remove nulls
   l_foo_test_paths <- l_foo_test_paths |>
     Filter(f = Negate(is.null))
 
-  if(length(l_foo_test_paths) == 0) return(data.frame(foo = foo_strings, location = NA))
+  if(length(l_foo_test_paths) == 0) return(data.frame(foo_string = foo_strings, location = NA))
 
   # get summary dataframe
-  df_summary <- dplyr:::bind_rows(l_foo_test_paths) |>
-                  as.data.frame()
+  df_summary <- dplyr::bind_rows(l_foo_test_paths) |>
+                  as.data.frame() |>
+                  dplyr::rename(test_location = location)
 
   # ensure all function inputs are included in dataframe of outputs
   df_out <- merge(
     x = df_summary,
-    y = data.frame(foo = foo_strings),
-    by = "foo",
+    y = data.frame(foo_string = foo_strings),
+    by = "foo_string",
     all = T
   )
+
+  return(df_out)
+
+}
+
+
+
+
+
+#' Summarise the model functions in a single folder.
+#'
+#' @param foo_folder path to folder containing all functions for the model
+#' @inheritParams function_calls_in_folder
+#'
+#' @return dataframe with three columns. 'foo_string' contains function names, 'foo_location'
+#' contains the location of the function definitions, 'test_location' contains the locations
+#' of tests for each function (both file and line number).
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' foo_folder  <- "./tests/testthat/example_project/R"
+#' test_folder <- "./tests/testthat/example_project/tests/testthat"
+#'
+#' summarise_model(foo_folder = foo_folder,
+#'                 test_folder =  test_folder)
+#' }
+summarise_model <- function(foo_folder,
+                            test_folder) {
+
+  # function summary
+  df_foo_summary <- find_folder_function_definitions(foo_folder = foo_folder)
+
+  # test summary
+  df_test_summary <-
+    function_calls_in_folder(foo_strings = df_foo_summary$foo_string,
+                             test_folder = test_folder)
+
+  # merge the two files
+  df_out <- merge(x = df_foo_summary,
+                  y = df_test_summary,
+                  by = "foo_string",
+                  all.x = T)
 
   return(df_out)
 

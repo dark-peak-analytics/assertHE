@@ -4,10 +4,14 @@
 \alias{function_calls_in_file}
 \title{Find all function calls in file}
 \usage{
-function_calls_in_file(file_path, foo_strings, filter_for_test_that = FALSE)
+function_calls_in_file(
+  relative_path = NULL,
+  foo_strings,
+  filter_for_test_that = FALSE
+)
 }
 \arguments{
-\item{file_path}{path of file to search in}
+\item{relative_path}{path of file to search in}
 
 \item{foo_strings}{string vector of function names to search for}
 
@@ -22,8 +26,10 @@ appended.
 Searches through a file for function calls using SYMBOL_FUNCTION_CALL
 }
 \examples{
+\dontrun{
 function_calls_in_file(
-file_path = "tests/testthat/example_project/tests/testthat/test-calculate_costs.R",
+relative_path = "tests/testthat/example_project/tests/testthat/test-calculate_costs.R",
 foo_strings = "calculate_costs"
 )
+}
 }

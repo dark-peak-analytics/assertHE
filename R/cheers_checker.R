@@ -125,10 +125,9 @@ extract_function_name <- function(string){
 #'
 #' @export
 #'
-#' @example
+#' @examples
 #' \dontrun{
 #' find_function_definitions(filename = "tests/testthat/example_scripts/example_tricky_functions.R")
-
 #' }
 find_function_definitions <- function(filename){
 
@@ -157,6 +156,58 @@ find_function_definitions <- function(filename){
   funcs <- dplyr::mutate(funcs, source = filename)
   return(funcs)
 }
+
+
+
+
+#' @title Creates summary of R files in folder with functions defined within and locations.
+#'
+#' @description Applies find_function_definitions to each file in a folder and aggregate results
+#'
+#' @param foo_folder A folder to apply find_function_definitions to each script in.
+#'
+#' @return A dataframe containing a column for function string and a column for function location.
+#'
+#' @export
+#'
+#' @import dplyr
+#'
+#' @examples
+#' \dontrun{
+#' find_folder_function_definitions(foo_folder = "tests/testthat/example_project")
+#' }
+find_folder_function_definitions <- function(foo_folder) {
+  # get a list of the files in the folder
+  l_files <- list.files(
+    path = foo_folder,
+    recursive = T,
+    full.names = T,
+    pattern = "\\.R$"
+  )
+
+  # loop through, combine all results in single dataframe
+  df_foo_summary <- lapply(X = l_files,
+                           FUN = find_function_definitions) |>
+    dplyr::bind_rows() |>
+    as.data.frame() |>
+    dplyr::rename("foo_string" = "text",
+                  "foo_location" = "source")
+
+  df_foo_summary$foo_location <-
+    paste0(df_foo_summary$foo_location, ":L", df_foo_summary$line1)
+
+
+  return(df_foo_summary[, c("foo_string", "foo_location")])
+}
+
+
+
+
+
+
+
+
+
 
 #' @title Get cheers classification tags from a given file
 #' @description For a provided filepath, identify the cheers classification tags
@@ -236,6 +287,21 @@ return(v_function_names)
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #' @title Get cheers classification tags from a given folder
 #'
 #' @description For a provided folder path, identify the cheers classification tags
@@ -295,6 +361,17 @@ return(df_foos)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 #' @title get all active functions that exist in the global environment
 #'
 #' @description get all active functions that exist in the global environment
@@ -331,3 +408,6 @@ get_active_functions <- function(packages = "assertHE") {
   return(c(v_global, v_packages))
 
 }
+
+
+

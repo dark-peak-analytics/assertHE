@@ -4,12 +4,14 @@
 \alias{function_calls_in_folder}
 \title{Find specific function calls in a folder}
 \usage{
-function_calls_in_folder(test_folder, foo_strings)
+function_calls_in_folder(test_folder, foo_strings, filter_for_test_that = F)
 }
 \arguments{
 \item{test_folder}{folder containing all tests}
 
-\item{foo_strings}{function names to search for}
+\item{foo_strings}{string vector of function names to search for}
+
+\item{filter_for_test_that}{whether to filter for only functions used after the call to test_that. Default FALSE.}
 }
 \value{
 dataframe with two columns. 'foo' contains function names, location
@@ -20,10 +22,11 @@ Runs function_calls_in_file on all files in a folder, and combined results into 
 single dataframe
 }
 \examples{
+\dontrun{
 function_calls_in_folder(foo_strings = c("calculate_costs",
 "calculate_QALYs",
 "create_Markov_trace",
 "FOO_WITH_NO_TESTS"),
 test_folder = "./tests/testthat/example_project/tests/testthat")
-
+}
 }
