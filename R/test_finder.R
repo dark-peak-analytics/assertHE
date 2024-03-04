@@ -14,12 +14,12 @@
 #'
 #' @examples
 #' \dontrun{
-#' function_calls_in_file(
+#' find_function_calls_in_file(
 #' relative_path = "tests/testthat/example_project/tests/testthat/test-calculate_costs.R",
 #' foo_strings = "calculate_costs"
 #' )
 #' }
-function_calls_in_file <- function(relative_path = NULL,
+find_function_calls_in_file <- function(relative_path = NULL,
                                    foo_strings,
                                    filter_for_test_that = FALSE){
 
@@ -81,12 +81,12 @@ function_calls_in_file <- function(relative_path = NULL,
 
 #' Find specific function calls in a folder
 #'
-#' Runs function_calls_in_file on all files in a folder, and combined results into a
+#' Runs find_function_calls_in_file on all files in a folder, and combined results into a
 #' single dataframe
 #'
 #'
 #' @param test_folder folder containing all tests
-#' @inheritParams function_calls_in_file
+#' @inheritParams find_function_calls_in_file
 #'
 #' @return dataframe with two columns. 'foo' contains function names, location
 #' contains the location of the tests for each function (file and line number).
@@ -94,13 +94,13 @@ function_calls_in_file <- function(relative_path = NULL,
 #'
 #' @examples
 #' \dontrun{
-#' function_calls_in_folder(foo_strings = c("calculate_costs",
+#' find_function_calls_in_folder(foo_strings = c("calculate_costs",
 #' "calculate_QALYs",
 #' "create_Markov_trace",
 #' "FOO_WITH_NO_TESTS"),
 #' test_folder = "./tests/testthat/example_project/tests/testthat")
 #' }
-function_calls_in_folder <- function(test_folder,
+find_function_calls_in_folder <- function(test_folder,
                                      foo_strings,
                                      filter_for_test_that = F) {
 
@@ -120,7 +120,7 @@ function_calls_in_folder <- function(test_folder,
 
   # find function names in all files in test folder
   l_foo_test_paths <- lapply(X = v_test_file_paths,
-                             FUN = function_calls_in_file,
+                             FUN = find_function_calls_in_file,
                              foo_strings = foo_strings,
                              filter_for_test_that = filter_for_test_that)
 
@@ -154,7 +154,7 @@ function_calls_in_folder <- function(test_folder,
 #' Summarise the model functions in a single folder.
 #'
 #' @param foo_folder path to folder containing all functions for the model
-#' @inheritParams function_calls_in_folder
+#' @inheritParams find_function_calls_in_folder
 #'
 #' @return dataframe with three columns. 'foo_string' contains function names, 'foo_location'
 #' contains the location of the function definitions, 'test_location' contains the locations
@@ -177,8 +177,8 @@ summarise_model <- function(foo_folder,
 
   # test summary
   df_test_summary <-
-    function_calls_in_folder(foo_strings = df_foo_summary$foo_string,
-                             test_folder = test_folder)
+    find_function_calls_in_folder(foo_strings = df_foo_summary$foo_string,
+                                  test_folder = test_folder)
 
   # merge the two files
   df_out <- merge(x = df_foo_summary,
