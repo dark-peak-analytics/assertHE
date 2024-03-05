@@ -1,60 +1,84 @@
-#' Parse Function
+#' Visualize Project
 #'
-#' This function parses an R expression, breaking it down into its components.
+#' Visualize the dependencies between functions in a project using a network plot.
 #'
-#' @param x An R expression to be parsed.
+#' @param project_path Path to the project folder.
+#' @param foo_path Path to the folder containing foo functions.
+#' @param test_path Path to the folder containing test functions.
 #'
-#' @return A character string or a list of parsed components, depending on the input expression.
+#' @return A visNetwork object representing the network plot of function dependencies.
 #'
-#' @details
-#' If the input expression `x` is not an atomic value, symbol, or an environment pointer,
-#' the function breaks it up into a list of components. It also handles expressions of the
-#' form `foo$bar` by splitting them up, keeping only the relevant parts for parsing.
-#'
-#' If `x` is a list of expressions, the function recursively parses each expression until
-#' they can no longer be listed, filtering out atomic values in the process.
-#'
-#' If `x` is not listable (e.g. a function), it is deparsed into a character string.
+#' @importFrom miceadds source.all
 #'
 #' @examples
 #' \dontrun{
-#' # Parse a simple expression
-#' tmp <- dplyr::across
-#' .parse_function(tmp)
+#' # Visualize project dependencies
+#' visualise_project(
+#' project_path = ".",
+#' foo_path = "R",
+#' test_path = "tests/testthat")
 #' }
-.parse_function <- function (x) {
-  # If expression x is not an atomic value or symbol (i.e., name of object) or
-  # an environment pointer then we can break x up into list of components
-  listable <- (!is.atomic(x) && !is.symbol(x) && !is.environment(x))
+#' @export
+visualise_project <- function(project_path,
+                              foo_path,
+                              test_path) {
+  # Check folder existence
+  stopifnot(dir.exists(project_path),
+            dir.exists(paste0(project_path,"/", foo_path)),
+            dir.exists(paste0(project_path,"/", test_path)))
 
-  if (!is.list(x) && listable) {
-    x <- as.list(x)
+  # Load and summarize the model
+  df_summary <- summarise_model(
+    foo_folder = paste0(project_path,"/", foo_path),
+    test_folder = paste0(project_path,"/", test_path)
+  )
 
-    # Check for expression of the form foo$bar
-    # We still want to split it up because foo might be a function
-    # but we want to get rid of bar, because it's a symbol in foo's namespace
-    # and not a symbol that could be reliably matched to the package namespace
-    if (identical(x[[1]], quote(`$`))) {
-      x <- x[1:2]
-    }
-  }
+  # the scripts must be loaded in the namespace...
+  # so we have to source them all before we can run the code.
+  # ideally we would not need to do this, although its hardly the end of the world
+  miceadds::source.all(path = paste0(project_path,"/", foo_path))
+
+  # Identify function dependencies and create a network plot
+  df_edges <- identify_dependencies(v_unique_foo = df_summary$foo_string)
+
+  # Plot the network of edges and nodes
+  p <- plotNetwork(df_edges,
+                   to_col = "to",
+                   from_col = "from",
+                   df_summary = df_summary)
 
 
-
-  if (listable){
-    # Filter out atomic values because we don't care about them
-    x <- Filter(f = Negate(is.atomic), x = x)
-
-    # Parse each listed expression recursively until
-    # they can't be listed anymore
-    out <- unlist(lapply(x, .parse_function), use.names = FALSE)
-  } else {
-
-    # If not listable, deparse into a character string
-    out <- paste(deparse(x), collapse = "\n")
-  }
-  return(out)
+  return(p)
 }
+
+
+
+
+
+
+#' Identify Dependencies
+#'
+#' Identify dependencies between functions.
+#'
+#' @param v_unique_foo Vector of unique function strings.
+#'
+#' @return A data.table with two columns ("from" and "to") representing the dependencies.
+#'
+#' @importFrom data.table rbindlist
+#'
+#' @export
+identify_dependencies <- function(v_unique_foo) {
+  lapply(
+    X = v_unique_foo,
+    FUN = .called_by,
+    all_functions = v_unique_foo,
+    pkg_env = environment()
+  ) |>
+    data.table::rbindlist(fill = TRUE) |>
+    unique() |>
+    as.data.frame()
+}
+
 
 
 
@@ -153,6 +177,76 @@
 }
 
 
+
+
+
+
+
+#' Parse Function
+#'
+#' This function parses an R expression, breaking it down into its components.
+#'
+#' @param x An R expression to be parsed.
+#'
+#' @return A character string or a list of parsed components, depending on the input expression.
+#'
+#' @details
+#' If the input expression `x` is not an atomic value, symbol, or an environment pointer,
+#' the function breaks it up into a list of components. It also handles expressions of the
+#' form `foo$bar` by splitting them up, keeping only the relevant parts for parsing.
+#'
+#' If `x` is a list of expressions, the function recursively parses each expression until
+#' they can no longer be listed, filtering out atomic values in the process.
+#'
+#' If `x` is not listable (e.g. a function), it is deparsed into a character string.
+#'
+#' @examples
+#' \dontrun{
+#' # Parse a simple expression
+#' tmp <- dplyr::across
+#' .parse_function(tmp)
+#' }
+.parse_function <- function (x) {
+  # If expression x is not an atomic value or symbol (i.e., name of object) or
+  # an environment pointer then we can break x up into list of components
+  listable <- (!is.atomic(x) && !is.symbol(x) && !is.environment(x))
+
+  if (!is.list(x) && listable) {
+    x <- as.list(x)
+
+    # Check for expression of the form foo$bar
+    # We still want to split it up because foo might be a function
+    # but we want to get rid of bar, because it's a symbol in foo's namespace
+    # and not a symbol that could be reliably matched to the package namespace
+    if (identical(x[[1]], quote(`$`))) {
+      x <- x[1:2]
+    }
+  }
+
+
+
+  if (listable){
+    # Filter out atomic values because we don't care about them
+    x <- Filter(f = Negate(is.atomic), x = x)
+
+    # Parse each listed expression recursively until
+    # they can't be listed anymore
+    out <- unlist(lapply(x, .parse_function), use.names = FALSE)
+  } else {
+
+    # If not listable, deparse into a character string
+    out <- paste(deparse(x), collapse = "\n")
+  }
+  return(out)
+}
+
+
+
+
+
+
+
+
 #' Plot Network
 #'
 #' Visualize a network plot using the visNetwork package.
@@ -160,6 +254,7 @@
 #' @param df_edges A data frame containing columns "from" and "to" representing the edges of the network.
 #' @param from_col Name of the column in df_edges representing the source nodes.
 #' @param to_col Name of the column in df_edges representing the target nodes.
+#' @param df_summary A summary dataframe containing the information about each function.
 #'
 #' @return A visNetwork object representing the network plot.
 #'
@@ -171,9 +266,11 @@
 #'
 #' @export
 #' @importFrom visNetwork visNetwork visEdges visOptions
+#' @importFrom dplyr rename
 plotNetwork <- function(df_edges,
                         from_col = "from",
-                        to_col = "to") {
+                        to_col = "to",
+                        df_summary) {
   # Check input validity
   assertthat::assert_that(is.data.frame(df_edges),
             from_col %in% colnames(df_edges),
@@ -184,21 +281,63 @@ plotNetwork <- function(df_edges,
                            from_col = from_col,
                            to_col = to_col)
 
+  df_node_info <- df_summary[, c("foo_string", "foo_location", "test_location")]
+
+  df_node_info <-
+    df_node_info[!duplicated(df_node_info[ , c("foo_string", "foo_location")]), ] |>
+    merge(y = df_nodes,
+          by.x = "foo_string",
+          by.y =  "id",
+          all.y = T) |>
+    dplyr::rename(id = foo_string)
+
+  df_nodes$title <- paste0("Foo Name: ", df_node_info$label,
+                           "<br>Foo Location: ", df_node_info$foo_location,
+                           "<br>Test location: ", df_node_info$test_location)
+
+  df_nodes$color.background <- ifelse(test = is.na(df_node_info$test_location),
+                                      yes = "#fad1d0",
+                                      no  = "#e6ffe6")
+
+  df_nodes$color.border <- ifelse(test = is.na(df_node_info$test_location),
+                                      yes = "#9c0000",
+                                      no  = "#65a765")
+
+  df_nodes$color.highlight <- ifelse(test = is.na(df_node_info$test_location),
+                                     yes = "#9c0000",
+                                     no  = "#65a765")
+
   # Create the network plot
   g <- visNetwork::visNetwork(
     nodes = df_nodes,
     edges = df_edges,
+    main = "Function Network",
+    submain = list(text = 'Functions without a test are <a style="color:#9c0000;">red</a> and those with a test are <a style="color:#65a765;">green</a>. Hover over nodes for more information.',
+                   style = "font-family:Calibri; font-size:15px; text-align:center;"),
+    footer = '<p><a href="https://github.com/dark-peak-analytics/assertHE/">Created with assertHE</a></p>',
     width = "100%"
   ) |>
-    visNetwork::visEdges(arrows = 'to') |>
+    visNetwork::visEdges(arrows = 'from') |>
     visNetwork::visOptions(
+      manipulation = TRUE,
       highlightNearest = list(
         enabled = TRUE,
         degree = nrow(df_nodes),
         algorithm = "hierarchical"
       ),
+      collapse = list(enabled = TRUE),
+      height = "500px",
+      width = "100%",
       nodesIdSelection = TRUE
-    )
+    )# |>
+    #visNetwork::visLegend(#addNodes = list(
+    #  list(label = "yes", color = "#e6ffe6",  font.align = "top"),
+    #  list(label = "no", color= "#fad1d0", font.align = "top")
+    #),
+    #useGroups = FALSE,
+    #width = 0.1,
+    #position = "left",
+    #main = "Testthat?")
 
   return(g)
 }
@@ -234,74 +373,8 @@ processNodes <- function(df_edges,
 
 
 
-#' Visualize Project
-#'
-#' Visualize the dependencies between functions in a project using a network plot.
-#'
-#' @param project_path Path to the project folder.
-#' @param foo_path Path to the folder containing foo functions.
-#' @param test_path Path to the folder containing test functions.
-#'
-#' @return A visNetwork object representing the network plot of function dependencies.
-#'
-#' @importFrom miceadds source.all
-#'
-#' @examples
-#' \dontrun{
-#' # Visualize project dependencies
-#' visualise_project(
-#' project_path = ".",
-#' foo_path = "R",
-#' test_path = "tests/testthat")
-#' }
-#' @export
-visualise_project <- function(project_path,
-                              foo_path,
-                              test_path) {
-  # Check folder existence
-  stopifnot(dir.exists(project_path),
-            dir.exists(paste0(project_path,"/", foo_path)),
-            dir.exists(paste0(project_path,"/", test_path)))
 
-  # Load and summarize the model
-  df_summary <- summarise_model(
-    foo_folder = paste0(project_path,"/", foo_path),
-    test_folder = paste0(project_path,"/", test_path)
-  )
 
-  # the scripts must be loaded in the namespace...
-  # so we have to source them all before we can run the code.
-  # ideally we would not need to do this, although its hardly the end of the world
-  miceadds::source.all(path = paste0(project_path,"/", foo_path))
 
-  # Identify function dependencies and create a network plot
-  df_edges <- identify_dependencies(df_summary$foo_string)
-
-  # Plot the network of edges and nodes
-  return(plotNetwork(df_edges))
-}
-
-#' Identify Dependencies
-#'
-#' Identify dependencies between functions.
-#'
-#' @param v_unique_foo Vector of unique function strings.
-#'
-#' @return A data.table with two columns ("from" and "to") representing the dependencies.
-#'
-#' @importFrom data.table rbindlist
-#'
-#' @export
-identify_dependencies <- function(v_unique_foo) {
-  lapply(
-    X = v_unique_foo,
-    FUN = .called_by,
-    all_functions = v_unique_foo,
-    pkg_env = environment()
-  ) |>
-    data.table::rbindlist(fill = TRUE) |>
-    unique() |>
-    as.data.frame()
-}
 
 
