@@ -297,9 +297,12 @@ plotNetwork <- function(df_edges,
           all.y = T) |>
     dplyr::rename(id = foo_string)
 
-  df_nodes$title <- paste0("Foo Name: ", df_node_info$label,
-                           "<br>Foo Location: ", df_node_info$foo_location,
-                           "<br>Test location: ", df_node_info$test_location)
+  df_nodes$title <- paste0("Foo Name: ",
+                           df_node_info$label,
+                           "<br>Foo Location: ",
+                           "<a href = 'file://~/Projects/GSK/assertHE/tests/testthat/example_project/tests/testthat/test-calculate_costs.R' > test-calculate_costs.R </a>",
+                           "<br>Test location: ",
+                           df_node_info$test_location)
 
   df_nodes$color.background <- ifelse(test = is.na(df_node_info$test_location),
                                       yes = "#fad1d0",
@@ -320,7 +323,7 @@ plotNetwork <- function(df_edges,
     main = "Function Network",
     submain = list(text = 'Functions without a test are <a style="color:#9c0000;">red</a> and those with a test are <a style="color:#65a765;">green</a>. Hover over nodes for more information.',
                    style = "font-family:Calibri; font-size:15px; text-align:center;"),
-    footer = '<p><a href="https://github.com/dark-peak-analytics/assertHE/">Created with assertHE</a></p>',
+    footer = '<a href="https://github.com/dark-peak-analytics/assertHE/">Created with assertHE</a>',
     width = "100%"
   ) |>
     visNetwork::visEdges(arrows = 'from') |>
