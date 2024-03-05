@@ -166,26 +166,35 @@ find_function_calls_in_folder <- function(test_folder,
 #' foo_folder  <- "./tests/testthat/example_project/R"
 #' test_folder <- "./tests/testthat/example_project/tests/testthat"
 #'
-#' summarise_model(foo_folder = foo_folder,
-#'                 test_folder =  test_folder)
+#' summarise_model(foo_folder = foo_folder, test_folder =  test_folder)
+#'
+#' summarise_model(foo_folder = foo_folder, test_folder =  NULL)
+#'
 #' }
 summarise_model <- function(foo_folder,
-                            test_folder) {
+                            test_folder = NULL) {
 
   # function summary
-  df_foo_summary <- find_folder_function_definitions(foo_folder = foo_folder)
+  df <- find_folder_function_definitions(foo_folder = foo_folder)
+
+  # if there is no test folder then there are no test locations...
+  if (is.null(test_folder)) {
+    df$test_location <- NA
+  } else {
 
   # test summary
   df_test_summary <-
-    find_function_calls_in_folder(foo_strings = df_foo_summary$foo_string,
+    find_function_calls_in_folder(foo_strings = df$foo_string,
                                   test_folder = test_folder)
 
   # merge the two files
-  df_out <- merge(x = df_foo_summary,
-                  y = df_test_summary,
-                  by = "foo_string",
-                  all.x = T)
+  df <- merge(x = df,
+              y = df_test_summary,
+              by = "foo_string",
+              all.x = T)
 
-  return(df_out)
+  }
+
+  return(df)
 
 }

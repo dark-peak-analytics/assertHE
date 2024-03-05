@@ -4,7 +4,7 @@
 \alias{visualise_project}
 \title{Visualize Project}
 \usage{
-visualise_project(project_path, foo_path, test_path)
+visualise_project(project_path, foo_path = "R", test_path = NULL)
 }
 \arguments{
 \item{project_path}{Path to the project folder.}
