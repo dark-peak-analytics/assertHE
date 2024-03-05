@@ -20,18 +20,24 @@
 #' }
 #' @export
 visualise_project <- function(project_path,
-                              foo_path,
-                              test_path) {
+                              foo_path = "R",
+                              test_path = NULL) {
+
   # Check folder existence
   stopifnot(dir.exists(project_path),
             dir.exists(paste0(project_path,"/", foo_path)),
             dir.exists(paste0(project_path,"/", test_path)))
 
+  # if test path is null then don't include them in summary...
+  test_path <- if (is.null(test_path)) {
+    NULL
+  } else{
+    paste0(project_path, "/", test_path)
+  }
+
   # Load and summarize the model
-  df_summary <- summarise_model(
-    foo_folder = paste0(project_path,"/", foo_path),
-    test_folder = paste0(project_path,"/", test_path)
-  )
+  df_summary <- summarise_model(foo_folder = paste0(project_path, "/", foo_path),
+                                test_folder = test_path)
 
   # the scripts must be loaded in the namespace...
   # so we have to source them all before we can run the code.
@@ -42,7 +48,7 @@ visualise_project <- function(project_path,
   df_edges <- identify_dependencies(v_unique_foo = df_summary$foo_string)
 
   # Plot the network of edges and nodes
-  p <- plotNetwork(df_edges,
+  p <- plotNetwork(df_edges = df_edges,
                    to_col = "to",
                    from_col = "from",
                    df_summary = df_summary)
@@ -284,7 +290,7 @@ plotNetwork <- function(df_edges,
   df_node_info <- df_summary[, c("foo_string", "foo_location", "test_location")]
 
   df_node_info <-
-    df_node_info[!duplicated(df_node_info[ , c("foo_string", "foo_location")]), ] |>
+    df_node_info[!duplicated(df_node_info[ , "foo_string"]), ] |>
     merge(y = df_nodes,
           by.x = "foo_string",
           by.y =  "id",

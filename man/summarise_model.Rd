@@ -4,7 +4,7 @@
 \alias{summarise_model}
 \title{Summarise the model functions in a single folder.}
 \usage{
-summarise_model(foo_folder, test_folder)
+summarise_model(foo_folder, test_folder = NULL)
 }
 \arguments{
 \item{foo_folder}{path to folder containing all functions for the model}
@@ -24,7 +24,9 @@ Summarise the model functions in a single folder.
 foo_folder  <- "./tests/testthat/example_project/R"
 test_folder <- "./tests/testthat/example_project/tests/testthat"
 
-summarise_model(foo_folder = foo_folder,
-                test_folder =  test_folder)
+summarise_model(foo_folder = foo_folder, test_folder =  test_folder)
+
+summarise_model(foo_folder = foo_folder, test_folder =  NULL)
+
 }
 }
