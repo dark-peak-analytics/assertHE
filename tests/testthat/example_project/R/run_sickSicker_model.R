@@ -40,7 +40,7 @@ run_sickSicker_model <- function(
   ## Run the model using the objects in the params list:
 
   with(
-    data = params,
+    data = params_,
     expr = {
       ## Calculate interim parameters:
 

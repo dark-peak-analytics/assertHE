@@ -17,3 +17,8 @@ Using utils::getParseData(), searches for function definitions
 by matching the FUNCTION keyword (i.e. "function")
 with it's associated SYMBOL (i.e the function name)
 }
+\examples{
+\dontrun{
+find_function_definitions(filename = "tests/testthat/example_scripts/example_tricky_functions.R")
+}
+}
