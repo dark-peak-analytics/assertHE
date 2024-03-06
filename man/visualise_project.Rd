@@ -8,7 +8,12 @@ visualise_project(
   project_path,
   foo_path = "R",
   test_path = NULL,
-  run_coverage = F
+  run_coverage = F,
+  color_no_test = c(background = "#fad1d0", border = "#9c0000", highlight = "#9c0000"),
+  color_with_test = c(background = "#e6ffe6", border = "#65a765", highlight = "#65a765"),
+  color_mod_coverage = c(background = "#FFD580", border = "#E49B0F", highlight =
+    "#E49B0F"),
+  moderate_coverage_range = c(0.2, 0.8)
 )
 }
 \arguments{
@@ -19,6 +24,14 @@ visualise_project(
 \item{test_path}{Path to the folder containing test functions.}
 
 \item{run_coverage}{Boolean determining whether to run coverage assessment}
+
+\item{color_no_test}{named vector with hexcodes for background, border and highlight}
+
+\item{color_with_test}{named vector with hexcodes for background, border and highlight}
+
+\item{color_mod_coverage}{named vector with hexcodes for background, border and highlight where coverage moderate}
+
+\item{moderate_coverage_range}{vector of two values giving range defined as moderate coverage.}
 }
 \value{
 A visNetwork object representing the network plot of function dependencies.

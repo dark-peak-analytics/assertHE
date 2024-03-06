@@ -2,6 +2,7 @@
 #'
 #' Visualize the dependencies between functions in a project using a network plot.
 #'
+#' @inheritParams plotNetwork
 #' @param project_path Path to the project folder.
 #' @param foo_path Path to the folder containing foo functions.
 #' @param test_path Path to the folder containing test functions.
@@ -24,7 +25,11 @@
 visualise_project <- function(project_path,
                               foo_path = "R",
                               test_path = NULL,
-                              run_coverage = F) {
+                              run_coverage = F,
+                              color_no_test = c("background" = "#fad1d0", "border" = "#9c0000", "highlight" = "#9c0000"),
+                              color_with_test = c("background" = "#e6ffe6", "border" = "#65a765", "highlight" = "#65a765"),
+                              color_mod_coverage = c("background" = "#FFD580", "border" = "#E49B0F", "highlight" = "#E49B0F"),
+                              moderate_coverage_range = c(0.2, 0.8)) {
 
   # Check folder existence
   stopifnot(dir.exists(project_path),
@@ -64,7 +69,11 @@ visualise_project <- function(project_path,
                    to_col = "to",
                    from_col = "from",
                    df_summary = df_summary,
-                   df_coverage = df_coverage)
+                   df_coverage = df_coverage,
+                   color_no_test = color_no_test,
+                   color_with_test = color_with_test,
+                   color_mod_coverage = color_mod_coverage,
+                   moderate_coverage_range = moderate_coverage_range)
 
 
   return(p)
@@ -275,6 +284,10 @@ identify_dependencies <- function(v_unique_foo) {
 #' @param to_col Name of the column in df_edges representing the target nodes.
 #' @param df_summary A summary dataframe containing the information about each function.
 #' @param df_coverage a summary dataframe with function names and test coverages
+#' @param color_no_test named vector with hexcodes for background, border and highlight
+#' @param color_with_test named vector with hexcodes for background, border and highlight
+#' @param color_mod_coverage named vector with hexcodes for background, border and highlight where coverage moderate
+#' @param moderate_coverage_range vector of two values giving range defined as moderate coverage.
 #'
 #' @return A visNetwork object representing the network plot.
 #'
@@ -295,7 +308,8 @@ plotNetwork <- function(df_edges,
                         df_coverage,
                         color_no_test = c("background" = "#fad1d0", "border" = "#9c0000", "highlight" = "#9c0000"),
                         color_with_test = c("background" = "#e6ffe6", "border" = "#65a765", "highlight" = "#65a765"),
-                        color_mod_coverage = c("background" = "#FFD580", "border" = "#E49B0F", "highlight" = "#E49B0F")) {
+                        color_mod_coverage = c("background" = "#FFD580", "border" = "#E49B0F", "highlight" = "#E49B0F"),
+                        moderate_coverage_range = c(0.2, 0.8)) {
   # Check input validity
   assertthat::assert_that(is.data.frame(df_edges),
             from_col %in% colnames(df_edges),
@@ -357,21 +371,21 @@ plotNetwork <- function(df_edges,
   if(any(!is.na(df_node_info$coverage))){
 
     df_nodes$color.background <- ifelse(test = between(x = df_node_info$coverage,
-                                                       left = 0.2,
-                                                       right = 0.8),
+                                                       left = moderate_coverage_range[1],
+                                                       right = moderate_coverage_range[2]),
                                         yes = color_mod_coverage["background"],
                                         no  = df_nodes$color.background)
 
 
     df_nodes$color.border <- ifelse(test = between(x = df_node_info$coverage,
-                                                       left = 0.2,
-                                                       right = 0.8),
+                                                       left = moderate_coverage_range[1],
+                                                       right = moderate_coverage_range[2]),
                                         yes = color_mod_coverage["border"],
                                         no  = df_nodes$color.border)
 
     df_nodes$color.highlight <- ifelse(test = between(x = df_node_info$coverage,
-                                                   left = 0.2,
-                                                   right = 0.8),
+                                                   left = moderate_coverage_range[1],
+                                                   right = moderate_coverage_range[2]),
                                     yes = color_mod_coverage["highlight"],
                                     no  = df_nodes$color.highlight)
 
@@ -400,15 +414,7 @@ plotNetwork <- function(df_edges,
       height = "500px",
       width = "100%",
       nodesIdSelection = TRUE
-    )# |>
-    #visNetwork::visLegend(#addNodes = list(
-    #  list(label = "yes", color = "#e6ffe6",  font.align = "top"),
-    #  list(label = "no", color= "#fad1d0", font.align = "top")
-    #),
-    #useGroups = FALSE,
-    #width = 0.1,
-    #position = "left",
-    #main = "Testthat?")
+    )
 
   return(g)
 }
