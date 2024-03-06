@@ -8,6 +8,9 @@
 #'
 #' @export
 #'
+#' @importFrom covr file_coverage
+#' @importFrom dplyr group_by summarise rename
+#'
 #' @examples
 #' \dontrun{
 #' get_foo_coverage(

@@ -274,6 +274,7 @@ identify_dependencies <- function(v_unique_foo) {
 #' @export
 #' @importFrom visNetwork visNetwork visEdges visOptions
 #' @importFrom dplyr rename
+#' @importFrom htmltools a
 plotNetwork <- function(df_edges,
                         from_col = "from",
                         to_col = "to",

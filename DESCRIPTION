@@ -23,4 +23,6 @@ Imports:
     utils,
     data.table,
     visNetwork,
-    miceadds
+    miceadds,
+    covr,
+    htmltools
