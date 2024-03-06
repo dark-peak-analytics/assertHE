@@ -4,7 +4,12 @@
 \alias{visualise_project}
 \title{Visualize Project}
 \usage{
-visualise_project(project_path, foo_path = "R", test_path = NULL)
+visualise_project(
+  project_path,
+  foo_path = "R",
+  test_path = NULL,
+  run_coverage = F
+)
 }
 \arguments{
 \item{project_path}{Path to the project folder.}
@@ -12,6 +17,8 @@ visualise_project(project_path, foo_path = "R", test_path = NULL)
 \item{foo_path}{Path to the folder containing foo functions.}
 
 \item{test_path}{Path to the folder containing test functions.}
+
+\item{run_coverage}{Boolean determining whether to run coverage assessment}
 }
 \value{
 A visNetwork object representing the network plot of function dependencies.
@@ -23,8 +30,9 @@ Visualize the dependencies between functions in a project using a network plot.
 \dontrun{
 # Visualize project dependencies
 visualise_project(
-project_path = ".",
+project_path = "tests/testthat/example_project",
 foo_path = "R",
-test_path = "tests/testthat")
+test_path = "tests/testthat",
+run_coverage = T)
 }
 }

@@ -17,6 +17,8 @@ Applies find_function_definitions to each file in a folder and aggregate results
 }
 \examples{
 \dontrun{
-find_folder_function_definitions(foo_folder = "tests/testthat/example_project")
+find_folder_function_definitions(
+foo_folder = "tests/testthat/example_project"
+)
 }
 }

@@ -2,6 +2,9 @@
 
 utility_example <- function(x = T) {
   if (x) {
+    if(!x){
+    "not run"
+    }
     "example_utility_function"
   } else{
     "something_else"

@@ -4,7 +4,13 @@
 \alias{plotNetwork}
 \title{Plot Network}
 \usage{
-plotNetwork(df_edges, from_col = "from", to_col = "to", df_summary)
+plotNetwork(
+  df_edges,
+  from_col = "from",
+  to_col = "to",
+  df_summary,
+  df_coverage
+)
 }
 \arguments{
 \item{df_edges}{A data frame containing columns "from" and "to" representing the edges of the network.}
@@ -14,6 +20,8 @@ plotNetwork(df_edges, from_col = "from", to_col = "to", df_summary)
 \item{to_col}{Name of the column in df_edges representing the target nodes.}
 
 \item{df_summary}{A summary dataframe containing the information about each function.}
+
+\item{df_coverage}{a summary dataframe with function names and test coverages}
 }
 \value{
 A visNetwork object representing the network plot.

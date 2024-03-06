@@ -5,6 +5,7 @@
 #' @param project_path Path to the project folder.
 #' @param foo_path Path to the folder containing foo functions.
 #' @param test_path Path to the folder containing test functions.
+#' @param run_coverage Boolean determining whether to run coverage assessment
 #'
 #' @return A visNetwork object representing the network plot of function dependencies.
 #'
@@ -14,14 +15,16 @@
 #' \dontrun{
 #' # Visualize project dependencies
 #' visualise_project(
-#' project_path = ".",
+#' project_path = "tests/testthat/example_project",
 #' foo_path = "R",
-#' test_path = "tests/testthat")
+#' test_path = "tests/testthat",
+#' run_coverage = T)
 #' }
 #' @export
 visualise_project <- function(project_path,
                               foo_path = "R",
-                              test_path = NULL) {
+                              test_path = NULL,
+                              run_coverage = F) {
 
   # Check folder existence
   stopifnot(dir.exists(project_path),
@@ -39,6 +42,14 @@ visualise_project <- function(project_path,
   df_summary <- summarise_model(foo_folder = paste0(project_path, "/", foo_path),
                                 test_folder = test_path)
 
+  df_coverage <- NULL
+  # get test coverage
+  if (run_coverage) {
+    df_coverage <-
+      get_foo_coverage(foo_folder  = paste0(project_path, "/", foo_path),
+                       test_folder = test_path)
+  }
+
   # the scripts must be loaded in the namespace...
   # so we have to source them all before we can run the code.
   # ideally we would not need to do this, although its hardly the end of the world
@@ -52,7 +63,8 @@ visualise_project <- function(project_path,
   p <- plotNetwork(df_edges = df_edges,
                    to_col = "to",
                    from_col = "from",
-                   df_summary = df_summary)
+                   df_summary = df_summary,
+                   df_coverage = df_coverage)
 
 
   return(p)
@@ -262,6 +274,7 @@ identify_dependencies <- function(v_unique_foo) {
 #' @param from_col Name of the column in df_edges representing the source nodes.
 #' @param to_col Name of the column in df_edges representing the target nodes.
 #' @param df_summary A summary dataframe containing the information about each function.
+#' @param df_coverage a summary dataframe with function names and test coverages
 #'
 #' @return A visNetwork object representing the network plot.
 #'
@@ -278,7 +291,8 @@ identify_dependencies <- function(v_unique_foo) {
 plotNetwork <- function(df_edges,
                         from_col = "from",
                         to_col = "to",
-                        df_summary) {
+                        df_summary,
+                        df_coverage) {
   # Check input validity
   assertthat::assert_that(is.data.frame(df_edges),
             from_col %in% colnames(df_edges),
@@ -291,21 +305,38 @@ plotNetwork <- function(df_edges,
 
   df_node_info <- df_summary[, c("foo_string", "foo_location", "test_location")]
 
+  # add in foo locations and test location to function strings in the edge dataframe
   df_node_info <-
     df_node_info[!duplicated(df_node_info[ , "foo_string"]), ] |>
     merge(y = df_nodes,
           by.x = "foo_string",
           by.y =  "id",
-          all.y = T) |>
-    dplyr::rename(id = foo_string)
+          all.y = T)
 
+  # add in coverage
+  if (!is.null(df_coverage)) {
+    df_node_info <- df_node_info |>
+      merge(y = df_coverage,
+            by = "foo_string",
+            all.x = T) |>
+      dplyr::rename(id = foo_string)
+  } else{
+    df_node_info <- df_node_info |>
+      dplyr::mutate(coverage = NA) |>
+      dplyr::rename(id = foo_string)
+  }
+
+  # create the html for the toggle...
   df_nodes$title <- paste0("Foo Name: ",
                            df_node_info$label,
                            "<br>Foo Location: ",
-                           as.character(htmltools::a(href = "#", "C:/Users/r_a_s/Documents/Projects/GSK/assertHE/tests/testthat/example_project/tests/testthat/test-calculate_costs.R")),
+                           df_node_info$foo_location,
                            "<br>Test location: ",
-                           df_node_info$test_location)
+                           df_node_info$test_location,
+                           "<br>Coverage: ",
+                           paste0(df_node_info$coverage * 100, "%"))
 
+  # define the colors based upon tests
   df_nodes$color.background <- ifelse(test = is.na(df_node_info$test_location),
                                       yes = "#fad1d0",
                                       no  = "#e6ffe6")
@@ -317,6 +348,32 @@ plotNetwork <- function(df_edges,
   df_nodes$color.highlight <- ifelse(test = is.na(df_node_info$test_location),
                                      yes = "#9c0000",
                                      no  = "#65a765")
+
+
+  # if code coverage is not all nulls
+  if(any(!is.na(df_node_info$coverage))){
+
+    df_nodes$color.background <- ifelse(test = between(x = df_node_info$coverage,
+                                                       left = 0.2,
+                                                       right = 0.8),
+                                        yes = "#FFD580",
+                                        no  = df_nodes$color.background)
+
+
+    df_nodes$color.border <- ifelse(test = between(x = df_node_info$coverage,
+                                                       left = 0.2,
+                                                       right = 0.8),
+                                        yes = "#E49B0F",
+                                        no  = df_nodes$color.border)
+
+    df_nodes$color.highlight <- ifelse(test = between(x = df_node_info$coverage,
+                                                   left = 0.2,
+                                                   right = 0.8),
+                                    yes = "#E49B0F",
+                                    no  = df_nodes$color.highlight)
+
+  }
+
 
   # Create the network plot
   g <- visNetwork::visNetwork(
