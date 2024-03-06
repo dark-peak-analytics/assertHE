@@ -292,7 +292,10 @@ plotNetwork <- function(df_edges,
                         from_col = "from",
                         to_col = "to",
                         df_summary,
-                        df_coverage) {
+                        df_coverage,
+                        color_no_test = c("background" = "#fad1d0", "border" = "#9c0000", "highlight" = "#9c0000"),
+                        color_with_test = c("background" = "#e6ffe6", "border" = "#65a765", "highlight" = "#65a765"),
+                        color_mod_coverage = c("background" = "#FFD580", "border" = "#E49B0F", "highlight" = "#E49B0F")) {
   # Check input validity
   assertthat::assert_that(is.data.frame(df_edges),
             from_col %in% colnames(df_edges),
@@ -338,16 +341,16 @@ plotNetwork <- function(df_edges,
 
   # define the colors based upon tests
   df_nodes$color.background <- ifelse(test = is.na(df_node_info$test_location),
-                                      yes = "#fad1d0",
-                                      no  = "#e6ffe6")
+                                      yes = color_no_test["background"],
+                                      no  = color_with_test["background"])
 
   df_nodes$color.border <- ifelse(test = is.na(df_node_info$test_location),
-                                      yes = "#9c0000",
-                                      no  = "#65a765")
+                                      yes = color_no_test["border"],
+                                      no  = color_with_test["border"])
 
   df_nodes$color.highlight <- ifelse(test = is.na(df_node_info$test_location),
-                                     yes = "#9c0000",
-                                     no  = "#65a765")
+                                     yes = color_no_test["highlight"],
+                                     no  = color_with_test["highlight"])
 
 
   # if code coverage is not all nulls
@@ -356,20 +359,20 @@ plotNetwork <- function(df_edges,
     df_nodes$color.background <- ifelse(test = between(x = df_node_info$coverage,
                                                        left = 0.2,
                                                        right = 0.8),
-                                        yes = "#FFD580",
+                                        yes = color_mod_coverage["background"],
                                         no  = df_nodes$color.background)
 
 
     df_nodes$color.border <- ifelse(test = between(x = df_node_info$coverage,
                                                        left = 0.2,
                                                        right = 0.8),
-                                        yes = "#E49B0F",
+                                        yes = color_mod_coverage["border"],
                                         no  = df_nodes$color.border)
 
     df_nodes$color.highlight <- ifelse(test = between(x = df_node_info$coverage,
                                                    left = 0.2,
                                                    right = 0.8),
-                                    yes = "#E49B0F",
+                                    yes = color_mod_coverage["highlight"],
                                     no  = df_nodes$color.highlight)
 
   }
