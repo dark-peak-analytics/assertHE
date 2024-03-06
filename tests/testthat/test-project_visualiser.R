@@ -17,7 +17,7 @@ test_that("Visualiser Sick Sicker ", {
 
 test_that("Visualiser cx2cea model ", {
 
-  cdx2cea_project_path <- testthat::test_path("cdx2cea")
+  cdx2cea_project_path <- testthat::test_path("cdx2cea_master")
 
   expect_no_error({
 
