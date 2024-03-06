@@ -20,8 +20,8 @@
 #' )
 #' }
 find_function_calls_in_file <- function(relative_path = NULL,
-                                   foo_strings,
-                                   filter_for_test_that = FALSE){
+                                        foo_strings,
+                                        filter_for_test_that = FALSE){
 
   # quick checks
   assertthat::assert_that(msg = paste("Can't find file at:", relative_path),
@@ -101,8 +101,8 @@ find_function_calls_in_file <- function(relative_path = NULL,
 #' test_folder = "./tests/testthat/example_project/tests/testthat")
 #' }
 find_function_calls_in_folder <- function(test_folder,
-                                     foo_strings,
-                                     filter_for_test_that = F) {
+                                          foo_strings,
+                                          filter_for_test_that = F) {
 
   # quick checks
   assertthat::assert_that(msg = paste("Can't find folder at:", test_folder),

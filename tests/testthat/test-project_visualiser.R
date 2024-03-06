@@ -1,6 +1,6 @@
 test_that("test that nothing blows up with visualiser run ", {
 
-  project_path <- testthat::test_path(paste0("example_project"))
+  project_path <- testthat::test_path("example_project")
 
   expect_no_error({
 

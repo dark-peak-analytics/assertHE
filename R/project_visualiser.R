@@ -42,7 +42,8 @@ visualise_project <- function(project_path,
   # the scripts must be loaded in the namespace...
   # so we have to source them all before we can run the code.
   # ideally we would not need to do this, although its hardly the end of the world
-  miceadds::source.all(path = paste0(project_path,"/", foo_path))
+  miceadds::source.all(path = paste0(project_path,"/", foo_path),
+                       print.source = F)
 
   # Identify function dependencies and create a network plot
   df_edges <- identify_dependencies(v_unique_foo = df_summary$foo_string)
@@ -297,9 +298,12 @@ plotNetwork <- function(df_edges,
           all.y = T) |>
     dplyr::rename(id = foo_string)
 
-  df_nodes$title <- paste0("Foo Name: ", df_node_info$label,
-                           "<br>Foo Location: ", df_node_info$foo_location,
-                           "<br>Test location: ", df_node_info$test_location)
+  df_nodes$title <- paste0("Foo Name: ",
+                           df_node_info$label,
+                           "<br>Foo Location: ",
+                           as.character(htmltools::a(href = "#", "C:/Users/r_a_s/Documents/Projects/GSK/assertHE/tests/testthat/example_project/tests/testthat/test-calculate_costs.R")),
+                           "<br>Test location: ",
+                           df_node_info$test_location)
 
   df_nodes$color.background <- ifelse(test = is.na(df_node_info$test_location),
                                       yes = "#fad1d0",
@@ -320,7 +324,7 @@ plotNetwork <- function(df_edges,
     main = "Function Network",
     submain = list(text = 'Functions without a test are <a style="color:#9c0000;">red</a> and those with a test are <a style="color:#65a765;">green</a>. Hover over nodes for more information.',
                    style = "font-family:Calibri; font-size:15px; text-align:center;"),
-    footer = '<p><a href="https://github.com/dark-peak-analytics/assertHE/">Created with assertHE</a></p>',
+    footer = '<a href="https://github.com/dark-peak-analytics/assertHE/">Created with assertHE</a>',
     width = "100%"
   ) |>
     visNetwork::visEdges(arrows = 'from') |>
@@ -362,6 +366,10 @@ plotNetwork <- function(df_edges,
 processNodes <- function(df_edges,
                          from_col = "from",
                          to_col = "to") {
+
+  assertthat::assert_that(msg = "Number of rows of df_edges in 'processNodes' does not exceed 1",
+                          nrow(df_edges) > 1)
+
   df_nodes <- data.frame(
     id = df_edges[, c(from_col, to_col)] |>
       unlist(use.names = FALSE) |>
