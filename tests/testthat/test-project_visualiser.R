@@ -6,7 +6,8 @@ test_that("test that nothing blows up with visualiser run ", {
 
   visualise_project(project_path = project_path,
                     foo_path = "R",
-                    test_path = "tests/testthat")
+                    test_path = "tests/testthat",
+                    run_coverage = T)
 
   })
 

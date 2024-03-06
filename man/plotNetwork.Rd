@@ -4,7 +4,18 @@
 \alias{plotNetwork}
 \title{Plot Network}
 \usage{
-plotNetwork(df_edges, from_col = "from", to_col = "to", df_summary)
+plotNetwork(
+  df_edges,
+  from_col = "from",
+  to_col = "to",
+  df_summary,
+  df_coverage,
+  color_no_test = c(background = "#fad1d0", border = "#9c0000", highlight = "#9c0000"),
+  color_with_test = c(background = "#e6ffe6", border = "#65a765", highlight = "#65a765"),
+  color_mod_coverage = c(background = "#FFD580", border = "#E49B0F", highlight =
+    "#E49B0F"),
+  moderate_coverage_range = c(0.2, 0.8)
+)
 }
 \arguments{
 \item{df_edges}{A data frame containing columns "from" and "to" representing the edges of the network.}
@@ -14,6 +25,16 @@ plotNetwork(df_edges, from_col = "from", to_col = "to", df_summary)
 \item{to_col}{Name of the column in df_edges representing the target nodes.}
 
 \item{df_summary}{A summary dataframe containing the information about each function.}
+
+\item{df_coverage}{a summary dataframe with function names and test coverages}
+
+\item{color_no_test}{named vector with hexcodes for background, border and highlight}
+
+\item{color_with_test}{named vector with hexcodes for background, border and highlight}
+
+\item{color_mod_coverage}{named vector with hexcodes for background, border and highlight where coverage moderate}
+
+\item{moderate_coverage_range}{vector of two values giving range defined as moderate coverage.}
 }
 \value{
 A visNetwork object representing the network plot.

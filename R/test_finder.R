@@ -163,7 +163,7 @@ find_function_calls_in_folder <- function(test_folder,
 #'
 #' @examples
 #' \dontrun{
-#' foo_folder  <- "./tests/testthat/example_project/R"
+#' foo_folder  <- "C:/Users/r_a_s/Documents/Projects/GSK/assertHE/tests/testthat/example_project/R"
 #' test_folder <- "./tests/testthat/example_project/tests/testthat"
 #'
 #' summarise_model(foo_folder = foo_folder, test_folder =  test_folder)
