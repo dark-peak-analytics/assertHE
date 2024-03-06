@@ -174,7 +174,9 @@ find_function_definitions <- function(filename){
 #'
 #' @examples
 #' \dontrun{
-#' find_folder_function_definitions(foo_folder = "tests/testthat/example_project")
+#' find_folder_function_definitions(
+#' foo_folder = "tests/testthat/example_project"
+#' )
 #' }
 find_folder_function_definitions <- function(foo_folder) {
   # get a list of the files in the folder
