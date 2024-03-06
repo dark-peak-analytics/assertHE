@@ -25,7 +25,7 @@
 #' }
 #'
 get_foo_coverage <- function(foo_folder,
-                         test_folder) {
+                             test_folder) {
   source_files <-
     list.files(foo_folder,
                pattern = ".R",
