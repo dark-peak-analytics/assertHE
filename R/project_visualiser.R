@@ -331,6 +331,7 @@ plotNetwork <- function(df_edges,
           all.y = T)
 
   # add in coverage
+  foo_string <- NULL
   if (!is.null(df_coverage)) {
     df_node_info <- df_node_info |>
       merge(y = df_coverage,
