@@ -35,14 +35,13 @@ get_foo_coverage <- function(foo_folder,
                pattern = ".R",
                full.names = T)
 
-  # Use file_coverage() to calculate test coverage
+  # Use file_coverage() to calculate test coverage, and convert to a dataframe
   tmp <- covr::file_coverage(source_files = source_files,
-                             test_files = test_files)
-
-  # convert to a dataframe
-  tmp <- covr:::as.data.frame.coverage(x = tmp)
+                             test_files = test_files) |>
+    as.data.frame()
 
   # group by function and then get proportion not 0
+  functions <- value <- NULL
   tmp <- tmp |>
     dplyr::group_by(functions) |>
     dplyr::summarise(coverage = mean(value > 0))|>
