@@ -116,7 +116,8 @@ find_function_calls_in_folder <- function(test_folder,
   v_test_file_paths <-
     list.files(path = test_folder,
                recursive = TRUE,
-               full.names = TRUE)
+               full.names = TRUE,
+               pattern = "\\.R$")
 
   # find function names in all files in test folder
   l_foo_test_paths <- lapply(X = v_test_file_paths,
