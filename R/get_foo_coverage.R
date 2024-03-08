@@ -36,7 +36,6 @@ get_foo_coverage <- function(foo_folder,
                full.names = T)
 
   # Use file_coverage() to calculate test coverage
-
   tmp <- NULL
 
   tryCatch(
@@ -62,9 +61,10 @@ get_foo_coverage <- function(foo_folder,
   )
 
   # convert to a dataframe
-  tmp <- covr:::as.data.frame.coverage(x = tmp)
+  tmp <- as.data.frame(x = tmp)
 
   # group by function and then get proportion not 0
+  functions <- value <- NULL
   tmp <- tmp |>
     dplyr::group_by(functions) |>
     dplyr::summarise(coverage = mean(value > 0))|>
