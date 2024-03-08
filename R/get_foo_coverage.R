@@ -36,8 +36,30 @@ get_foo_coverage <- function(foo_folder,
                full.names = T)
 
   # Use file_coverage() to calculate test coverage
-  tmp <- covr::file_coverage(source_files = source_files,
-                             test_files = test_files)
+
+  tmp <- NULL
+
+  tryCatch(
+    expr = {
+      invisible({
+        tmp <- #capture.output(
+          covr::file_coverage(source_files = source_files,
+                                                  test_files = test_files)
+          #)
+      })
+    },
+    error = function(cond) {
+      if (grepl(pattern = "fail",
+                ignore.case = T,
+                conditionMessage(cond))) {
+        message(
+          "Code tests fail - please correct before proceeding \nRunning function without code coverage."
+        )
+      } else{
+        message(conditionMessage(cond))
+      }
+    }
+  )
 
   # convert to a dataframe
   tmp <- covr:::as.data.frame.coverage(x = tmp)
