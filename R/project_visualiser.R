@@ -332,15 +332,18 @@ plotNetwork <- function(df_edges,
 
   # add in coverage
   if (!is.null(df_coverage)) {
+
+    foo_string_rename <- c("id" = "foo_string")
+
     df_node_info <- df_node_info |>
       merge(y = df_coverage,
             by = "foo_string",
             all.x = T) |>
-      dplyr::rename(id = foo_string)
+      dplyr::rename(dplyr::all_of(foo_string_rename))
   } else{
     df_node_info <- df_node_info |>
       dplyr::mutate(coverage = NA) |>
-      dplyr::rename(id = foo_string)
+      dplyr::rename(dplyr::all_of(foo_string_rename))
   }
 
   # create the html for the toggle...
