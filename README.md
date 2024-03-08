@@ -5,6 +5,12 @@ You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-da
 
 # assertHE
 
+<div class="logos">
+
+<img src="https://github.com/dark-peak-analytics/darkpeak/blob/main/man/figures/logo_concise.PNG?raw=true" width="120px" align="right">
+
+</div>
+
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/dark-peak-analytics/assertHE/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dark-peak-analytics/assertHE/actions/workflows/R-CMD-check.yaml)
@@ -13,6 +19,12 @@ You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-da
 
 The goal of assertHE is to identify errors and bugs in health economic
 evaluation models early in the development process.
+
+For more context about the aims of the wider project please read [the
+wiki](https://github.com/dark-peak-analytics/assertHE/wiki/assertHE:-an-R-package-to-improve-quality-assurance-of-health-economic-models).
+
+To get involved, please see the [Contribution
+guide](https://github.com/dark-peak-analytics/assertHE/blob/main/CONTRIBUTING.md)
 
 ## Installation
 
@@ -26,9 +38,17 @@ devtools::install_github("dark-peak-analytics/assertHE")
 library(assertHE)
 ```
 
-## Example
+## Using the package
 
-This is a basic example which shows you how to solve a common problem:
+### Internal checks for modellers
+
+The package has a series of functions to be used **within models** to
+check that the objects created conform to standard rules
+(e.g. probabilities between 0 and 1).
+
+The code below shows a basic example which shows you how to use
+`check_trans_prob_array` to ensure that the time dependent transition
+probability array is balanced.
 
 ``` r
 library(assertHE)
@@ -90,12 +110,45 @@ check_trans_prob_array(a_P = a_P,
 # 10                                         H; at cycle 10
 ```
 
-[Robert Smith](https://www.linkedin.com/in/robert-smith-53b28438) <sup>
-1,2 </sup>
+### Reviewing model structure
 
-<sup> 1 </sup> *Public Health Economics and Decision Science, University
-of Sheffield, UK* <br> <sup> 2 </sup> *Dark Peak Analytics, Sheffield,
-UK*
+The below code creates a visual representation of the model structure
+for a given project. The user must provide a path to the project folder,
+the location of functions (typically “R”) and the location of tests
+(typically “tests/testthat”). It shows only the local functions, not
+those called from external packages.
+
+``` r
+
+visualise_project(
+  project_path = "path_to_project_directory",
+  foo_path = "R",
+  test_path = "tests/testthat",
+  run_coverage = T)
+```
+
+The result is a visual representation of the model functions. This gives
+some indication of how to review the model since each function can be
+checked in isolation and in combination. It may also reveal redundant
+code.
+
+The below is an example of using the function on the cdx2cea model. The
+red nodes are the ones without tests, the green nodes are the ones with
+tests. When hovering over a function we can see more information
+including where it is defined (file and line number) and where the test
+(if any) resides. The coverage % of the function is also provided. Tests
+with coverage \<20% are in red, between 20-80% in orange, and above 80%
+in green. These are arbitrary cut-points, reviewers should assess
+sufficiency of testing.
+
+<figure>
+<img
+src="https://github.com/dark-peak-analytics/assertHE/assets/41961614/0d330730-1e0b-40d9-b18b-b2ee14511cb6"
+alt="Function network for cdx2cea" />
+<figcaption aria-hidden="true">Function network for cdx2cea</figcaption>
+</figure>
+
+[Dr. Robert Smith](https://www.linkedin.com/in/robert-smith-53b28438)
 
 Contact: <rsmith@darkpeakanalytics.com>
 
