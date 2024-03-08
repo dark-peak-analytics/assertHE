@@ -43,8 +43,7 @@ get_foo_coverage <- function(foo_folder,
       invisible({
         tmp <- #capture.output(
           covr::file_coverage(source_files = source_files,
-                                                  test_files = test_files) |>
-    as.data.frame()
+                                                  test_files = test_files)
           #)
       })
     },
@@ -62,7 +61,7 @@ get_foo_coverage <- function(foo_folder,
   )
 
   # convert to a dataframe
-  tmp <- covr:::as.data.frame.coverage(x = tmp)
+  tmp <- as.data.frame(x = tmp)
 
   # group by function and then get proportion not 0
   functions <- value <- NULL
