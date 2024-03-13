@@ -29,7 +29,9 @@ source_files <- function(path = ".",
 
   # Filter out any directories which might match the Directory exclude regex
   if (!is.null(dirExclRegx)) {
-    files <- files[!grepl(dirExclRegx, dirname(files))]
+    # the directory exclusion is from the path provided, not the full path
+    file_path_within_directory <- gsub(pattern = path, replacement =  "", x = dirname(files))
+    files <- files[!grepl(dirExclRegx, file_path_within_directory) ]
   }
 
   # Source each file
