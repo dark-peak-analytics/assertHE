@@ -24,7 +24,7 @@ test_that("source_files works at sourcing a file with no functions", {
   })
 
   # now we should have the functions in the global environment.
-  expect_true(object = script_has_been_run)
+  expect_true(object = "script_has_been_run" %in% ls(globalenv()))
 
 })
 
@@ -35,22 +35,16 @@ test_that("source_files works at sourcing a file with no functions", {
 
 test_that("dirExclRegx works as intended", {
 
-  #expect_output({
-  #  source_files(path = testthat::test_path("example_project"))
-  #})
+  expect_no_error({
+    source_files(path = testthat::test_path("example_project"),
+                 fileExclRegx = "model.R",
+                 dirExclRegx = "tests",
+                 verbose = F)
+  })
 
-  #expect_silent({
-  #  source_files(path = testthat::test_path("example_project"),
-  #               dirExclRegx = "tests",
-  #               fileIncRegx = "\\.R$")
-  #})
-
- # expect_equal(object = {
- #   rm(list = ls(globalenv()))
- #   source_files(path = testthat::test_path("example_project"),
- #                fileExclRegx = ".R")
- #   ls(globalenv())
- # },expected =  as.character(NULL))
+  # now we should have the functions in the global environment.
+  expect_true(object = "calculate_costs" %in% ls(globalenv()),
+              label = "calculate costs exists in environment")
 
 
 
