@@ -1,6 +1,7 @@
 
 
-#' source files based upon regular expression searching
+#' @title source_files 
+#' @description Source files based upon regular expression searching
 #' # IMPORTANT !!!
 #' sourcing *this* file is a mistake - may result in infinite recursion
 #' @param file_regx = ".*" - a regular expression for files to source
@@ -15,7 +16,6 @@
 #'
 #' @export
 #'
-#' @importFrom base
 #'
 #' @examples
 #' \dontrun{
