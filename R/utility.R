@@ -4,10 +4,12 @@
 #' # IMPORTANT !!!
 #' sourcing *this* file is a mistake - may result in infinite recursion
 #' @param file_regx = ".*" - a regular expression for files to source
-#' @param dir_regx = "." - a regular expression for directories to search
+#' @param path = "." - a path to search
 #' @param recursive = TRUE - recurse into subdirectories 
 #' @param exclude_files = NULL - a regular expression for files to filter (from the results of file_regx)
 #' @param exclude_dirs = NULL - a regular expression for directories to filter (from the results of dir_regx)
+#' @param local = !testthat::is_testing() - see base::source() for details
+#' @param verbose = FALSE - whether to emit the sourced files.
 #' 
 #' @return list of files sourced
 #'
@@ -18,18 +20,23 @@
 #' @examples
 #' \dontrun{
 #' source_files(file_regx = ".*",  ## any file name
-#'  dir_regx = ".*",   # the current directory and all subdirectories
+#'  path = ".*",   # the current directory and all subdirectories
 #'  recursive = FALSE  # don't recurse
 #'  exclude_files = ".*utility.*",   # don't source any file with the string "utility" anywhere in its basename
 #'  exclude_dirs = "\/tmp\/"  # don't source any files which reside in any directory named "tmp", or its subdirectories
 #' )
 #' }
 #'
-source_files <- function(file_regx = ".*",  dir_regx = ".", recursive = TRUE, exclude_files = NULL, exclude_dirs = NULL, local=!testthat::is_testing() ) {
-  
+source_files <- function( file_regx = ".*",  
+                          path = ".", 
+                          recursive = TRUE, 
+                          exclude_files = NULL, 
+                          exclude_dirs = NULL, 
+                          local=!testthat::is_testing(), 
+                          verbose=FALSE) {
   
   # Get the list of files matching file_regx in directories matching dir_regx
-  files <- list.files(path = dir_regx, pattern = file_regx, recursive, full.names = TRUE)
+  files <- list.files(path = path, pattern = file_regx, recursive=recursive, full.names = TRUE)
 
   # Filter out directories - can't source a directory !
   files <- files[file.info(files)$isdir == FALSE]
@@ -46,7 +53,7 @@ source_files <- function(file_regx = ".*",  dir_regx = ".", recursive = TRUE, ex
 
   # Source each file
   for (file in files) {
-    source(file, local=local)
+    source(file, local=local, echo=verbose)
   }
   return (files)
 }
