@@ -148,6 +148,12 @@ alt="Function network for cdx2cea" />
 <figcaption aria-hidden="true">Function network for cdx2cea</figcaption>
 </figure>
 
+### Acknowledgements
+
+We would like to thank the following people who tested the package on closed-source models and provided feedback which has made the code more robust:
+- [nialldavison](https://github.com/dark-peak-analytics/assertHE/issues?q=is%3Apr+author%3Anialldavison)
+
+
 [Dr. Robert Smith](https://www.linkedin.com/in/robert-smith-53b28438)
 
 Contact: <rsmith@darkpeakanalytics.com>
