@@ -2,7 +2,6 @@ rm(list = ls())
 
 # devtools::install_github("dark-peak-analytics/sicksickerPack")
 library(sicksickerPack)
-library(miceadds)
 library(assertHE)
 
 # source local functions

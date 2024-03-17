@@ -10,8 +10,6 @@
 #'
 #' @return A visNetwork object representing the network plot of function dependencies.
 #'
-#' @importFrom miceadds source.all
-#'
 #' @examples
 #' \dontrun{
 #' # Visualize project dependencies
@@ -58,8 +56,8 @@ visualise_project <- function(project_path,
   # the scripts must be loaded in the namespace...
   # so we have to source them all before we can run the code.
   # ideally we would not need to do this, although its hardly the end of the world
-  miceadds::source.all(path = paste0(project_path,"/", foo_path),
-                       print.source = F)
+  source_files(path = paste0(project_path,"/", foo_path),
+                       verbose = F)
 
   # Identify function dependencies and create a network plot
   df_edges <- identify_dependencies(v_unique_foo = df_summary$foo_string)
