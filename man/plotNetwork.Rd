@@ -14,7 +14,8 @@ plotNetwork(
   color_with_test = c(background = "#e6ffe6", border = "#65a765", highlight = "#65a765"),
   color_mod_coverage = c(background = "#FFD580", border = "#E49B0F", highlight =
     "#E49B0F"),
-  moderate_coverage_range = c(0.2, 0.8)
+  moderate_coverage_range = c(0.2, 0.8),
+  show_in_shiny = FALSE
 )
 }
 \arguments{
@@ -35,6 +36,9 @@ plotNetwork(
 \item{color_mod_coverage}{named vector with hexcodes for background, border and highlight where coverage moderate}
 
 \item{moderate_coverage_range}{vector of two values giving range defined as moderate coverage.}
+
+\item{show_in_shiny}{logical scalar indicating whether to prepare/deploy the
+netowrk using a built in shiny app. Default is \code{FALSE}.}
 }
 \value{
 A visNetwork object representing the network plot.
