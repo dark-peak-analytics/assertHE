@@ -14,12 +14,21 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Visualize project dependencies
+#' # Visualize project dependencies in HTML
 #' visualise_project(
-#' project_path = "tests/testthat/example_project",
-#' foo_path = "R",
-#' test_path = "tests/testthat",
-#' run_coverage = T)
+#'   project_path = "tests/testthat/example_project",
+#'   foo_path = "R",
+#'   test_path = "tests/testthat",
+#'   run_coverage = TRUE
+#' )
+#' # Visualize project dependencies in shiny
+#' visualise_project(
+#'   project_path = "tests/testthat/example_project",
+#'   foo_path = "R",
+#'   test_path = "tests/testthat",
+#'   run_coverage = TRUE,
+#'   show_in_shiny = TRUE
+#' )
 #' }
 #' @export
 visualise_project <- function(project_path,
@@ -873,7 +882,6 @@ define_app_server <- function(network_object) {
 #' @param network_object visNetwork object to be displayed in the shiny app
 #'
 #' @return A shiny app
-#' @export
 #'
 #' @examples
 #' \dontrun {

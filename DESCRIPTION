@@ -26,4 +26,5 @@ Imports:
     miceadds,
     covr,
     htmltools,
-    shiny
+    shiny,
+    shinyjs

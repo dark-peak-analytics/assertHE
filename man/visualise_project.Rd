@@ -45,11 +45,20 @@ Visualize the dependencies between functions in a project using a network plot.
 }
 \examples{
 \dontrun{
-# Visualize project dependencies
+# Visualize project dependencies in HTML
 visualise_project(
-project_path = "tests/testthat/example_project",
-foo_path = "R",
-test_path = "tests/testthat",
-run_coverage = T)
+  project_path = "tests/testthat/example_project",
+  foo_path = "R",
+  test_path = "tests/testthat",
+  run_coverage = TRUE
+)
+# Visualize project dependencies in shiny
+visualise_project(
+  project_path = "tests/testthat/example_project",
+  foo_path = "R",
+  test_path = "tests/testthat",
+  run_coverage = TRUE,
+  show_in_shiny = TRUE
+)
 }
 }
