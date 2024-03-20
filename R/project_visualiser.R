@@ -364,29 +364,38 @@ plotNetwork <- function(df_edges,
   if(isTRUE(show_in_shiny)) {
     for (index in 1:length(foo_paths)) {
       df_nodes$title[index] <- paste0(
-        "Foo Name: ",
+        "<b>Foo Name</b>: ",
         df_node_info$label[index],
-        "<br>Foo Location: ", foo_paths[index], " ",
-        #"<i class='fa fa-external-link' ",
+        "<br><b>Foo Location</b>: ", foo_paths[index], " ",
         "<i class='fa fa-eye' ",
         "title='Open function definition in browser' ",
         "aria-hidden='true' style='cursor:pointer; color: #337ab7;' id='",
         paste0("openFileInShiny_", df_node_info$label[index]),
-        "' onclick=\"openInShiny('", foo_paths[index], "');\"></i>",
+        "' onclick=\"openInShiny('", foo_paths[index], "');\"></i>", " ",
+        "<i class='fa fa-external-link' ",
+        "title='Open function definition in RStudio' ",
+        "aria-hidden='true' style='cursor:pointer; color: #75AADB;' id='",
+        paste0("openFileInShiny_", df_node_info$label[index]),
+        "' onclick=\"openInRStudio('", foo_paths[index], "');\"></i>",
         # skip "Test location" if coverage is 0%, cleaned_test_path == "".
         ifelse(
           test_paths[index] == "",
           "",
           paste0(
-            "<br>Test location: ", test_paths[index], " ",
+            "<br><b>Test location</b>: ", test_paths[index], " ",
             "<i class='fa fa-eye' ",
             "title='Open function test(s) in browser' ",
             "aria-hidden='true' style='cursor:pointer; color: #337ab7;' id='",
             paste0("openFileInShiny_", df_node_info$label[index], "_test"),
-            "' onclick=\"openInShiny('", test_paths[index], "');\"></i>"
+            "' onclick=\"openInShiny('", test_paths[index], "');\"></i>", " ",
+            "<i class='fa fa-external-link' ",
+            "title='Open function test(s) in RStudio' ",
+            "aria-hidden='true' style='cursor:pointer; color: #75AADB;' id='",
+            paste0("openFileInShiny_", df_node_info$label[index], "_test"),
+            "' onclick=\"openInRStudio('", test_paths[index], "');\"></i>"
           )
         ),
-        "<br>Coverage: ",
+        "<br><b>Coverage</b>: ",
         paste0(df_node_info$coverage[index] * 100, "%")
       )
     }
@@ -586,6 +595,7 @@ define_app_ui <- function() {
       shiny::tags$script("
       // Initialize a variable to mirror the value of 'openInShiny'
       var currentOpenInShinyValue = null;
+      var currentOpenInRstudioValue = null;
 
       function openInShiny(file_location) {
         console.log('Executing JavaScript function openInShiny');
@@ -599,19 +609,48 @@ define_app_ui <- function() {
           Shiny.setInputValue('openInShiny', null, {priority: 'event'});
           Shiny.setInputValue('close_tab', null, {priority: 'event'});
 
-          // Use setTimeout to ensure the null value is processed before setting the new value
+          // Use setTimeout to ensure the null value is processed before setting
+          // the new value
           setTimeout(function() {
             Shiny.setInputValue('openInShiny', file_location, {priority: 'event'});
           }, 10);
         } else {
 
-          // Directly set 'openInShiny' to 'file_location' if the values are different
+          // Directly set 'openInShiny' to 'file_location' if the values are
+          // different
           Shiny.setInputValue('openInShiny', file_location, {priority: 'event'});
         }
 
         // Update the mirror variable to reflect the new value
         currentOpenInShinyValue = file_location;
       }
+
+      function openInRStudio(file_location) {
+        console.log('Executing JavaScript function openInRStudio');
+        console.log('File location: ' + file_location);
+
+        // Check if the current value is the same as 'file_location'
+        if (currentOpenInRstudioValue === file_location) {
+
+          // Temporarily set 'openInRStudio' to null to ensure the change is
+          // detected
+          Shiny.setInputValue('openInRStudio', null, {priority: 'event'});
+
+          // Use setTimeout to ensure the null value is processed before setting
+          // the new value
+          setTimeout(function() {
+            Shiny.setInputValue('openInRStudio', file_location, {priority: 'event'});
+          }, 10);
+
+        } else {
+
+          // Directly set 'openInRStudio' to 'file_location'
+          Shiny.setInputValue('openInRStudio', file_location);
+        }
+
+       // Update the mirror variable to reflect the new value
+        currentOpenInRstudioValue = file_location;
+   }
 
       $(document).on('shiny:connected', function(event) {
         function adjustTabHeight() {
@@ -706,11 +745,40 @@ define_app_server <- function(network_object) {
     # Render the network visual
     output$networkPlot <- visNetwork::renderVisNetwork(network_object)
 
-    # Observer to handle opening files in a new tab
+    # Observer to handle opening files in RStudio
     shiny::observeEvent(
       ignoreNULL = TRUE,
       ignoreInit = TRUE,
-      eventExpr = input$openInShiny, {
+      eventExpr = input$openInRStudio,
+      handlerExpr = {
+        # Open the file in RStudio
+        file_location <- input$openInRStudio
+        file_path <- get_function_path(
+          file_location = file_location
+        )
+        function_line <- get_function_line(
+          file_location = file_location
+        )
+
+        if (file.exists(file_path)) {
+          rstudioapi::navigateToFile(
+            file = file_path,
+            line = function_line
+          )
+        } else {
+          shiny::showNotification(
+            paste("File not found:", file_path),
+            type = "error"
+          )
+        }
+      })
+
+    # Observer to handle opening files in a new tab within the shiny app
+    shiny::observeEvent(
+      ignoreNULL = TRUE,
+      ignoreInit = TRUE,
+      eventExpr = input$openInShiny,
+      handlerExpr = {
         if(input$openInShiny != "") {
           file_location <- input$openInShiny
           file_location <- get_function_path(
@@ -768,11 +836,12 @@ define_app_server <- function(network_object) {
         }
       })
 
-    # Observer to remove the current tab
+    # Observer to remove the tab opened in the shiny app
     observeEvent(
       ignoreNULL = TRUE,
       ignoreInit = TRUE,
-      eventExpr = input$close_tab, {
+      eventExpr = input$close_tab,
+      handlerExpr = {
         print("detecting closer")
         print(input$close_tab)
         print("compare")
