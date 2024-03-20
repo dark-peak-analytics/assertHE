@@ -91,6 +91,21 @@ test_that(desc = "Check summarise_model works for sicksickerPack example",
 
             expect_true(nrow(tmp) > 0)
 
+            expect_no_error({
+              summarise_model(foo_folder = foo_folder,
+                                     test_folder =  test_folder,
+                                     output_format = "latex")
+              })
+
+            expect_no_error({
+              summarise_model(foo_folder = foo_folder,
+                              test_folder =  test_folder,
+                              output_format = "word")
+            })
+
+
+
+
           })
 
 
