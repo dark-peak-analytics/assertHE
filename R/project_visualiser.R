@@ -472,24 +472,24 @@ processNodes <- function(df_edges,
 #'
 #' @examples
 #' \dontrun{
-#' cleaned_file_path <- clean_file_path(
+#' cleaned_file_path <- get_function_path(
 #'  file_location = "tests/testthat/example_project/R/calculate_QALYs.R:L41"
 #' )
-#' cleaned_file_path <- clean_file_path(
+#' cleaned_file_path <- get_function_path(
 #'  file_location = c(
 #'    "tests/testthat/example_project/R/calculate_QALYs.R:L41",
 #'    "tests/testthat/example_project/R/calculate_QALYs.R:L49"
 #'  )
 #' )
 #' }
-clean_file_path <- function(file_location) {
+get_function_path <- function(file_location) {
 
-  clean_file_path <- gsub(":.*", "", file_location)
+  get_function_path <- gsub(":.*", "", file_location)
 
   full_file_path <- ifelse(
-    test = is.na(clean_file_path),
+    test = is.na(get_function_path),
     yes =  "",
-    no = paste0(here::here(), "/", clean_file_path)
+    no = paste0(here::here(), "/", get_function_path)
   )
 
   return(full_file_path)
@@ -504,17 +504,17 @@ clean_file_path <- function(file_location) {
 #'
 #' @examples
 #' \dontrun{
-#' cleaned_function_line <- clean_function_line(
+#' cleaned_function_line <- get_function_line(
 #'  file_location = "tests/testthat/example_project/R/calculate_QALYs.R:L41"
 #' )
-#' cleaned_function_line <- clean_function_line(
+#' cleaned_function_line <- get_function_line(
 #'  file_location = c(
 #'    "tests/testthat/example_project/R/calculate_QALYs.R:L41",
 #'    "tests/testthat/example_project/R/calculate_QALYs.R:L49"
 #'  )
 #' )
 #' }
-clean_function_line <- function(file_location) {
+get_function_line <- function(file_location) {
 
   function_line <- gsub(".*:L", "", file_location)
 
@@ -527,16 +527,12 @@ clean_function_line <- function(file_location) {
   return(function_line)
 }
 
-
-
 #' Create Shiny app UI
 #'
 #' @return Shiny app user interface
 define_app_ui <- function() {
 
   shiny::fluidPage(
-    # Enable shinyJs
-    shinyjs::useShinyjs(),
     shiny::tags$head(
       shiny::tags$script("
       // Initialize a variable to mirror the value of 'openInRStudio'
@@ -658,7 +654,7 @@ define_app_server <- function(network_object) {
       eventExpr = input$openInRStudio, {
         if(input$openInRStudio != "") {
           file_location <- input$openInRStudio
-          file_location <- assertHE::clean_file_path(
+          file_location <- get_function_path(
             file_location = file_location
           )
           tab_name <- basename(file_location)
@@ -726,7 +722,6 @@ define_app_server <- function(network_object) {
       })
   }
 }
-
 
 #' Run a Shiny app to host a network visualization
 #'

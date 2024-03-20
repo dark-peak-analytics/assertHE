@@ -25,4 +25,5 @@ Imports:
     visNetwork,
     miceadds,
     covr,
-    htmltools
+    htmltools,
+    shiny
