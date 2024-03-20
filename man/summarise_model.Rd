@@ -4,12 +4,14 @@
 \alias{summarise_model}
 \title{Summarise the model functions in a single folder.}
 \usage{
-summarise_model(foo_folder, test_folder = NULL)
+summarise_model(foo_folder, test_folder = NULL, output_format = "dataframe")
 }
 \arguments{
 \item{foo_folder}{path to folder containing all functions for the model}
 
 \item{test_folder}{folder containing all tests}
+
+\item{output_format}{output format to use, defaults to dataframe, options include latex and word.}
 }
 \value{
 dataframe with three columns. 'foo_string' contains function names, 'foo_location'

@@ -25,4 +25,8 @@ Imports:
     visNetwork,
     miceadds,
     covr,
-    htmltools
+    htmltools,
+    officer,
+    flextable,
+    knitr,
+    here
