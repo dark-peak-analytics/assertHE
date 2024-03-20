@@ -312,8 +312,8 @@ plotNetwork <- function(df_edges,
                         moderate_coverage_range = c(0.2, 0.8)) {
   # Check input validity
   assertthat::assert_that(is.data.frame(df_edges),
-            from_col %in% colnames(df_edges),
-            to_col %in% colnames(df_edges))
+                          from_col %in% colnames(df_edges),
+                          to_col %in% colnames(df_edges))
 
   # Extract unique nodes from the dataframe
   df_nodes <- processNodes(df_edges = df_edges,
@@ -345,14 +345,28 @@ plotNetwork <- function(df_edges,
   }
 
   # create the html for the toggle...
-  df_nodes$title <- paste0("Foo Name: ",
-                           df_node_info$label,
-                           "<br>Foo Location: ",
-                           df_node_info$foo_location,
-                           "<br>Test location: ",
-                           df_node_info$test_location,
-                           "<br>Coverage: ",
-                           paste0(df_node_info$coverage * 100, "%"))
+  foo_paths <- df_node_info$foo_location
+  test_paths <- df_node_info$test_location
+
+  df_nodes$title <- paste0(
+    "Foo Name: ",
+    df_node_info$label,
+    "<br>Foo Location: <a href=\"#\" onclick=\"openInRStudio('",
+    foo_paths, "'); event.preventDefault();\">",
+    df_node_info$foo_location, "</a>",
+    # skip "Test location" if coverage is 0%, cleaned_test_path == "".
+    ifelse(
+      test = test_paths == "",
+      yes = "",
+      no = paste0(
+        "<br>Test location: <a href=\"#\" onclick=\"openInRStudio('",
+        test_paths, "'); event.preventDefault();\">",
+        df_node_info$test_location, "</a>"
+      )
+    ),
+    "<br>Coverage: ",
+    paste0(df_node_info$coverage * 100, "%")
+  )
 
   # define the colors based upon tests
   df_nodes$color.background <- ifelse(test = is.na(df_node_info$test_location),
@@ -360,8 +374,8 @@ plotNetwork <- function(df_edges,
                                       no  = color_with_test["background"])
 
   df_nodes$color.border <- ifelse(test = is.na(df_node_info$test_location),
-                                      yes = color_no_test["border"],
-                                      no  = color_with_test["border"])
+                                  yes = color_no_test["border"],
+                                  no  = color_with_test["border"])
 
   df_nodes$color.highlight <- ifelse(test = is.na(df_node_info$test_location),
                                      yes = color_no_test["highlight"],
@@ -379,16 +393,16 @@ plotNetwork <- function(df_edges,
 
 
     df_nodes$color.border <- ifelse(test = between(x = df_node_info$coverage,
-                                                       left = moderate_coverage_range[1],
-                                                       right = moderate_coverage_range[2]),
-                                        yes = color_mod_coverage["border"],
-                                        no  = df_nodes$color.border)
-
-    df_nodes$color.highlight <- ifelse(test = between(x = df_node_info$coverage,
                                                    left = moderate_coverage_range[1],
                                                    right = moderate_coverage_range[2]),
-                                    yes = color_mod_coverage["highlight"],
-                                    no  = df_nodes$color.highlight)
+                                    yes = color_mod_coverage["border"],
+                                    no  = df_nodes$color.border)
+
+    df_nodes$color.highlight <- ifelse(test = between(x = df_node_info$coverage,
+                                                      left = moderate_coverage_range[1],
+                                                      right = moderate_coverage_range[2]),
+                                       yes = color_mod_coverage["highlight"],
+                                       no  = df_nodes$color.highlight)
 
   }
 
@@ -419,6 +433,8 @@ plotNetwork <- function(df_edges,
 
   return(g)
 }
+
+
 
 #' Process Nodes
 #'
@@ -453,10 +469,70 @@ processNodes <- function(df_edges,
 
 
 
+#' Remove artefacts from file path
+#'
+#' @param file_location Character scalar specifying the path of a file.
+#'
+#' @return A character scalar
+#'
+#' @importFrom here here
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' cleaned_file_path <- clean_file_path(
+#'  file_location = "tests/testthat/example_project/R/calculate_QALYs.R:L41"
+#' )
+#' cleaned_file_path <- clean_file_path(
+#'  file_location = c(
+#'    "tests/testthat/example_project/R/calculate_QALYs.R:L41",
+#'    "tests/testthat/example_project/R/calculate_QALYs.R:L49"
+#'  )
+#' )
+#' }
+clean_file_path <- function(file_location) {
 
+  clean_file_path <- gsub(":.*", "", file_location)
 
+  full_file_path <- ifelse(
+    test = is.na(clean_file_path),
+    yes =  "",
+    no = paste0(here::here(), "/", clean_file_path)
+  )
 
+  return(full_file_path)
+}
 
+#' Extract function line in file path
+#'
+#' @param file_location Character scalar specifying the path of a file.
+#'
+#' @return A numeric scalar
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' cleaned_function_line <- clean_function_line(
+#'  file_location = "tests/testthat/example_project/R/calculate_QALYs.R:L41"
+#' )
+#' cleaned_function_line <- clean_function_line(
+#'  file_location = c(
+#'    "tests/testthat/example_project/R/calculate_QALYs.R:L41",
+#'    "tests/testthat/example_project/R/calculate_QALYs.R:L49"
+#'  )
+#' )
+#' }
+clean_function_line <- function(file_location) {
 
+  function_line <- gsub(".*:L", "", file_location)
+
+  function_line <- ifelse(
+    test = is.na(function_line),
+    yes =  -1L,
+    no = as.numeric(function_line)
+  )
+
+  return(function_line)
+}
 
 
