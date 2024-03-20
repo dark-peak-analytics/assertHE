@@ -533,6 +533,9 @@ get_function_line <- function(file_location) {
 define_app_ui <- function() {
 
   shiny::fluidPage(
+    # Initialize shinyjs
+    shinyjs::useShinyjs(),
+    # Define javaScript functions
     shiny::tags$head(
       shiny::tags$script("
       // Initialize a variable to mirror the value of 'openInRStudio'
@@ -581,6 +584,7 @@ define_app_ui <- function() {
         adjustTabHeight();
       });
     "),
+      # Define CSS
       shiny::tags$style("
       /* CSS to make tab content scrollable */
       .tab-content {
@@ -588,19 +592,22 @@ define_app_ui <- function() {
       }
     ")
     ),
+    # Define main panel
     shiny::fluidRow(
       shiny::column(
-        width = 6,
+        width = 11,
         visNetwork::visNetworkOutput(
           outputId = "networkPlot"
-        )
+        ),
+        id = "mainColumn"
       ),
       shiny::column(
-        width = 6,
-        # Define a tabsetPanel to contain the dynamic tabs
+        width = 1,
+        # Define a tabsetPanel to contain the dynamic tabs showing user code
         shiny::tabsetPanel(
-          id = "fileTabs"  # Set an ID for the tabsetPanel
-        )
+          id = "fileTabs"
+        ),
+        id = "tabColumn"
       )
     )
   )
@@ -682,6 +689,14 @@ define_app_server <- function(network_object) {
               cat(paste(file_content, collapse = "\n"))
             })
 
+            # Dynamically adjust column widths
+            shinyjs::runjs(
+              '$("#mainColumn").removeClass("col-sm-11").addClass("col-sm-6");'
+            )
+            shinyjs::runjs(
+              '$("#tabColumn").removeClass("col-sm-1").addClass("col-sm-6");'
+            )
+
             # Insert the new tab and set it to the current
             shiny::insertTab(
               inputId = "fileTabs",
@@ -718,6 +733,13 @@ define_app_server <- function(network_object) {
           )
           # Reset the current tab ID
           currentTabId(NULL)
+          # Reset columns width
+          shinyjs::runjs(
+            '$("#mainColumn").removeClass("col-sm-6").addClass("col-sm-11");'
+          )
+          shinyjs::runjs(
+            '$("#tabColumn").removeClass("col-sm-6").addClass("col-sm-1");'
+          )
         }
       })
   }
