@@ -97,11 +97,6 @@ visualise_project <- function(project_path,
   }
 }
 
-
-
-
-
-
 #' Identify Dependencies
 #'
 #' Identify dependencies between functions.
@@ -124,11 +119,6 @@ identify_dependencies <- function(v_unique_foo) {
     unique() |>
     as.data.frame()
 }
-
-
-
-
-
 
 #' Called By
 #'
@@ -222,12 +212,6 @@ identify_dependencies <- function(v_unique_foo) {
 
 }
 
-
-
-
-
-
-
 #' Parse Function
 #'
 #' This function parses an R expression, breaking it down into its components.
@@ -285,13 +269,6 @@ identify_dependencies <- function(v_unique_foo) {
   }
   return(out)
 }
-
-
-
-
-
-
-
 
 #' Plot Network
 #'
@@ -410,19 +387,19 @@ plotNetwork <- function(df_edges,
     }
   } else {
     df_nodes$title <- paste0(
-      "Foo Name: ",
+      "<b>Foo Name</b>: ",
       df_node_info$label,
-      "<br>Foo Location: ", df_node_info$foo_location,
+      "<br><b>Foo Location</b>: ", df_node_info$foo_location,
       # skip "Test location" if coverage is 0%, cleaned_test_path == "".
       ifelse(
         test = test_paths == "",
         yes = NULL,
         no = paste0(
-          "<br>Test location: ",
+          "<br><b>Test location</b>: ",
           df_node_info$test_location
         )
       ),
-      "<br>Coverage: ",
+      "<br><b>Coverage</b>: ",
       paste0(df_node_info$coverage * 100, "%")
     )
   }
@@ -904,11 +881,3 @@ run_shiny_app <- function(
     server = serverFunction(network_object = network_object)
   )
 }
-
-
-
-
-
-
-
-
