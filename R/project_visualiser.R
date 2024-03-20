@@ -590,6 +590,14 @@ define_app_ui <- function() {
       .tab-content {
         overflow-y: auto; /* Enable vertical scrolling */
       }
+
+      /* Style for custom tab content background */
+      .custom-tab-content {
+        background-color: #f5f5f5;
+        padding-bottom: 5px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+      }
     ")
     ),
     # Define main panel
@@ -636,7 +644,10 @@ define_app_server <- function(network_object) {
             )
           )
         ),
-        shiny::verbatimTextOutput(outputId = contentOutputId),
+        shiny::div(
+          class = "custom-tab-content",
+          shiny::verbatimTextOutput(outputId = contentOutputId)
+        ),
         value = contentOutputId  # Assign the contentOutputId as the tab's value for easy identification
       )
     }
@@ -644,15 +655,8 @@ define_app_server <- function(network_object) {
     # Keep track of the current tab's output ID
     currentTabId <- shiny::reactiveVal(NULL)
 
-    output$networkPlot <- visNetwork::renderVisNetwork({
-      network_object
-      # visualise_project(
-      #   project_path = "tests/testthat/example_project",
-      #   foo_path = "R",
-      #   test_path = "tests/testthat",
-      #   run_coverage = TRUE
-      # )
-    })
+    # Render the network visual
+    output$networkPlot <- visNetwork::renderVisNetwork(network_object)
 
     # Observer to handle opening files in a new tab
     shiny::observeEvent(
