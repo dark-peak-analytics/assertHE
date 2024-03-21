@@ -24,7 +24,7 @@ A shiny app
 Run a Shiny app to host a network visualization
 }
 \examples{
-\dontrun {
+\dontrun{
 network_object <- visualise_project(
     project_path = "tests/testthat/example_project",
     foo_path = "R",

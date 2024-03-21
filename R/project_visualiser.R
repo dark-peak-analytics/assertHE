@@ -143,7 +143,6 @@ identify_dependencies <- function(v_unique_foo) {
 #' when function is defined within another function, capturing the environment of the outer function.
 #'
 #' @examples
-#'
 #' \dontrun{
 #' # Identify functions called by a specific function
 #' .called_by(
@@ -532,7 +531,8 @@ processNodes <- function(df_edges,
 #' @param file_location Character scalar specifying the path of a file.
 #'
 #' @return A character scalar
-#' @export
+#'
+#' @importFrom here here
 #'
 #' @examples
 #' \dontrun{
@@ -564,7 +564,6 @@ get_function_path <- function(file_location) {
 #' @param file_location Character scalar specifying the path of a file.
 #'
 #' @return A numeric scalar
-#' @export
 #'
 #' @examples
 #' \dontrun{
@@ -591,6 +590,45 @@ get_function_line <- function(file_location) {
   return(function_line)
 }
 
+
+#' Create closable shiny tab
+#'
+#' @param tab_name Character scalar representing the name or title of the shiny
+#' tab.
+#' @param content_output_Id Character scalar representing the id of the shiny
+#' tab.
+#'
+#' @return A tab that can be passed to `shiny::tabsetPanel()`
+make_closable_tab <- function(tab_name, content_output_Id) {
+  shiny::tabPanel(
+    title = shiny::div(
+      style = "display: flex; justify-content: space-between; align-items: center;",
+      shiny::span(
+        shiny::HTML(
+          paste0("<b>", tab_name, "</b>")
+        ),
+        style = "flex-grow: 1;"
+      ),
+      shiny::actionButton(
+        inputId = "close",
+        label = shiny::HTML(
+          '<i class="fa fa-window-close" aria-hidden="true"></i>'
+        ),
+        class = "close-tab",
+        onclick = sprintf(
+          "Shiny.setInputValue('close_tab', '%s');",
+          content_output_Id
+        )
+      )
+    ),
+    shiny::div(
+      class = "custom-tab-content",
+      shiny::verbatimTextOutput(outputId = content_output_Id)
+    ),
+    value = content_output_Id
+  )
+}
+
 #' Create Shiny app UI
 #'
 #' @return Shiny app user interface
@@ -601,7 +639,7 @@ define_app_ui <- function() {
     shinyjs::useShinyjs(),
     # Define javaScript functions
     shiny::tags$head(
-      tags$link(
+      shiny::tags$link(
         rel = "stylesheet",
         type = "text/css",
         href = "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -765,37 +803,6 @@ define_app_ui <- function() {
 #' @return Shiny app server logic
 define_app_server <- function(network_object) {
   function(input, output, session) {
-    # Function to create a closable tab
-    makeClosableTab <- function(tabName, contentOutputId) {
-      shiny::tabPanel(
-        title = div(
-          style = "display: flex; justify-content: space-between; align-items: center;",
-          shiny::span(
-            shiny::HTML(
-              paste0("<b>", tabName, "</b>")
-            ),
-            style = "flex-grow: 1;"
-          ),
-          shiny::actionButton(
-            inputId = "close",
-            label = shiny::HTML(
-              '<i class="fa fa-window-close" aria-hidden="true"></i>'
-            ),
-            class = "close-tab",
-            onclick = sprintf(
-              "Shiny.setInputValue('close_tab', '%s');",
-              contentOutputId
-            )
-          )
-        ),
-        shiny::div(
-          class = "custom-tab-content",
-          shiny::verbatimTextOutput(outputId = contentOutputId)
-        ),
-        value = contentOutputId  # Assign the contentOutputId as the tab's value for easy identification
-      )
-    }
-
     # Keep track of the current tab's output ID
     currentTabId <- shiny::reactiveVal(NULL)
 
@@ -845,8 +852,6 @@ define_app_server <- function(network_object) {
 
           # If there's a current tab open, remove it
           if (!is.null(currentTabId())) {
-            print("I found a tab")
-            print(currentTabId())
             shiny::removeTab(
               inputId = "fileTabs",
               target = currentTabId()
@@ -877,9 +882,9 @@ define_app_server <- function(network_object) {
             # Insert the new tab and set it to the current
             shiny::insertTab(
               inputId = "fileTabs",
-              makeClosableTab(
-                tabName = tab_name,
-                contentOutputId = tab_name
+              make_closable_tab(
+                tab_name = tab_name,
+                content_output_Id = tab_name
               ),
               select = TRUE
             )
@@ -894,17 +899,12 @@ define_app_server <- function(network_object) {
       })
 
     # Observer to remove the tab opened in the shiny app
-    observeEvent(
+    shiny::observeEvent(
       ignoreNULL = TRUE,
       ignoreInit = TRUE,
       eventExpr = input$close_tab,
       handlerExpr = {
-        print("detecting closer")
-        print(input$close_tab)
-        print("compare")
-        print(currentTabId())
         if (!is.null(currentTabId())) {
-          print("Print closing!")
           shiny::removeTab(
             inputId = "fileTabs",
             target = currentTabId()
@@ -931,8 +931,10 @@ define_app_server <- function(network_object) {
 #'
 #' @return A shiny app
 #'
+#' @importFrom rstudioapi navigateToFile
+#'
 #' @examples
-#' \dontrun {
+#' \dontrun{
 #' network_object <- visualise_project(
 #'     project_path = "tests/testthat/example_project",
 #'     foo_path = "R",
