@@ -757,11 +757,16 @@ define_app_ui <- function() {
     ),
     shiny::HTML(
       paste0(
-        '<div id="subtitlenetworkPlot" style="font-family:Calibri; ',
-        'font-size:15px; text-align:center;;background-color: ',
-        'inherit;">Functions without a test are <a style="color:#9c0000;',
-        '">red</a> and those with a test are <a style="color:#65a765;',
-        '">green</a>. Hover over nodes for more information.</div>'
+        '<div id="subtitlenetworkPlot" ',
+        'style="font-family:Calibri; font-size:15px; text-align:center; ',
+        'background-color: inherit;">',
+        'Functions without a test are <a style="color:#9c0000;">red</a> ',
+        'and those with a test are <a style="color:#65a765;">green</a>. ',
+        'Hover over nodes for more information. Click on ',
+        "<i class='fa fa-external-link' aria-hidden='true' ",
+        "style='color: #75AADB;'></i>",' to open the file in RStudio, or on ',
+        "<i class='fa fa-eye' aria-hidden='true' style='color: #337ab7;'></i>",
+        ' to load its contents into a new browser tab.</div>'
       )
     ),
     # Define main panel
