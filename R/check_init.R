@@ -9,7 +9,10 @@
 #' @return If successful there is no message, otherwise, it issues warnings with
 #' informative messages for each failed condition.
 #'
+#' @export
+#'
 #' @examples
+#' \dontrun{
 #' x <- setNames(object = c(0.2, 0.3, 0.4, 0.1), nm = letters[1:4])
 #' check_init(x) # Should issue warnings for values outside 0-1 and the sum not equal to 1
 #'
@@ -18,8 +21,7 @@
 #'
 #' x <- c(-2, 0.3, 0.4, 0.1) # Missing names
 #' check_init(x) # Should issue a warning about a value below 0 and about not summing to 1
-#'
-#' @export
+#' }
 check_init <- function(x) {
   # Check that all values of x are between 0 and 1
   if (any(x < 0) || any(x > 1) || any(is.na(x))) {

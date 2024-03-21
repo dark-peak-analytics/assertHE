@@ -14,12 +14,22 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Visualize project dependencies
+#' # Visualize project dependencies in HTML
 #' visualise_project(
-#' project_path = "tests/testthat/example_project",
-#' foo_path = "R",
-#' test_path = "tests/testthat",
-#' run_coverage = T)
+#'   project_path = "tests/testthat/example_project",
+#'   foo_path = "R",
+#'   test_path = "tests/testthat",
+#'   run_coverage = TRUE
+#' )
+#'
+#' # Visualize project dependencies in shiny
+#' visualise_project(
+#'   project_path = "tests/testthat/example_project",
+#'   foo_path = "R",
+#'   test_path = "tests/testthat",
+#'   run_coverage = TRUE,
+#'   show_in_shiny = TRUE
+#' )
 #' }
 #' @export
 visualise_project <- function(project_path,
@@ -29,7 +39,8 @@ visualise_project <- function(project_path,
                               color_no_test = c("background" = "#fad1d0", "border" = "#9c0000", "highlight" = "#9c0000"),
                               color_with_test = c("background" = "#e6ffe6", "border" = "#65a765", "highlight" = "#65a765"),
                               color_mod_coverage = c("background" = "#FFD580", "border" = "#E49B0F", "highlight" = "#E49B0F"),
-                              moderate_coverage_range = c(0.2, 0.8)) {
+                              moderate_coverage_range = c(0.2, 0.8),
+                              show_in_shiny = FALSE) {
 
   # Check folder existence
   stopifnot(dir.exists(project_path),
@@ -65,24 +76,27 @@ visualise_project <- function(project_path,
   df_edges <- identify_dependencies(v_unique_foo = df_summary$foo_string)
 
   # Plot the network of edges and nodes
-  p <- plotNetwork(df_edges = df_edges,
-                   to_col = "to",
-                   from_col = "from",
-                   df_summary = df_summary,
-                   df_coverage = df_coverage,
-                   color_no_test = color_no_test,
-                   color_with_test = color_with_test,
-                   color_mod_coverage = color_mod_coverage,
-                   moderate_coverage_range = moderate_coverage_range)
+  p <- plotNetwork(
+    df_edges = df_edges,
+    to_col = "to",
+    from_col = "from",
+    df_summary = df_summary,
+    df_coverage = df_coverage,
+    color_no_test = color_no_test,
+    color_with_test = color_with_test,
+    color_mod_coverage = color_mod_coverage,
+    moderate_coverage_range = moderate_coverage_range,
+    show_in_shiny = show_in_shiny
+  )
 
+  if(!isTRUE(show_in_shiny)) {
 
-  return(p)
+    return(p)
+  } else {
+
+    run_shiny_app(network_object = p)
+  }
 }
-
-
-
-
-
 
 #' Identify Dependencies
 #'
@@ -107,11 +121,6 @@ identify_dependencies <- function(v_unique_foo) {
     as.data.frame()
 }
 
-
-
-
-
-
 #' Called By
 #'
 #' Identify functions called by a given function within a specified project folder
@@ -134,7 +143,6 @@ identify_dependencies <- function(v_unique_foo) {
 #' when function is defined within another function, capturing the environment of the outer function.
 #'
 #' @examples
-#'
 #' \dontrun{
 #' # Identify functions called by a specific function
 #' .called_by(
@@ -204,12 +212,6 @@ identify_dependencies <- function(v_unique_foo) {
 
 }
 
-
-
-
-
-
-
 #' Parse Function
 #'
 #' This function parses an R expression, breaking it down into its components.
@@ -268,13 +270,6 @@ identify_dependencies <- function(v_unique_foo) {
   return(out)
 }
 
-
-
-
-
-
-
-
 #' Plot Network
 #'
 #' Visualize a network plot using the visNetwork package.
@@ -288,6 +283,8 @@ identify_dependencies <- function(v_unique_foo) {
 #' @param color_with_test named vector with hexcodes for background, border and highlight
 #' @param color_mod_coverage named vector with hexcodes for background, border and highlight where coverage moderate
 #' @param moderate_coverage_range vector of two values giving range defined as moderate coverage.
+#' @param show_in_shiny logical scalar indicating whether to prepare/deploy the
+#' netowrk using a built in shiny app. Default is `FALSE`.
 #'
 #' @return A visNetwork object representing the network plot.
 #'
@@ -309,11 +306,12 @@ plotNetwork <- function(df_edges,
                         color_no_test = c("background" = "#fad1d0", "border" = "#9c0000", "highlight" = "#9c0000"),
                         color_with_test = c("background" = "#e6ffe6", "border" = "#65a765", "highlight" = "#65a765"),
                         color_mod_coverage = c("background" = "#FFD580", "border" = "#E49B0F", "highlight" = "#E49B0F"),
-                        moderate_coverage_range = c(0.2, 0.8)) {
+                        moderate_coverage_range = c(0.2, 0.8),
+                        show_in_shiny = FALSE) {
   # Check input validity
   assertthat::assert_that(is.data.frame(df_edges),
-            from_col %in% colnames(df_edges),
-            to_col %in% colnames(df_edges))
+                          from_col %in% colnames(df_edges),
+                          to_col %in% colnames(df_edges))
 
   # Extract unique nodes from the dataframe
   df_nodes <- processNodes(df_edges = df_edges,
@@ -345,64 +343,151 @@ plotNetwork <- function(df_edges,
   }
 
   # create the html for the toggle...
-  df_nodes$title <- paste0("Foo Name: ",
-                           df_node_info$label,
-                           "<br>Foo Location: ",
-                           df_node_info$foo_location,
-                           "<br>Test location: ",
-                           df_node_info$test_location,
-                           "<br>Coverage: ",
-                           paste0(df_node_info$coverage * 100, "%"))
+  foo_paths <- df_node_info$foo_location
+  test_paths <- df_node_info$test_location
+
+  df_nodes$title <- NULL
+  if(isTRUE(show_in_shiny)) {
+    for (index in 1:length(foo_paths)) {
+      df_nodes$title[index] <- paste0(
+        "<b>Foo Name</b>: ",
+        df_node_info$label[index],
+        "<br><b>Foo Location</b>: ", foo_paths[index], " ",
+        "<i class='fa fa-eye' ",
+        "title='Open function definition in browser' ",
+        "aria-hidden='true' style='cursor:pointer; color: #337ab7;' id='",
+        paste0("openFileInShiny_", df_node_info$label[index]),
+        "' onclick=\"openInShiny('", foo_paths[index], "');\"></i>", " ",
+        "<i class='fa fa-external-link' ",
+        "title='Open function definition in RStudio' ",
+        "aria-hidden='true' style='cursor:pointer; color: #75AADB;' id='",
+        paste0("openFileInShiny_", df_node_info$label[index]),
+        "' onclick=\"openInRStudio('", foo_paths[index], "');\"></i>",
+        "<br><b>Test location</b>:",
+        # skip "Test location" if coverage is 0%, cleaned_test_path == "".
+        ifelse(
+          test = test_paths[index] == "",
+          yes = " ",
+          no = paste0(
+            " ",
+            test_paths[index],
+            " ",
+            "<i class='fa fa-eye' ",
+            "title='Open function test(s) in browser' ",
+            "aria-hidden='true' style='cursor:pointer; color: #337ab7;' id='",
+            paste0("openFileInShiny_", df_node_info$label[index], "_test"),
+            "' onclick=\"openInShiny('",
+            test_paths[index],
+            "');\"></i>",
+            " ",
+            "<i class='fa fa-external-link' ",
+            "title='Open function test(s) in RStudio' ",
+            "aria-hidden='true' style='cursor:pointer; color: #75AADB;' id='",
+            paste0("openFileInShiny_", df_node_info$label[index], "_test"),
+            "' onclick=\"openInRStudio('",
+            test_paths[index],
+            "');\"></i>"
+          )
+        ),
+        "<br><b>Coverage</b>: ",
+        paste0(df_node_info$coverage[index] * 100, "%")
+      )
+    }
+  } else {
+    df_nodes$title <- paste0(
+      "<b>Foo Name</b>: ",
+      df_node_info$label,
+      "<br><b>Foo Location</b>: ", df_node_info$foo_location,
+      # skip "Test location" if coverage is 0%, cleaned_test_path == "".
+      ifelse(
+        test = test_paths == "",
+        yes = NULL,
+        no = paste0(
+          "<br><b>Test location</b>: ",
+          df_node_info$test_location
+        )
+      ),
+      "<br><b>Coverage</b>: ",
+      paste0(df_node_info$coverage * 100, "%")
+    )
+  }
 
   # define the colors based upon tests
-  df_nodes$color.background <- ifelse(test = is.na(df_node_info$test_location),
-                                      yes = color_no_test["background"],
-                                      no  = color_with_test["background"])
+  df_nodes$color.background <- ifelse(
+    test = is.na(df_node_info$test_location),
+    yes = color_no_test["background"],
+    no  = color_with_test["background"]
+  )
 
-  df_nodes$color.border <- ifelse(test = is.na(df_node_info$test_location),
-                                      yes = color_no_test["border"],
-                                      no  = color_with_test["border"])
+  df_nodes$color.border <- ifelse(
+    test = is.na(df_node_info$test_location),
+    yes = color_no_test["border"],
+    no  = color_with_test["border"]
+  )
 
-  df_nodes$color.highlight <- ifelse(test = is.na(df_node_info$test_location),
-                                     yes = color_no_test["highlight"],
-                                     no  = color_with_test["highlight"])
+  df_nodes$color.highlight <- ifelse(
+    test = is.na(df_node_info$test_location),
+    yes = color_no_test["highlight"],
+    no  = color_with_test["highlight"]
+  )
 
 
   # if code coverage is not all nulls
   if(any(!is.na(df_node_info$coverage))){
 
-    df_nodes$color.background <- ifelse(test = between(x = df_node_info$coverage,
-                                                       left = moderate_coverage_range[1],
-                                                       right = moderate_coverage_range[2]),
-                                        yes = color_mod_coverage["background"],
-                                        no  = df_nodes$color.background)
+    df_nodes$color.background <- ifelse(
+      test = between(x = df_node_info$coverage,
+                     left = moderate_coverage_range[1],
+                     right = moderate_coverage_range[2]),
+      yes = color_mod_coverage["background"],
+      no  = df_nodes$color.background
+    )
 
 
-    df_nodes$color.border <- ifelse(test = between(x = df_node_info$coverage,
-                                                       left = moderate_coverage_range[1],
-                                                       right = moderate_coverage_range[2]),
-                                        yes = color_mod_coverage["border"],
-                                        no  = df_nodes$color.border)
+    df_nodes$color.border <- ifelse(
+      test = between(x = df_node_info$coverage,
+                     left = moderate_coverage_range[1],
+                     right = moderate_coverage_range[2]),
+      yes = color_mod_coverage["border"],
+      no  = df_nodes$color.border
+    )
 
-    df_nodes$color.highlight <- ifelse(test = between(x = df_node_info$coverage,
-                                                   left = moderate_coverage_range[1],
-                                                   right = moderate_coverage_range[2]),
-                                    yes = color_mod_coverage["highlight"],
-                                    no  = df_nodes$color.highlight)
-
+    df_nodes$color.highlight <- ifelse(
+      test = between(x = df_node_info$coverage,
+                     left = moderate_coverage_range[1],
+                     right = moderate_coverage_range[2]),
+      yes = color_mod_coverage["highlight"],
+      no  = df_nodes$color.highlight
+    )
   }
 
-
   # Create the network plot
-  g <- visNetwork::visNetwork(
-    nodes = df_nodes,
-    edges = df_edges,
-    main = "Function Network",
-    submain = list(text = 'Functions without a test are <a style="color:#9c0000;">red</a> and those with a test are <a style="color:#65a765;">green</a>. Hover over nodes for more information.',
-                   style = "font-family:Calibri; font-size:15px; text-align:center;"),
-    footer = '<a href="https://github.com/dark-peak-analytics/assertHE/">Created with assertHE</a>',
-    width = "100%"
-  ) |>
+  g <- if(isTRUE(show_in_shiny)){
+    visNetwork::visNetwork(
+      nodes = df_nodes,
+      edges = df_edges,
+      width = "100%"
+    )
+  } else {
+    visNetwork::visNetwork(
+      nodes = df_nodes,
+      edges = df_edges,
+      main = "Function Network",
+      submain = list(
+        text = paste0(
+          'Functions without a test are <a style="color:#9c0000;">red</a> and ',
+          'those with a test are <a style="color:#65a765;">green</a>. Hover ',
+          'over nodes for more information.'
+        ),
+        style = "font-family:Calibri; font-size:15px; text-align:center;"
+      ),
+      footer = paste0(
+        '<a href="https://github.com/dark-peak-analytics/assertHE/"',
+        '>Created with assertHE</a>'),
+      width = "100%"
+    )
+  }
+  g <- g |>
     visNetwork::visEdges(arrows = 'from') |>
     visNetwork::visOptions(
       manipulation = TRUE,
@@ -449,14 +534,436 @@ processNodes <- function(df_edges,
   return(df_nodes)
 }
 
+#' Remove artefacts from file path
+#'
+#' @param file_location Character scalar specifying the path of a file.
+#'
+#' @return A character scalar
+#'
+#' @importFrom here here
+#'
+#' @examples
+#' \dontrun{
+#' cleaned_file_path <- get_function_path(
+#'  file_location = "tests/testthat/example_project/R/calculate_QALYs.R:L41"
+#' )
+#' cleaned_file_path <- get_function_path(
+#'  file_location = c(
+#'    "tests/testthat/example_project/R/calculate_QALYs.R:L41",
+#'    "tests/testthat/example_project/R/calculate_QALYs.R:L49"
+#'  )
+#' )
+#' }
+get_function_path <- function(file_location) {
+
+  get_function_path <- gsub(":.*", "", file_location)
+
+  full_file_path <- ifelse(
+    test = is.na(get_function_path),
+    yes =  "",
+    no = paste0(here::here(), "/", get_function_path)
+  )
+
+  return(full_file_path)
+}
+
+#' Extract function line in file path
+#'
+#' @param file_location Character scalar specifying the path of a file.
+#'
+#' @return A numeric scalar
+#'
+#' @examples
+#' \dontrun{
+#' cleaned_function_line <- get_function_line(
+#'  file_location = "tests/testthat/example_project/R/calculate_QALYs.R:L41"
+#' )
+#' cleaned_function_line <- get_function_line(
+#'  file_location = c(
+#'    "tests/testthat/example_project/R/calculate_QALYs.R:L41",
+#'    "tests/testthat/example_project/R/calculate_QALYs.R:L49"
+#'  )
+#' )
+#' }
+get_function_line <- function(file_location) {
+
+  function_line <- gsub(".*:L", "", file_location)
+
+  function_line <- ifelse(
+    test = is.na(function_line),
+    yes =  -1L,
+    no = as.numeric(function_line)
+  )
+
+  return(function_line)
+}
 
 
+#' Create closable shiny tab
+#'
+#' @param tab_name Character scalar representing the name or title of the shiny
+#' tab.
+#' @param content_output_Id Character scalar representing the id of the shiny
+#' tab.
+#'
+#' @return A tab that can be passed to `shiny::tabsetPanel()`
+make_closable_tab <- function(tab_name, content_output_Id) {
+  shiny::tabPanel(
+    title = shiny::div(
+      style = "display: flex; justify-content: space-between; align-items: center;",
+      shiny::span(
+        shiny::HTML(
+          paste0("<b>", tab_name, "</b>")
+        ),
+        style = "flex-grow: 1;"
+      ),
+      shiny::actionButton(
+        inputId = "close",
+        label = shiny::HTML(
+          '<i class="fa fa-window-close" aria-hidden="true"></i>'
+        ),
+        class = "close-tab",
+        onclick = sprintf(
+          "Shiny.setInputValue('close_tab', '%s');",
+          content_output_Id
+        )
+      )
+    ),
+    shiny::div(
+      class = "custom-tab-content",
+      shiny::verbatimTextOutput(outputId = content_output_Id)
+    ),
+    value = content_output_Id
+  )
+}
 
+#' Create Shiny app UI
+#'
+#' @return Shiny app user interface
+define_app_ui <- function() {
 
+  shiny::fluidPage(
+    # Initialize shinyjs
+    shinyjs::useShinyjs(),
+    # Define javaScript functions
+    shiny::tags$head(
+      shiny::tags$link(
+        rel = "stylesheet",
+        type = "text/css",
+        href = "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      ),
+      shiny::tags$script("
+      // Initialize a variable to mirror the value of 'openInShiny'
+      var currentOpenInShinyValue = null;
+      var currentOpenInRstudioValue = null;
 
+      function openInShiny(file_location) {
+        console.log('Executing JavaScript function openInShiny');
+        console.log('File location: ' + file_location);
 
+        // Check if the current value is the same as 'file_location'
+        if (currentOpenInShinyValue === file_location) {
 
+          // Temporarily set 'openInShiny' and 'close_tab' to null
+          // to ensure the change is detected
+          Shiny.setInputValue('openInShiny', null, {priority: 'event'});
+          Shiny.setInputValue('close_tab', null, {priority: 'event'});
 
+          // Use setTimeout to ensure the null value is processed before setting
+          // the new value
+          setTimeout(function() {
+            Shiny.setInputValue('openInShiny', file_location, {priority: 'event'});
+          }, 10);
+        } else {
 
+          // Directly set 'openInShiny' to 'file_location' if the values are
+          // different
+          Shiny.setInputValue('openInShiny', file_location, {priority: 'event'});
+        }
 
+        // Update the mirror variable to reflect the new value
+        currentOpenInShinyValue = file_location;
+      }
 
+      function openInRStudio(file_location) {
+        console.log('Executing JavaScript function openInRStudio');
+        console.log('File location: ' + file_location);
+
+        // Check if the current value is the same as 'file_location'
+        if (currentOpenInRstudioValue === file_location) {
+
+          // Temporarily set 'openInRStudio' to null to ensure the change is
+          // detected
+          Shiny.setInputValue('openInRStudio', null, {priority: 'event'});
+
+          // Use setTimeout to ensure the null value is processed before setting
+          // the new value
+          setTimeout(function() {
+            Shiny.setInputValue('openInRStudio', file_location, {priority: 'event'});
+          }, 10);
+
+        } else {
+
+          // Directly set 'openInRStudio' to 'file_location'
+          Shiny.setInputValue('openInRStudio', file_location);
+        }
+
+       // Update the mirror variable to reflect the new value
+        currentOpenInRstudioValue = file_location;
+   }
+
+      $(document).on('shiny:connected', function(event) {
+        function adjustTabHeight() {
+          var windowHeight = $(window).height();
+          // Distance from the top of the viewport
+          var offsetTop = $('#fileTabs').offset().top;
+          // Subtract any additional margin or padding
+          var tabHeight = windowHeight - offsetTop - 20;
+          $('.tab-content').css('height', tabHeight + 'px');
+        }
+
+        // Adjust the height on window resize
+        $(window).resize(adjustTabHeight);
+
+        // Initial adjustment
+        adjustTabHeight();
+      });
+    "),
+      # Define CSS
+      shiny::tags$style("
+      /* Make tab content scrollable */
+      .tab-content {
+        /* Enable vertical scrolling */
+        overflow-y: auto;
+      }
+
+      /* Style for custom tab content background */
+      .custom-tab-content {
+        background-color: #f5f5f5;
+        padding-bottom: 5px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+      }
+
+      /* Reduce padding around close actionButton */
+      .close-tab {
+        border: none;
+        padding: 5px;
+        margin: 5px;
+        color: red;
+      }
+    ")
+    ),
+    # Define network plot title/subtitle divs
+    shiny::HTML(
+      paste0(
+        '<div id="titlehtmlwidget-b9361e0bc6cd12c5d6d9" style="font-family: ',
+        'Georgia, &quot;Times New Roman&quot;, Times, serif; font-weight: ',
+        'bold; font-size: 20px; text-align: center; background-color: ',
+        'inherit; display: block;">Function Network</div>'
+      )
+    ),
+    shiny::HTML(
+      paste0(
+        '<div id="subtitlenetworkPlot" ',
+        'style="font-family:Calibri; font-size:15px; text-align:center; ',
+        'background-color: inherit;">',
+        'Functions without a test are <a style="color:#9c0000;">red</a> ',
+        'and those with a test are <a style="color:#65a765;">green</a>. ',
+        'Hover over nodes for more information. Click on ',
+        "<i class='fa fa-external-link' aria-hidden='true' ",
+        "style='color: #75AADB;'></i>",' to open the file in RStudio, or on ',
+        "<i class='fa fa-eye' aria-hidden='true' style='color: #337ab7;'></i>",
+        ' to load its contents into a new browser tab.</div>'
+      )
+    ),
+    # Define main panel
+    shiny::fluidRow(
+      shiny::column(
+        # Prevent another tabs from covering network tooltip/popup
+        style = "z-index: 10000;",
+        width = 11,
+        visNetwork::visNetworkOutput(
+          outputId = "networkPlot"
+        ),
+        id = "mainColumn"
+      ),
+      shiny::column(
+        width = 1,
+        # Define a tabsetPanel to contain the dynamic tabs showing user code
+        shiny::tabsetPanel(
+          id = "fileTabs"
+        ),
+        id = "tabColumn"
+      )
+    ),
+    shiny::HTML(
+      paste0(
+        '<div id="footernetworkPlot" style="font-family: Georgia, &quot;Times ',
+        'New Roman&quot;, Times, serif; font-size: 12px; text-align: center; ',
+        'background-color: inherit; display: block;">',
+        '<a href="https://github.com/dark-peak-analytics/assertHE/">',
+        'Created with assertHE</a></div>'
+      )
+    )
+  )
+}
+
+#' Create Shiny app server logic
+#'
+#' @inheritParams run_shiny_app
+#'
+#' @return Shiny app server logic
+define_app_server <- function(network_object) {
+  function(input, output, session) {
+    # Keep track of the current tab's output ID
+    currentTabId <- shiny::reactiveVal(NULL)
+
+    # Render the network visual
+    output$networkPlot <- visNetwork::renderVisNetwork(network_object)
+
+    # Observer to handle opening files in RStudio
+    shiny::observeEvent(
+      ignoreNULL = TRUE,
+      ignoreInit = TRUE,
+      eventExpr = input$openInRStudio,
+      handlerExpr = {
+        # Open the file in RStudio
+        file_location <- input$openInRStudio
+        file_path <- get_function_path(
+          file_location = file_location
+        )
+        function_line <- get_function_line(
+          file_location = file_location
+        )
+
+        if (file.exists(file_path)) {
+          rstudioapi::navigateToFile(
+            file = file_path,
+            line = function_line
+          )
+        } else {
+          shiny::showNotification(
+            paste("File not found:", file_path),
+            type = "error"
+          )
+        }
+      })
+
+    # Observer to handle opening files in a new tab within the shiny app
+    shiny::observeEvent(
+      ignoreNULL = TRUE,
+      ignoreInit = TRUE,
+      eventExpr = input$openInShiny,
+      handlerExpr = {
+        if(input$openInShiny != "") {
+          file_location <- input$openInShiny
+          file_location <- get_function_path(
+            file_location = file_location
+          )
+          tab_name <- basename(file_location)
+
+          # If there's a current tab open, remove it
+          if (!is.null(currentTabId())) {
+            shiny::removeTab(
+              inputId = "fileTabs",
+              target = currentTabId()
+            )
+          }
+
+          # Set the ID of the new tab to be the current one
+          currentTabId(tab_name)
+
+          # Check if the file path is valid
+          if (file.exists(file_location)) {
+            # Read the file content
+            file_content <- readLines(file_location)
+
+            # Create the new tab and output its content
+            output[[tab_name]] <- shiny::renderPrint({
+              cat(paste(file_content, collapse = "\n"))
+            })
+
+            # Dynamically adjust column widths
+            shinyjs::runjs(
+              '$("#mainColumn").removeClass("col-sm-11").addClass("col-sm-6");'
+            )
+            shinyjs::runjs(
+              '$("#tabColumn").removeClass("col-sm-1").addClass("col-sm-6");'
+            )
+
+            # Insert the new tab and set it to the current
+            shiny::insertTab(
+              inputId = "fileTabs",
+              make_closable_tab(
+                tab_name = tab_name,
+                content_output_Id = tab_name
+              ),
+              select = TRUE
+            )
+          } else {
+            # Notify the user if the file is not found
+            shiny::showNotification(
+              ui = paste("File not found:", file_location),
+              type = "error"
+            )
+          }
+        }
+      })
+
+    # Observer to remove the tab opened in the shiny app
+    shiny::observeEvent(
+      ignoreNULL = TRUE,
+      ignoreInit = TRUE,
+      eventExpr = input$close_tab,
+      handlerExpr = {
+        if (!is.null(currentTabId())) {
+          shiny::removeTab(
+            inputId = "fileTabs",
+            target = currentTabId()
+          )
+          # Reset the current tab ID
+          currentTabId(NULL)
+          # Reset columns width
+          shinyjs::runjs(
+            '$("#mainColumn").removeClass("col-sm-6").addClass("col-sm-11");'
+          )
+          shinyjs::runjs(
+            '$("#tabColumn").removeClass("col-sm-6").addClass("col-sm-1");'
+          )
+        }
+      })
+  }
+}
+
+#' Run a Shiny app to host a network visualization
+#'
+#' @param uiFunction Function defining shiny user-interface
+#' @param serverFunction Function defining shiny server logic
+#' @param network_object visNetwork object to be displayed in the shiny app
+#'
+#' @return A shiny app
+#'
+#' @importFrom rstudioapi navigateToFile
+#'
+#' @examples
+#' \dontrun{
+#' network_object <- visualise_project(
+#'     project_path = "tests/testthat/example_project",
+#'     foo_path = "R",
+#'     test_path = "tests/testthat",
+#'     run_coverage = TRUE
+#'  )
+#'
+#'  run_shiny_app(network_object = network_object)
+#' }
+run_shiny_app <- function(
+    uiFunction = define_app_ui,
+    serverFunction = define_app_server,
+    network_object) {
+
+  shiny::shinyApp(
+    ui = uiFunction(),
+    server = serverFunction(network_object = network_object)
+  )
+}
