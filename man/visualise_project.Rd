@@ -52,6 +52,7 @@ visualise_project(
   test_path = "tests/testthat",
   run_coverage = TRUE
 )
+
 # Visualize project dependencies in shiny
 visualise_project(
   project_path = "tests/testthat/example_project",

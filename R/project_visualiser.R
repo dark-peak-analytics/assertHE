@@ -21,6 +21,7 @@
 #'   test_path = "tests/testthat",
 #'   run_coverage = TRUE
 #' )
+#'
 #' # Visualize project dependencies in shiny
 #' visualise_project(
 #'   project_path = "tests/testthat/example_project",
@@ -405,54 +406,81 @@ plotNetwork <- function(df_edges,
   }
 
   # define the colors based upon tests
-  df_nodes$color.background <- ifelse(test = is.na(df_node_info$test_location),
-                                      yes = color_no_test["background"],
-                                      no  = color_with_test["background"])
+  df_nodes$color.background <- ifelse(
+    test = is.na(df_node_info$test_location),
+    yes = color_no_test["background"],
+    no  = color_with_test["background"]
+  )
 
-  df_nodes$color.border <- ifelse(test = is.na(df_node_info$test_location),
-                                  yes = color_no_test["border"],
-                                  no  = color_with_test["border"])
+  df_nodes$color.border <- ifelse(
+    test = is.na(df_node_info$test_location),
+    yes = color_no_test["border"],
+    no  = color_with_test["border"]
+  )
 
-  df_nodes$color.highlight <- ifelse(test = is.na(df_node_info$test_location),
-                                     yes = color_no_test["highlight"],
-                                     no  = color_with_test["highlight"])
+  df_nodes$color.highlight <- ifelse(
+    test = is.na(df_node_info$test_location),
+    yes = color_no_test["highlight"],
+    no  = color_with_test["highlight"]
+  )
 
 
   # if code coverage is not all nulls
   if(any(!is.na(df_node_info$coverage))){
 
-    df_nodes$color.background <- ifelse(test = between(x = df_node_info$coverage,
-                                                       left = moderate_coverage_range[1],
-                                                       right = moderate_coverage_range[2]),
-                                        yes = color_mod_coverage["background"],
-                                        no  = df_nodes$color.background)
+    df_nodes$color.background <- ifelse(
+      test = between(x = df_node_info$coverage,
+                     left = moderate_coverage_range[1],
+                     right = moderate_coverage_range[2]),
+      yes = color_mod_coverage["background"],
+      no  = df_nodes$color.background
+    )
 
 
-    df_nodes$color.border <- ifelse(test = between(x = df_node_info$coverage,
-                                                   left = moderate_coverage_range[1],
-                                                   right = moderate_coverage_range[2]),
-                                    yes = color_mod_coverage["border"],
-                                    no  = df_nodes$color.border)
+    df_nodes$color.border <- ifelse(
+      test = between(x = df_node_info$coverage,
+                     left = moderate_coverage_range[1],
+                     right = moderate_coverage_range[2]),
+      yes = color_mod_coverage["border"],
+      no  = df_nodes$color.border
+    )
 
-    df_nodes$color.highlight <- ifelse(test = between(x = df_node_info$coverage,
-                                                      left = moderate_coverage_range[1],
-                                                      right = moderate_coverage_range[2]),
-                                       yes = color_mod_coverage["highlight"],
-                                       no  = df_nodes$color.highlight)
-
+    df_nodes$color.highlight <- ifelse(
+      test = between(x = df_node_info$coverage,
+                     left = moderate_coverage_range[1],
+                     right = moderate_coverage_range[2]),
+      yes = color_mod_coverage["highlight"],
+      no  = df_nodes$color.highlight
+    )
   }
 
-
   # Create the network plot
-  g <- visNetwork::visNetwork(
-    nodes = df_nodes,
-    edges = df_edges,
-    main = "Function Network",
-    submain = list(text = 'Functions without a test are <a style="color:#9c0000;">red</a> and those with a test are <a style="color:#65a765;">green</a>. Hover over nodes for more information.',
-                   style = "font-family:Calibri; font-size:15px; text-align:center;"),
-    footer = '<a href="https://github.com/dark-peak-analytics/assertHE/">Created with assertHE</a>',
-    width = "100%"
-  ) |>
+  g <- if(isTRUE(show_in_shiny)){
+    visNetwork::visNetwork(
+      nodes = df_nodes,
+      edges = df_edges,
+      width = "100%"
+    )
+  } else {
+    visNetwork::visNetwork(
+      nodes = df_nodes,
+      edges = df_edges,
+      main = "Function Network",
+      submain = list(
+        text = paste0(
+          'Functions without a test are <a style="color:#9c0000;">red</a> and ',
+          'those with a test are <a style="color:#65a765;">green</a>. Hover ',
+          'over nodes for more information.'
+        ),
+        style = "font-family:Calibri; font-size:15px; text-align:center;"
+      ),
+      footer = paste0(
+        '<a href="https://github.com/dark-peak-analytics/assertHE/"',
+        '>Created with assertHE</a>'),
+      width = "100%"
+    )
+  }
+  g <- g |>
     visNetwork::visEdges(arrows = 'from') |>
     visNetwork::visOptions(
       manipulation = TRUE,
@@ -657,9 +685,10 @@ define_app_ui <- function() {
     "),
       # Define CSS
       shiny::tags$style("
-      /* CSS to make tab content scrollable */
+      /* Make tab content scrollable */
       .tab-content {
-        overflow-y: auto; /* Enable vertical scrolling */
+        /* Enable vertical scrolling */
+        overflow-y: auto;
       }
 
       /* Style for custom tab content background */
@@ -669,12 +698,38 @@ define_app_ui <- function() {
         border-radius: 4px;
         margin-bottom: 20px;
       }
+
+      /* Reduce padding around close actionButton */
+      .close-tab {
+        border: none;
+        padding: 5px;
+        margin: 5px;
+        color: red;
+      }
     ")
+    ),
+    # Define network plot title/subtitle divs
+    shiny::HTML(
+      paste0(
+        '<div id="titlehtmlwidget-b9361e0bc6cd12c5d6d9" style="font-family: ',
+        'Georgia, &quot;Times New Roman&quot;, Times, serif; font-weight: ',
+        'bold; font-size: 20px; text-align: center; background-color: ',
+        'inherit; display: block;">Function Network</div>'
+      )
+    ),
+    shiny::HTML(
+      paste0(
+        '<div id="subtitlenetworkPlot" style="font-family:Calibri; ',
+        'font-size:15px; text-align:center;;background-color: ',
+        'inherit;">Functions without a test are <a style="color:#9c0000;',
+        '">red</a> and those with a test are <a style="color:#65a765;',
+        '">green</a>. Hover over nodes for more information.</div>'
+      )
     ),
     # Define main panel
     shiny::fluidRow(
       shiny::column(
-        # Prevent another tabs from covering network tooltip
+        # Prevent another tabs from covering network tooltip/popup
         style = "z-index: 10000;",
         width = 11,
         visNetwork::visNetworkOutput(
@@ -689,6 +744,15 @@ define_app_ui <- function() {
           id = "fileTabs"
         ),
         id = "tabColumn"
+      )
+    ),
+    shiny::HTML(
+      paste0(
+        '<div id="footernetworkPlot" style="font-family: Georgia, &quot;Times ',
+        'New Roman&quot;, Times, serif; font-size: 12px; text-align: center; ',
+        'background-color: inherit; display: block;">',
+        '<a href="https://github.com/dark-peak-analytics/assertHE/">',
+        'Created with assertHE</a></div>'
       )
     )
   )
@@ -706,10 +770,17 @@ define_app_server <- function(network_object) {
       shiny::tabPanel(
         title = div(
           style = "display: flex; justify-content: space-between; align-items: center;",
-          shiny::span(tabName, style = "flex-grow: 1;"),
+          shiny::span(
+            shiny::HTML(
+              paste0("<b>", tabName, "</b>")
+            ),
+            style = "flex-grow: 1;"
+          ),
           shiny::actionButton(
             inputId = "close",
-            label = HTML("&times;"),
+            label = shiny::HTML(
+              '<i class="fa fa-window-close" aria-hidden="true"></i>'
+            ),
             class = "close-tab",
             onclick = sprintf(
               "Shiny.setInputValue('close_tab', '%s');",
