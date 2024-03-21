@@ -363,22 +363,30 @@ plotNetwork <- function(df_edges,
         "aria-hidden='true' style='cursor:pointer; color: #75AADB;' id='",
         paste0("openFileInShiny_", df_node_info$label[index]),
         "' onclick=\"openInRStudio('", foo_paths[index], "');\"></i>",
+        "<br><b>Test location</b>:",
         # skip "Test location" if coverage is 0%, cleaned_test_path == "".
         ifelse(
-          test_paths[index] == "",
-          "",
-          paste0(
-            "<br><b>Test location</b>: ", test_paths[index], " ",
+          test = test_paths[index] == "",
+          yes = " ",
+          no = paste0(
+            " ",
+            test_paths[index],
+            " ",
             "<i class='fa fa-eye' ",
             "title='Open function test(s) in browser' ",
             "aria-hidden='true' style='cursor:pointer; color: #337ab7;' id='",
             paste0("openFileInShiny_", df_node_info$label[index], "_test"),
-            "' onclick=\"openInShiny('", test_paths[index], "');\"></i>", " ",
+            "' onclick=\"openInShiny('",
+            test_paths[index],
+            "');\"></i>",
+            " ",
             "<i class='fa fa-external-link' ",
             "title='Open function test(s) in RStudio' ",
             "aria-hidden='true' style='cursor:pointer; color: #75AADB;' id='",
             paste0("openFileInShiny_", df_node_info$label[index], "_test"),
-            "' onclick=\"openInRStudio('", test_paths[index], "');\"></i>"
+            "' onclick=\"openInRStudio('",
+            test_paths[index],
+            "');\"></i>"
           )
         ),
         "<br><b>Coverage</b>: ",
