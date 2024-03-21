@@ -31,7 +31,6 @@ Note: This function may potentially miss calls if they are in attributes of the 
 when function is defined within another function, capturing the environment of the outer function.
 }
 \examples{
-
 \dontrun{
 # Identify functions called by a specific function
 .called_by(
