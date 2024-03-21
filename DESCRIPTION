@@ -28,7 +28,10 @@ Imports:
     miceadds,
     covr,
     htmltools,
+    officer,
+    flextable,
+    knitr,
+    here,
     shiny,
     shinyjs,
-    here,
     rstudioapi
