@@ -19,6 +19,7 @@ within the range 0 to 1 inclusive, the sum of values being equal to 1, no duplic
 and all elements having names.
 }
 \examples{
+\dontrun{
 x <- setNames(object = c(0.2, 0.3, 0.4, 0.1), nm = letters[1:4])
 check_init(x) # Should issue warnings for values outside 0-1 and the sum not equal to 1
 
@@ -27,5 +28,5 @@ check_init(x) # Should issue a warning about missing names
 
 x <- c(-2, 0.3, 0.4, 0.1) # Missing names
 check_init(x) # Should issue a warning about a value below 0 and about not summing to 1
-
+}
 }

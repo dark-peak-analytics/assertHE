@@ -13,6 +13,8 @@ RoxygenNote: 7.3.1
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Depends:
+    R (>= 3.5.0)
 Imports: 
     assertthat,
     ggplot2,
@@ -24,4 +26,11 @@ Imports:
     data.table,
     visNetwork,
     covr,
-    htmltools
+    htmltools,
+    officer,
+    flextable,
+    knitr,
+    here,
+    shiny,
+    shinyjs,
+    rstudioapi

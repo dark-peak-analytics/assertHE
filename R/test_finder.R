@@ -155,12 +155,18 @@ find_function_calls_in_folder <- function(test_folder,
 #' Summarise the model functions in a single folder.
 #'
 #' @param foo_folder path to folder containing all functions for the model
+#' @param output_format output format to use, defaults to dataframe, options include latex and word.
 #' @inheritParams find_function_calls_in_folder
 #'
 #' @return dataframe with three columns. 'foo_string' contains function names, 'foo_location'
 #' contains the location of the function definitions, 'test_location' contains the locations
 #' of tests for each function (both file and line number).
 #' @export
+#'
+#' @importFrom knitr kable
+#' @importFrom flextable flextable body_add_flextable width
+#' @importFrom officer read_docx body_add_par
+#' @importFrom here here
 #'
 #' @examples
 #' \dontrun{
@@ -173,7 +179,8 @@ find_function_calls_in_folder <- function(test_folder,
 #'
 #' }
 summarise_model <- function(foo_folder,
-                            test_folder = NULL) {
+                            test_folder = NULL,
+                            output_format = "dataframe") {
 
   # function summary
   df <- find_folder_function_definitions(foo_folder = foo_folder)
@@ -196,6 +203,39 @@ summarise_model <- function(foo_folder,
 
   }
 
+  # Return the correct format.
+  if (output_format == "latex") {
+    return(knitr::kable(x = df, format = "latex"))
+  }
+
+  if (output_format == "word") {
+    # create a word document with title and summary.
+    doc <- officer::read_docx() |>
+      officer::body_add_par(value =  "Model function summary",
+                            style = "heading 1") |>
+      officer::body_add_par(value = "",
+                            style = "centered",
+                            pos = "after") |>
+      officer::body_add_par(value = "Created using the assertHE R package.",
+                            style = "centered",
+                            pos = "after") |>
+      officer::body_add_par(value = "",
+                            style = "centered",
+                            pos = "after")
+
+    # add the table in
+    doc <- doc |>
+      flextable::body_add_flextable(
+        flextable::flextable(df) |>
+          flextable::width(width = 2)
+      )
+
+    print(x = doc, target = "model_summary.docx")
+
+    return(paste0("Word document created at: ", here::here("model_summary.docx")))
+  }
+
   return(df)
 
 }
+
