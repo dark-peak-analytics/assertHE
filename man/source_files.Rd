@@ -21,9 +21,9 @@ source_files(
 
 \item{recursive}{= TRUE - recurse into subdirectories}
 
-\item{exclude_files}{= NULL - a regular expression for files to filter (from the results of file_regx)}
+\item{exclude_files}{= NULL - regx for files to exclude}
 
-\item{exclude_dirs}{= NULL - a regular expression for directories to filter (from the results of dir_regx)}
+\item{exclude_dirs}{= NULL - regx for directories to exclude}
 
 \item{local}{= !testthat::is_testing() - see base::source() for details}
 
@@ -43,10 +43,10 @@ sourcing \emph{this} file is a mistake - may result in infinite recursion
 \dontrun{
 source_files(file_regx = ".*",  ## any file name
  path = ".*",   # the current directory and all subdirectories
- recursive = FALSE  # don't recurse
- exclude_files = ".*utility.*",   # don't source any file with the string "utility" anywhere in its basename
- exclude_dirs = "\/tmp\/"  # don't source any files which reside in any directory named "tmp", or its subdirectories
-)
+ recursive = FALSE,  # don't recurse
+ exclude_files = ".*utility.*", # exclude "utility" anywhere in basename
+ exclude_dirs = "\/tmp\/"  # exclude any directory named "tmp", or subdirs
+ )
 }
 
 }
