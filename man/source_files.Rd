@@ -5,13 +5,13 @@
 \title{source_files}
 \usage{
 source_files(
-  file_regx = ".*",
+  file_regx = ".R",
   path = ".",
   recursive = TRUE,
   exclude_files = NULL,
   exclude_dirs = NULL,
-  local = !testthat::is_testing(),
-  verbose = FALSE
+  verbose = FALSE,
+  keep_source = FALSE
 )
 }
 \arguments{
@@ -25,9 +25,9 @@ source_files(
 
 \item{exclude_dirs}{= NULL - regx for directories to exclude}
 
-\item{local}{= !testthat::is_testing() - see base::source() for details}
-
 \item{verbose}{= FALSE - whether to emit the sourced files.}
+
+\item{keep_source}{= FALSE - whether to keep the source data when using source.}
 }
 \value{
 list of files sourced
