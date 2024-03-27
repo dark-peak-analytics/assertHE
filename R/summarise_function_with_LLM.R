@@ -3,6 +3,7 @@
 #' This function summarizes another function using a Language Model.
 #'
 #' @inheritParams create_prompt
+#' @inheritParams summarise_function_from_arguments_and_body
 #'
 #' @return A character string with a summary of the function based on its arguments and body.
 #'
@@ -12,7 +13,9 @@
 #' summarise_function_with_LLM("calculate_costs")
 #' }
 #'
-summarise_function_with_LLM <- function(foo_name){
+summarise_function_with_LLM <- function(foo_name,
+                                        llm_api_url = Sys.getenv("LLM_API_URL"),
+                                        llm_api_key = Sys.getenv("LLM_API_KEY")){
   # get the function data list (function arguments and body)
   l_foo_data <- get_function_data(foo_name)
 
@@ -25,8 +28,8 @@ summarise_function_with_LLM <- function(foo_name){
       foo_title = l_foo_data[["title"]],
       foo_desc = l_foo_data[["desc"]],
       model_name = "gpt-3.5-turbo-0125",
-      llm_api_url = Sys.getenv("LLM_API_URL"),
-      llm_api_key = Sys.getenv("LLM_API_KEY")
+      llm_api_url = llm_api_url,
+      llm_api_key = llm_api_key
     )
 
   # message cleaned and returned
