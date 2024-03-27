@@ -9,8 +9,8 @@
 #' @param recursive = TRUE - recurse into subdirectories
 #' @param exclude_files = NULL - regx for files to exclude
 #' @param exclude_dirs = NULL - regx for directories to exclude
-#' @param local = !testthat::is_testing() - see base::source() for details
 #' @param verbose = FALSE - whether to emit the sourced files.
+#' @param keep_source = FALSE - whether to keep the source data when using source.
 #'
 #' @return list of files sourced
 #'
@@ -27,13 +27,13 @@
 #'  )
 #' }
 #'
-source_files <- function( file_regx = ".*",
+source_files <- function( file_regx = ".R",
                           path = ".",
                           recursive = TRUE,
                           exclude_files = NULL,
                           exclude_dirs = NULL,
-                          local=!testthat::is_testing(),
-                          verbose=FALSE) {
+                          verbose=FALSE,
+                          keep_source=FALSE) {
 
   # Get the list of files matching file_regx in directories matching dir_regx
   files <- list.files(path = path, pattern = file_regx, recursive=recursive, full.names = TRUE)
@@ -53,7 +53,7 @@ source_files <- function( file_regx = ".*",
 
   # Source each file
   for (file in files) {
-    source(file, local=local, echo=verbose)
+    source(file = file, echo=verbose, keep.source = keep_source)
   }
   return (files)
 }
