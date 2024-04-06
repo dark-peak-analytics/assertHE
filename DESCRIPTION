@@ -36,4 +36,5 @@ Imports:
     rstudioapi,
     httr,
     roxygen2,
-    methods
+    methods,
+    waiter
