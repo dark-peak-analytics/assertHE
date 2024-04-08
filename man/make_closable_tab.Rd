@@ -4,7 +4,7 @@
 \alias{make_closable_tab}
 \title{Create closable shiny tab}
 \usage{
-make_closable_tab(tab_name, content_output_Id)
+make_closable_tab(tab_name, content_output_Id, output_type = "text")
 }
 \arguments{
 \item{tab_name}{Character scalar representing the name or title of the shiny
@@ -12,6 +12,9 @@ tab.}
 
 \item{content_output_Id}{Character scalar representing the id of the shiny
 tab.}
+
+\item{output_type}{Character scalar specifying the type of rendered output.
+Default is \code{"text"} and can also accept \code{"HTML"}.}
 }
 \value{
 A tab that can be passed to \code{shiny::tabsetPanel()}
