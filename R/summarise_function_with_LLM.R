@@ -33,11 +33,14 @@ summarise_function_with_LLM <- function(foo_name,
     )
 
   # message cleaned and returned
-  out <- return_message(API_response = response)
+  response <- return_message(API_response = response)
 
-  return(out)
+  response_wrapped <- wrap_string(response)
+
+  return(response_wrapped)
 
 }
+
 
 #' Retrieve Function data to a list
 #'
