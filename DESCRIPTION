@@ -33,4 +33,8 @@ Imports:
     here,
     shiny,
     shinyjs,
-    rstudioapi
+    rstudioapi,
+    httr,
+    roxygen2,
+    methods,
+    waiter

@@ -9,8 +9,8 @@
 #' @param recursive = TRUE - recurse into subdirectories
 #' @param exclude_files = NULL - regx for files to exclude
 #' @param exclude_dirs = NULL - regx for directories to exclude
-#' @param local = !testthat::is_testing() - see base::source() for details
 #' @param verbose = FALSE - whether to emit the sourced files.
+#' @param keep_source = FALSE - whether to keep the source data when using source.
 #'
 #' @return list of files sourced
 #'
@@ -27,13 +27,13 @@
 #'  )
 #' }
 #'
-source_files <- function( file_regx = ".*",
+source_files <- function( file_regx = ".R",
                           path = ".",
                           recursive = TRUE,
                           exclude_files = NULL,
                           exclude_dirs = NULL,
-                          local=!testthat::is_testing(),
-                          verbose=FALSE) {
+                          verbose=FALSE,
+                          keep_source=FALSE) {
 
   # Get the list of files matching file_regx in directories matching dir_regx
   files <- list.files(path = path, pattern = file_regx, recursive=recursive, full.names = TRUE)
@@ -53,7 +53,49 @@ source_files <- function( file_regx = ".*",
 
   # Source each file
   for (file in files) {
-    source(file, local=local, echo=verbose)
+    source(file = file, echo=verbose, keep.source = keep_source)
   }
   return (files)
+}
+
+
+
+
+
+#' Wrap a string to lines of a specified width
+#'
+#' This function takes an input string and wraps it to lines of a specified
+#' width, breaking the string at word boundaries.
+#'
+#' @param input_string The input string to be wrapped.
+#' @param width The maximum width of each line. Default is 80 characters.
+#' @return A character vector where each element represents a line of the
+#'   wrapped string.
+#' @examples
+#' input_string <- "This is a long string that needs to be wrapped to fit within
+#'                 a specified width."
+#' wrapped_lines <- wrap_string(input_string, width = 30)
+#' cat(wrapped_lines, sep = "\n")
+#'
+#' @export
+wrap_string <- function(input_string,
+                        width = 80) {
+
+  words <- unlist(strsplit(input_string, " "))
+  lines <- ""
+  current_line <- ""
+
+  for (word in words) {
+    if (nchar(current_line) + nchar(word) > width) {
+      lines <- c(lines, current_line)
+      current_line <- word
+    } else {
+      current_line <- paste(current_line, word, sep = " ")
+    }
+  }
+
+  lines <- c(lines, current_line)
+
+  return(lines)
+
 }

@@ -348,19 +348,28 @@ plotNetwork <- function(df_edges,
   if(isTRUE(show_in_shiny)) {
     for (index in 1:length(foo_paths)) {
       df_nodes$title[index] <- paste0(
-        "<b>Foo Name</b>: ",
-        df_node_info$label[index],
-        "<br><b>Foo Location</b>: ", foo_paths[index], " ",
-        "<i class='fa fa-eye' ",
+        "<b>Foo Name</b>: ", df_node_info$label[index], " ",
+        "<i class='fa-solid fa-robot' ",
+        "title='Request AI summary' ",
+        "aria-hidden='true' style='cursor:pointer; color: #337ab7;' id='",
+        paste0("aiAssist_", df_node_info$label[index]),
+        "' onclick=\"aiAssist('", df_node_info$label[index],
+        "');\"></i>",
+        "<br><b>Foo Location</b>: ", foo_paths[index],
+        " ",
+        "<i class='fa-solid fa-eye' ",
         "title='Open function definition in browser' ",
         "aria-hidden='true' style='cursor:pointer; color: #337ab7;' id='",
         paste0("openFileInShiny_", df_node_info$label[index]),
-        "' onclick=\"openInShiny('", foo_paths[index], "');\"></i>", " ",
-        "<i class='fa fa-external-link' ",
+        "' onclick=\"openInShiny('", foo_paths[index],
+        "');\"></i>",
+        " ",
+        "<i class='fa-solid fa-up-right-from-square' ",
         "title='Open function definition in RStudio' ",
         "aria-hidden='true' style='cursor:pointer; color: #75AADB;' id='",
-        paste0("openFileInShiny_", df_node_info$label[index]),
-        "' onclick=\"openInRStudio('", foo_paths[index], "');\"></i>",
+        paste0("openFileInRStudio_", df_node_info$label[index]),
+        "' onclick=\"openInRStudio('", foo_paths[index],
+        "');\"></i>",
         "<br><b>Test location</b>:",
         # skip "Test location" if coverage is 0%, cleaned_test_path == "".
         ifelse(
@@ -370,7 +379,7 @@ plotNetwork <- function(df_edges,
             " ",
             test_paths[index],
             " ",
-            "<i class='fa fa-eye' ",
+            "<i class='fa-solid fa-eye' ",
             "title='Open function test(s) in browser' ",
             "aria-hidden='true' style='cursor:pointer; color: #337ab7;' id='",
             paste0("openFileInShiny_", df_node_info$label[index], "_test"),
@@ -378,10 +387,10 @@ plotNetwork <- function(df_edges,
             test_paths[index],
             "');\"></i>",
             " ",
-            "<i class='fa fa-external-link' ",
+            "<i class='fa-solid fa-up-right-from-square' ",
             "title='Open function test(s) in RStudio' ",
             "aria-hidden='true' style='cursor:pointer; color: #75AADB;' id='",
-            paste0("openFileInShiny_", df_node_info$label[index], "_test"),
+            paste0("openFileInRStudio_", df_node_info$label[index], "_test"),
             "' onclick=\"openInRStudio('",
             test_paths[index],
             "');\"></i>"
@@ -603,9 +612,14 @@ get_function_line <- function(file_location) {
 #' tab.
 #' @param content_output_Id Character scalar representing the id of the shiny
 #' tab.
+#' @param output_type Character scalar specifying the type of rendered output.
+#' Default is `"text"` and can also accept `"HTML"`.
 #'
 #' @return A tab that can be passed to `shiny::tabsetPanel()`
-make_closable_tab <- function(tab_name, content_output_Id) {
+make_closable_tab <- function(
+    tab_name,
+    content_output_Id,
+    output_type = "text") {
   shiny::tabPanel(
     title = shiny::div(
       style = "display: flex; justify-content: space-between; align-items: center;",
@@ -629,7 +643,11 @@ make_closable_tab <- function(tab_name, content_output_Id) {
     ),
     shiny::div(
       class = "custom-tab-content",
-      shiny::verbatimTextOutput(outputId = content_output_Id)
+      if(output_type != "HTML") {
+        shiny::verbatimTextOutput(outputId = content_output_Id)
+      } else {
+        shiny::htmlOutput(outputId = content_output_Id)
+      }
     ),
     value = content_output_Id
   )
@@ -641,19 +659,50 @@ make_closable_tab <- function(tab_name, content_output_Id) {
 define_app_ui <- function() {
 
   shiny::fluidPage(
-    # Initialize shinyjs
+    # Initialize shinyjs and waiter
     shinyjs::useShinyjs(),
+    waiter::use_waiter(),
     # Define javaScript functions
     shiny::tags$head(
       shiny::tags$link(
         rel = "stylesheet",
         type = "text/css",
-        href = "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
       ),
       shiny::tags$script("
-      // Initialize a variable to mirror the value of 'openInShiny'
+      // Initialize a variable to mirror the values of 'aiAssist',
+      // 'openInShiny' and 'openInRStudio'
+      var currentAiAssistValue = null;
       var currentOpenInShinyValue = null;
       var currentOpenInRstudioValue = null;
+
+      function aiAssist(function_name) {
+        console.log('Executing JavaScript function aiAssist');
+        console.log('Function name: ' + function_name);
+
+        // Check if the current value is the same as 'function_name'
+        if (currentAiAssistValue === function_name) {
+
+          // Temporarily set 'aiAssist' and 'close_tab' to null
+          // to ensure the change is detected
+          Shiny.setInputValue('aiAssist', null, {priority: 'event'});
+          Shiny.setInputValue('close_tab', null, {priority: 'event'});
+
+          // Use setTimeout to ensure the null value is processed before setting
+          // the new value
+          setTimeout(function() {
+            Shiny.setInputValue('aiAssist', function_name, {priority: 'event'});
+          }, 10);
+
+        } else {
+
+          // Directly set 'aiAssist' to 'function_name'
+          Shiny.setInputValue('aiAssist', function_name);
+        }
+
+       // Update the mirror variable to reflect the new value
+        currentAiAssistValue = function_name;
+      }
 
       function openInShiny(file_location) {
         console.log('Executing JavaScript function openInShiny');
@@ -708,7 +757,7 @@ define_app_ui <- function() {
 
        // Update the mirror variable to reflect the new value
         currentOpenInRstudioValue = file_location;
-   }
+      }
 
       $(document).on('shiny:connected', function(event) {
         function adjustTabHeight() {
@@ -750,6 +799,16 @@ define_app_ui <- function() {
         margin: 5px;
         color: red;
       }
+
+      /* Waiter */
+      .waiter-overlay  {
+        position: fixed;
+        height: 919px;
+        width: 1375px;
+        top: 0px;
+        left: 0px;
+        background-color: rgba(51, 62, 72, 0.5) !important;
+      }
     ")
     ),
     # Define network plot title/subtitle divs
@@ -769,9 +828,12 @@ define_app_ui <- function() {
         'Functions without a test are <a style="color:#9c0000;">red</a> ',
         'and those with a test are <a style="color:#65a765;">green</a>. ',
         'Hover over nodes for more information. Click on ',
-        "<i class='fa fa-external-link' aria-hidden='true' ",
+        "<i class='fa-solid fa-robot' aria-hidden='true' ",
+        "style='color: #337ab7;'></i>",' to request an AI generated summary ',
+        "of the corresponding function, ",
+        "<i class='fa-solid fa-up-right-from-square' aria-hidden='true' ",
         "style='color: #75AADB;'></i>",' to open the file in RStudio, or on ',
-        "<i class='fa fa-eye' aria-hidden='true' style='color: #337ab7;'></i>",
+        "<i class='fa-solid fa-eye' aria-hidden='true' style='color: #337ab7;'></i>",
         ' to load its contents into a new browser tab.</div>'
       )
     ),
@@ -817,8 +879,119 @@ define_app_server <- function(network_object) {
     # Keep track of the current tab's output ID
     currentTabId <- shiny::reactiveVal(NULL)
 
+    # Keep track of the number of AI-generated summary requests
+    aiAssit_calls <- shiny::reactiveVal(0)
+
     # Render the network visual
     output$networkPlot <- visNetwork::renderVisNetwork(network_object)
+
+    # Observer to handle AI response in a new tab within the shiny app
+    shiny::observeEvent(
+      ignoreNULL = TRUE,
+      ignoreInit = TRUE,
+      eventExpr = input$aiAssist,
+      handlerExpr = {
+        # If there's a current tab open, remove it
+        if (!is.null(currentTabId())) {
+          shiny::removeTab(
+            inputId = "fileTabs",
+            target = currentTabId()
+          )
+        }
+
+        if(input$aiAssist != "") {
+          function_name <- input$aiAssist
+          tab_name <- paste(function_name)
+
+          # Check if the function name refers to an existing function
+          if (is.function(get(x = function_name))) {
+            # Check if the number of calls did not exceed a maximum:
+            if(aiAssit_calls() < 5) {
+              # Waiter
+              waiter <- waiter::Waiter$new(
+                html = shiny::div(
+                  style = "display: flex;
+                          flex-direction: column;
+                          align-items: center;
+                          justify-content:center;
+                          color: white;
+                          opacity: 1 !important;",
+                  shiny::h4("Please wait ..."),
+                  shiny::h6(paste(
+                    "generating", function_name, "function summary ..."
+                  )),
+                  shiny::br(),
+                  shiny::br(),
+                  waiter::spin_wandering_cubes()
+                ),
+                hide_on_render  = FALSE
+              )
+              waiter$show()
+              on.exit(waiter$hide())
+
+              # Set the ID of the new tab to be the current one
+              currentTabId(tab_name)
+
+              # Query AI:
+              ai_response <- summarise_function_with_LLM(
+                foo_name = function_name,
+                llm_api_url = Sys.getenv("LLM_API_URL"),
+                llm_api_key = Sys.getenv("LLM_API_KEY")
+              )
+
+              # Create the new tab and output its content
+              output[[tab_name]] <- shiny::renderUI({
+                shiny::HTML(ai_response)
+              })
+
+              # Update the number of calls
+              aiAssit_calls(aiAssit_calls() + 1)
+
+              # Dynamically adjust column widths
+              shinyjs::runjs(
+                '$("#mainColumn").removeClass("col-sm-11").addClass("col-sm-6");'
+              )
+              shinyjs::runjs(
+                '$("#tabColumn").removeClass("col-sm-1").addClass("col-sm-6");'
+              )
+
+              # Insert the new tab and set it to the current
+              shiny::insertTab(
+                inputId = "fileTabs",
+                make_closable_tab(
+                  tab_name = paste("AI summary -", tab_name),
+                  content_output_Id = tab_name,
+                  output_type = "HTML"
+                ),
+                select = TRUE
+              )
+
+            } else {
+              # Reset the current tab ID
+              currentTabId(NULL)
+              # Reset columns width
+              shinyjs::runjs(
+                '$("#mainColumn").removeClass("col-sm-6").addClass("col-sm-11");'
+              )
+              shinyjs::runjs(
+                '$("#tabColumn").removeClass("col-sm-6").addClass("col-sm-1");'
+              )
+              # Notify the user if the file is not found
+              shiny::showNotification(
+                ui = "You have exceeded the allotted AI queries.",
+                type = "warning"
+              )
+            }
+          } else {
+            # Notify the user if the file is not found
+            shiny::showNotification(
+              ui = paste("Function not found:", function_name),
+              type = "error"
+            )
+          }
+        }
+      }
+    )
 
     # Observer to handle opening files in RStudio
     shiny::observeEvent(
@@ -846,7 +1019,8 @@ define_app_server <- function(network_object) {
             type = "error"
           )
         }
-      })
+      }
+    )
 
     # Observer to handle opening files in a new tab within the shiny app
     shiny::observeEvent(
@@ -907,7 +1081,8 @@ define_app_server <- function(network_object) {
             )
           }
         }
-      })
+      }
+    )
 
     # Observer to remove the tab opened in the shiny app
     shiny::observeEvent(
@@ -930,7 +1105,8 @@ define_app_server <- function(network_object) {
             '$("#tabColumn").removeClass("col-sm-6").addClass("col-sm-1");'
           )
         }
-      })
+      }
+    )
   }
 }
 
