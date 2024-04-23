@@ -40,7 +40,8 @@ visualise_project <- function(project_path,
                               color_mod_coverage = c("background" = "#FFD580", "border" = "#E49B0F", "highlight" = "#E49B0F"),
                               moderate_coverage_range = c(0.2, 0.8),
                               print_isolated_foo = TRUE,
-                              show_in_shiny = FALSE) {
+                              show_in_shiny = FALSE,
+                              network_title = NULL) {
 
   # Check folder existence
   stopifnot(dir.exists(project_path),
@@ -330,7 +331,8 @@ identify_dependencies <- function(v_unique_foo) {
 #' @param color_mod_coverage named vector with hexcodes for background, border and highlight where coverage moderate
 #' @param moderate_coverage_range vector of two values giving range defined as moderate coverage.
 #' @param show_in_shiny logical scalar indicating whether to prepare/deploy the
-#' netowrk using a built in shiny app. Default is `FALSE`.
+#' network using a built in shiny app. Default is `FALSE`.
+#' @param network_title title of the network plot.
 #'
 #' @return A visNetwork object representing the network plot.
 #'
@@ -353,7 +355,8 @@ plotNetwork <- function(df_edges,
                         color_with_test = c("background" = "#e6ffe6", "border" = "#65a765", "highlight" = "#65a765"),
                         color_mod_coverage = c("background" = "#FFD580", "border" = "#E49B0F", "highlight" = "#E49B0F"),
                         moderate_coverage_range = c(0.2, 0.8),
-                        show_in_shiny = FALSE) {
+                        show_in_shiny = FALSE,
+                        network_title = NULL) {
   # Check input validity
   assertthat::assert_that(is.data.frame(df_edges),
                           from_col %in% colnames(df_edges),
@@ -452,16 +455,15 @@ plotNetwork <- function(df_edges,
     df_nodes$title <- paste0(
       "<b>Foo Name</b>: ",
       df_node_info$label,
-      "<br><b>Foo Location</b>: ", df_node_info$foo_location,
+      "<br><b>Foo Location</b>: ",
+      df_node_info$foo_location,
+      "<br><b>Test location</b>: ",
       # skip "Test location" if coverage is 0%, cleaned_test_path == "".
       ifelse(
         test = test_paths == "",
         yes = NULL,
-        no = paste0(
-          "<br><b>Test location</b>: ",
-          df_node_info$test_location
-        )
-      ),
+        no = df_node_info$test_location
+        ),
       "<br><b>Coverage</b>: ",
       paste0(df_node_info$coverage * 100, "%")
     )
@@ -527,7 +529,7 @@ plotNetwork <- function(df_edges,
     visNetwork::visNetwork(
       nodes = df_nodes,
       edges = df_edges,
-      main = "Function Network",
+      main = ifelse(test = !is.null(x = network_title), network_title, "Function Network"),
       submain = list(
         text = paste0(
           'Functions without a test are <a style="color:#9c0000;">red</a> and ',
