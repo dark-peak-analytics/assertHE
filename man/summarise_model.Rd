@@ -4,9 +4,16 @@
 \alias{summarise_model}
 \title{Summarise the model functions in a single folder.}
 \usage{
-summarise_model(foo_folder, test_folder = NULL, output_format = "dataframe")
+summarise_model(
+  project_path = ".",
+  foo_folder = "R",
+  test_folder = NULL,
+  output_format = "dataframe"
+)
 }
 \arguments{
+\item{project_path}{path to the project folder, if not provided, will use current working directory.}
+
 \item{foo_folder}{path to folder containing all functions for the model}
 
 \item{test_folder}{folder containing all tests}
@@ -23,10 +30,13 @@ Summarise the model functions in a single folder.
 }
 \examples{
 \dontrun{
-foo_folder  <- "C:/Users/r_a_s/Documents/Projects/GSK/assertHE/tests/testthat/example_project/R"
-test_folder <- "./tests/testthat/example_project/tests/testthat"
+project_path <- "tests/testthat/example_project"
+foo_folder  <- "R"
+test_folder <- "tests/testthat"
 
-summarise_model(foo_folder = foo_folder, test_folder =  test_folder)
+summarise_model(project_path = "./tests/testthat/example_project",
+foo_folder = foo_folder,
+test_folder =  test_folder)
 
 summarise_model(foo_folder = foo_folder, test_folder =  NULL)
 

@@ -47,6 +47,11 @@ visualise_project <- function(project_path,
             dir.exists(paste0(project_path,"/", foo_path)),
             dir.exists(paste0(project_path,"/", test_path)))
 
+  # Load and summarize the model
+  df_summary <- summarise_model(project_path = project_path,
+                                foo_folder = foo_path,
+                                test_folder = test_path)
+
   # if test path is null then don't include them in summary...
   test_path <- if (is.null(test_path)) {
     NULL
@@ -56,10 +61,6 @@ visualise_project <- function(project_path,
 
   # get the full function paths including project path and use from here on wards
   foo_path <- paste0(project_path, "/", foo_path)
-
-  # Load and summarize the model
-  df_summary <- summarise_model(foo_folder = foo_path,
-                                test_folder = test_path)
 
   # get test coverage
   if (run_coverage) {
@@ -74,10 +75,22 @@ visualise_project <- function(project_path,
   # so we have to source them all before we can run the code.
   # ideally we would not need to do this, although its hardly the end of the world
   source_files(path = foo_path,
-               verbose = F)
+               verbose = F,
+               keep_source = FALSE)
 
   # Identify function dependencies and create a network plot
   df_edges <- identify_dependencies(v_unique_foo = df_summary$foo_string)
+
+  # identify which functions are isolated (not child or parent of any other function)
+  # this means that there is no to (or its NA), and no from (or its NA)
+  # print isolated functions in a nice sentence
+  # add a new line for each function name for readability
+  v_isolated <- get_isolated_foo(df_edges = df_edges)
+  if (length(v_isolated) > 0) {
+    cat("The following functions are isolated (no parent or child): ",
+        v_isolated,
+        sep = "\n * ")
+  }
 
   # Plot the network of edges and nodes
   p <- plotNetwork(
@@ -93,29 +106,7 @@ visualise_project <- function(project_path,
     show_in_shiny = show_in_shiny
   )
 
-  # identify which functions are isolated (not child or parent of any other function)
-  # this means that there is no to (or its NA), and no from (or its NA)
-  get_isolated_foo <- function(df_edges){
-    # get all unique functions
-    v_functions <- unique(c(df_edges$from, df_edges$to))
-    # remove NAs
-    v_functions <- v_functions[!is.na(v_functions)]
-    # from edges
-    has_parent <- df_edges$from[df_edges$from %in% df_edges$to]
-    has_child  <- unique(df_edges$from[!is.na(df_edges$to)])
-    # return functions with no parent or child
-    v_isolated <- setdiff(v_functions, c(has_parent, has_child))
-    # return this vector of isolated function names
-    return(v_isolated)
-  }
 
-  # print isolated functions in a nice sentence
-  # add a new line for each function name for readability
-  cat(
-    "The following functions are isolated (no parent or child): ",
-    get_isolated_foo(df_edges = df_edges),
-    sep = "\n * "
-  )
 
   # whether to display in shiny or not
   if(!isTRUE(show_in_shiny)) {
@@ -125,6 +116,33 @@ visualise_project <- function(project_path,
   }
 
 }
+
+
+#' Get Isolated Functions
+#'
+#' @param df_edges A data.table with two columns ("from" and "to") representing the dependencies.
+#'
+#' @return A vector of isolated function names.
+#'
+#' @examples
+#' \dontrun{
+#' get_isolated_foo(df_edges = data.frame(from = c("a", "b", "c", "d"), to = c("b", "c", NA, NA)))
+#' }
+get_isolated_foo <- function(df_edges){
+  # get all unique functions
+  v_functions <- unique(c(df_edges$from, df_edges$to))
+  # remove NAs
+  v_functions <- v_functions[!is.na(v_functions)]
+  # from edges
+  has_parent <- df_edges$from[df_edges$from %in% df_edges$to]
+  has_child  <- unique(df_edges$from[!is.na(df_edges$to)])
+  # return functions with no parent or child
+  v_isolated <- setdiff(v_functions, c(has_parent, has_child))
+  # return this vector of isolated function names
+  return(v_isolated)
+}
+
+
 
 #' Identify Dependencies
 #'
@@ -582,18 +600,18 @@ processNodes <- function(df_edges,
 #' @examples
 #' \dontrun{
 #' cleaned_file_path <- get_function_path(
-#'  file_location = "tests/testthat/example_project/R/calculate_QALYs.R:L41"
+#'  file_location = "tests/testthat/example_project/R/calculate_QALYs.R#L41"
 #' )
 #' cleaned_file_path <- get_function_path(
 #'  file_location = c(
-#'    "tests/testthat/example_project/R/calculate_QALYs.R:L41",
-#'    "tests/testthat/example_project/R/calculate_QALYs.R:L49"
+#'    "tests/testthat/example_project/R/calculate_QALYs.R#L41",
+#'    "tests/testthat/example_project/R/calculate_QALYs.R#L49"
 #'  )
 #' )
 #' }
 get_function_path <- function(file_location) {
 
-  get_function_path <- gsub(":.*", "", file_location)
+  get_function_path <- gsub("#.*", "", file_location)
 
   full_file_path <- ifelse(
     test = is.na(get_function_path),
@@ -617,14 +635,14 @@ get_function_path <- function(file_location) {
 #' )
 #' cleaned_function_line <- get_function_line(
 #'  file_location = c(
-#'    "tests/testthat/example_project/R/calculate_QALYs.R:L41",
-#'    "tests/testthat/example_project/R/calculate_QALYs.R:L49"
+#'    "tests/testthat/example_project/R/calculate_QALYs.R#L41",
+#'    "tests/testthat/example_project/R/calculate_QALYs.R#L49"
 #'  )
 #' )
 #' }
 get_function_line <- function(file_location) {
 
-  function_line <- gsub(".*:L", "", file_location)
+  function_line <- gsub(".*#L", "", file_location)
 
   function_line <- ifelse(
     test = is.na(function_line),
