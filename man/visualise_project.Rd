@@ -15,7 +15,8 @@ visualise_project(
     "#E49B0F"),
   moderate_coverage_range = c(0.2, 0.8),
   print_isolated_foo = TRUE,
-  show_in_shiny = FALSE
+  show_in_shiny = FALSE,
+  network_title = NULL
 )
 }
 \arguments{
@@ -38,7 +39,9 @@ visualise_project(
 \item{print_isolated_foo}{Print the isolated functions to the console.}
 
 \item{show_in_shiny}{logical scalar indicating whether to prepare/deploy the
-netowrk using a built in shiny app. Default is \code{FALSE}.}
+network using a built in shiny app. Default is \code{FALSE}.}
+
+\item{network_title}{title of the network plot.}
 }
 \value{
 A visNetwork object representing the network plot of function dependencies.
