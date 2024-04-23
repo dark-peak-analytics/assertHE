@@ -16,7 +16,7 @@ test_that(desc = "Check find_function_calls_in_file works for example scripts",
               expected_df <-
                 data.frame(
                   foo_string = rep("calculate_costs", 2),
-                  location = paste0(relative_path, ":L", c(26, 33))
+                  location = paste0(relative_path, "#L", c(26, 33))
                 )
 
               # run function and store output

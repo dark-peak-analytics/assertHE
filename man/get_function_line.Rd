@@ -22,8 +22,8 @@ cleaned_function_line <- get_function_line(
 )
 cleaned_function_line <- get_function_line(
  file_location = c(
-   "tests/testthat/example_project/R/calculate_QALYs.R:L41",
-   "tests/testthat/example_project/R/calculate_QALYs.R:L49"
+   "tests/testthat/example_project/R/calculate_QALYs.R#L41",
+   "tests/testthat/example_project/R/calculate_QALYs.R#L49"
  )
 )
 }

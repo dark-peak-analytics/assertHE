@@ -196,7 +196,7 @@ find_folder_function_definitions <- function(foo_folder) {
                   "foo_location" = "source")
 
   df_foo_summary$foo_location <-
-    paste0(df_foo_summary$foo_location, ":L", df_foo_summary$line1)
+    paste0(df_foo_summary$foo_location, "#L", df_foo_summary$line1)
 
 
   return(df_foo_summary[, c("foo_string", "foo_location")])

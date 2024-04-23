@@ -69,7 +69,7 @@ find_function_calls_in_file <- function(relative_path = NULL,
   if(nrow(df) == 0) return(NULL)
 
   # combine file path & line number in single string
-  df$location <- paste0(relative_path, ":L", df$line)
+  df$location <- paste0(relative_path, "#L", df$line)
   df$foo_string  <- df$text
 
   return(df[, c("foo_string", "location")])
@@ -156,6 +156,7 @@ find_function_calls_in_folder <- function(test_folder,
 #'
 #' @param foo_folder path to folder containing all functions for the model
 #' @param output_format output format to use, defaults to dataframe, options include latex and word.
+#' @param project_path path to the project folder, if not provided, will use current working directory.
 #' @inheritParams find_function_calls_in_folder
 #'
 #' @return dataframe with three columns. 'foo_string' contains function names, 'foo_location'
@@ -170,17 +171,35 @@ find_function_calls_in_folder <- function(test_folder,
 #'
 #' @examples
 #' \dontrun{
-#' foo_folder  <- "C:/Users/r_a_s/Documents/Projects/GSK/assertHE/tests/testthat/example_project/R"
-#' test_folder <- "./tests/testthat/example_project/tests/testthat"
+#' project_path <- "tests/testthat/example_project"
+#' foo_folder  <- "R"
+#' test_folder <- "tests/testthat"
 #'
-#' summarise_model(foo_folder = foo_folder, test_folder =  test_folder)
+#' summarise_model(project_path = "./tests/testthat/example_project",
+#' foo_folder = foo_folder,
+#' test_folder =  test_folder)
 #'
 #' summarise_model(foo_folder = foo_folder, test_folder =  NULL)
 #'
 #' }
-summarise_model <- function(foo_folder,
+summarise_model <- function(project_path = ".",
+                            foo_folder = "R",
                             test_folder = NULL,
                             output_format = "dataframe") {
+
+  # Check folder existence
+  stopifnot(dir.exists(project_path),
+            dir.exists(paste0(project_path,"/", foo_folder)),
+            dir.exists(paste0(project_path,"/", test_folder)))
+
+  # if test path is null then don't include them in summary...
+  test_folder <- if (is.null(test_folder)) {
+    NULL
+  } else{
+    paste0(project_path, "/", test_folder)
+  }
+
+  foo_folder <- paste0(project_path,"/", foo_folder)
 
   # function summary
   df <- find_folder_function_definitions(foo_folder = foo_folder)
@@ -202,6 +221,20 @@ summarise_model <- function(foo_folder,
               all.x = T)
 
   }
+
+  # remove the project path from the start of the locations:
+  df$foo_location <- sub(
+    x = df$foo_location,
+    pattern = paste0(project_path, "/"),
+    replacement = "",
+    fixed = TRUE
+  )
+  df$test_location <- sub(
+    x = df$test_location,
+    pattern = paste0(project_path, "/"),
+    replacement = "",
+    fixed = TRUE
+  )
 
   # Return the correct format.
   if (output_format == "latex") {
