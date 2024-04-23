@@ -35,7 +35,8 @@ summarise_function_with_LLM <- function(foo_name,
   # message cleaned and returned
   response <- return_message(API_response = response)
 
-  response_wrapped <- wrap_string(response)
+  # wrap the string to a more reasonable line length
+  response_wrapped <- wrap_string(input_string = response, width = 50)
 
   return(response_wrapped)
 

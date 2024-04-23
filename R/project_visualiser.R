@@ -7,6 +7,7 @@
 #' @param foo_path Path to the folder containing foo functions.
 #' @param test_path Path to the folder containing test functions.
 #' @param run_coverage Boolean determining whether to run coverage assessment
+#' @param print_isolated_foo Print the isolated functions to the console.
 #'
 #' @return A visNetwork object representing the network plot of function dependencies.
 #'
@@ -38,6 +39,7 @@ visualise_project <- function(project_path,
                               color_with_test = c("background" = "#e6ffe6", "border" = "#65a765", "highlight" = "#65a765"),
                               color_mod_coverage = c("background" = "#FFD580", "border" = "#E49B0F", "highlight" = "#E49B0F"),
                               moderate_coverage_range = c(0.2, 0.8),
+                              print_isolated_foo = TRUE,
                               show_in_shiny = FALSE) {
 
   # Check folder existence
@@ -52,23 +54,27 @@ visualise_project <- function(project_path,
     paste0(project_path, "/", test_path)
   }
 
+  # get the full function paths including project path and use from here on wards
+  foo_path <- paste0(project_path, "/", foo_path)
+
   # Load and summarize the model
-  df_summary <- summarise_model(foo_folder = paste0(project_path, "/", foo_path),
+  df_summary <- summarise_model(foo_folder = foo_path,
                                 test_folder = test_path)
 
-  df_coverage <- NULL
   # get test coverage
   if (run_coverage) {
     df_coverage <-
-      get_foo_coverage(foo_folder  = paste0(project_path, "/", foo_path),
+      get_foo_coverage(foo_folder  = foo_path,
                        test_folder = test_path)
+  }else{
+    df_coverage <- NULL
   }
 
   # the scripts must be loaded in the namespace...
   # so we have to source them all before we can run the code.
   # ideally we would not need to do this, although its hardly the end of the world
-  source_files(path = paste0(project_path,"/", foo_path),
-                       verbose = F)
+  source_files(path = foo_path,
+               verbose = F)
 
   # Identify function dependencies and create a network plot
   df_edges <- identify_dependencies(v_unique_foo = df_summary$foo_string)
@@ -87,13 +93,37 @@ visualise_project <- function(project_path,
     show_in_shiny = show_in_shiny
   )
 
-  if(!isTRUE(show_in_shiny)) {
+  # identify which functions are isolated (not child or parent of any other function)
+  # this means that there is no to (or its NA), and no from (or its NA)
+  get_isolated_foo <- function(df_edges){
+    # get all unique functions
+    v_functions <- unique(c(df_edges$from, df_edges$to))
+    # remove NAs
+    v_functions <- v_functions[!is.na(v_functions)]
+    # from edges
+    has_parent <- df_edges$from[df_edges$from %in% df_edges$to]
+    has_child  <- unique(df_edges$from[!is.na(df_edges$to)])
+    # return functions with no parent or child
+    v_isolated <- setdiff(v_functions, c(has_parent, has_child))
+    # return this vector of isolated function names
+    return(v_isolated)
+  }
 
+  # print isolated functions in a nice sentence
+  # add a new line for each function name for readability
+  cat(
+    "The following functions are isolated (no parent or child): ",
+    get_isolated_foo(df_edges = df_edges),
+    sep = "\n * "
+  )
+
+  # whether to display in shiny or not
+  if(!isTRUE(show_in_shiny)) {
     return(p)
   } else {
-
     run_shiny_app(network_object = p)
   }
+
 }
 
 #' Identify Dependencies

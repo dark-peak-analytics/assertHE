@@ -52,8 +52,8 @@ source_files <- function( file_regx = ".R",
   }
 
   # Source each file
-  for (file in files) {
-    source(file = file, echo=verbose, keep.source = keep_source)
+  for (f in files) {
+    source(file = f, echo=verbose, keep.source = keep_source)
   }
   return (files)
 }
