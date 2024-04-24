@@ -4,10 +4,12 @@
 \alias{get_function_path}
 \title{Remove artefacts from file path}
 \usage{
-get_function_path(file_location)
+get_function_path(file_location, project_path)
 }
 \arguments{
 \item{file_location}{Character scalar specifying the path of a file.}
+
+\item{project_path}{Character scalar specifying the path of the project.}
 }
 \value{
 A character scalar

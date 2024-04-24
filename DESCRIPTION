@@ -34,7 +34,8 @@ Imports:
     shiny,
     shinyjs,
     rstudioapi,
-    httr,
     roxygen2,
     methods,
-    waiter
+    waiter,
+    igraph,
+    httr

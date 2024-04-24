@@ -4,7 +4,10 @@
 \alias{define_app_ui}
 \title{Create Shiny app UI}
 \usage{
-define_app_ui()
+define_app_ui(network_title)
+}
+\arguments{
+\item{network_title}{Character string representing the title of the network to be displayed above the network.}
 }
 \value{
 Shiny app user interface

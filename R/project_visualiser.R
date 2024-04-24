@@ -41,7 +41,8 @@ visualise_project <- function(project_path,
                               moderate_coverage_range = c(0.2, 0.8),
                               print_isolated_foo = TRUE,
                               show_in_shiny = FALSE,
-                              network_title = NULL) {
+                              network_title = "Function Network",
+                              scale_node_size_by_degree = TRUE) {
 
   # Check folder existence
   stopifnot(dir.exists(project_path),
@@ -86,15 +87,18 @@ visualise_project <- function(project_path,
   # this means that there is no to (or its NA), and no from (or its NA)
   # print isolated functions in a nice sentence
   # add a new line for each function name for readability
-  v_isolated <- get_isolated_foo(df_edges = df_edges)
-  if (length(v_isolated) > 0) {
-    cat("The following functions are isolated (no parent or child): ",
-        v_isolated,
-        sep = "\n * ")
+  if(shiny::isTruthy(print_isolated_foo)) {
+    v_isolated <- get_isolated_foo(df_edges = df_edges)
+    if (length(v_isolated) > 0) {
+      cat("The following functions are isolated (no parent or child): ",
+          v_isolated,
+          sep = "\n * ")
+    }
   }
 
   # Plot the network of edges and nodes
   p <- plotNetwork(
+    network_title = network_title,
     df_edges = df_edges,
     to_col = "to",
     from_col = "from",
@@ -104,7 +108,8 @@ visualise_project <- function(project_path,
     color_with_test = color_with_test,
     color_mod_coverage = color_mod_coverage,
     moderate_coverage_range = moderate_coverage_range,
-    show_in_shiny = show_in_shiny
+    show_in_shiny = show_in_shiny,
+    scale_node_size_by_degree = scale_node_size_by_degree
   )
 
 
@@ -113,7 +118,9 @@ visualise_project <- function(project_path,
   if(!isTRUE(show_in_shiny)) {
     return(p)
   } else {
-    run_shiny_app(network_object = p)
+    run_shiny_app(network_object = p,
+                  network_title = network_title,
+                  project_path = project_path)
   }
 
 }
@@ -333,6 +340,7 @@ identify_dependencies <- function(v_unique_foo) {
 #' @param show_in_shiny logical scalar indicating whether to prepare/deploy the
 #' network using a built in shiny app. Default is `FALSE`.
 #' @param network_title title of the network plot.
+#' @param scale_node_size_by_degree Scale the node size by the degree centrality of the node.
 #'
 #' @return A visNetwork object representing the network plot.
 #'
@@ -346,6 +354,7 @@ identify_dependencies <- function(v_unique_foo) {
 #' @importFrom visNetwork visNetwork visEdges visOptions
 #' @importFrom dplyr rename
 #' @importFrom htmltools a
+#' @importFrom igraph graph_from_data_frame degree V
 plotNetwork <- function(df_edges,
                         from_col = "from",
                         to_col = "to",
@@ -356,7 +365,8 @@ plotNetwork <- function(df_edges,
                         color_mod_coverage = c("background" = "#FFD580", "border" = "#E49B0F", "highlight" = "#E49B0F"),
                         moderate_coverage_range = c(0.2, 0.8),
                         show_in_shiny = FALSE,
-                        network_title = NULL) {
+                        network_title = NULL,
+                        scale_node_size_by_degree = FALSE) {
   # Check input validity
   assertthat::assert_that(is.data.frame(df_edges),
                           from_col %in% colnames(df_edges),
@@ -419,7 +429,7 @@ plotNetwork <- function(df_edges,
         "title='Open function definition in RStudio' ",
         "aria-hidden='true' style='cursor:pointer; color: #75AADB;' id='",
         paste0("openFileInRStudio_", df_node_info$label[index]),
-        "' onclick=\"openInRStudio('", foo_paths[index],
+        "' onclick=\"openInRStudio('",  foo_paths[index],
         "');\"></i>",
         "<br><b>Test location</b>:",
         # skip "Test location" if coverage is 0%, cleaned_test_path == "".
@@ -435,7 +445,7 @@ plotNetwork <- function(df_edges,
             "aria-hidden='true' style='cursor:pointer; color: #337ab7;' id='",
             paste0("openFileInShiny_", df_node_info$label[index], "_test"),
             "' onclick=\"openInShiny('",
-            test_paths[index],
+             test_paths[index],
             "');\"></i>",
             " ",
             "<i class='fa-solid fa-up-right-from-square' ",
@@ -488,6 +498,23 @@ plotNetwork <- function(df_edges,
     no  = color_with_test["highlight"]
   )
 
+  if (shiny::isTruthy(scale_node_size_by_degree)) {
+    print("scale by degree")
+    # network
+    graph_of_edges <- igraph::graph_from_data_frame(d = df_edges,
+                                                    directed = TRUE)
+    degree_centrality <-
+      igraph::degree(graph_of_edges, mode = "out")  # In-degree centrality for directed graphs
+    # remove NA
+    degree_centrality <-
+      degree_centrality[names(degree_centrality) != "NA"]
+    # Scale Degree centrality values
+    scaled_centrality <- degree_centrality / max(degree_centrality)
+
+    # Add scaled Degree centrality values to the dataframe
+    df_nodes$value <-
+      scaled_centrality[match(df_nodes$id, igraph::V(graph_of_edges)$name)]
+  }
 
   # if code coverage is not all nulls
   if(any(!is.na(df_node_info$coverage))){
@@ -516,6 +543,7 @@ plotNetwork <- function(df_edges,
       yes = color_mod_coverage["highlight"],
       no  = df_nodes$color.highlight
     )
+
   }
 
   # Create the network plot
@@ -523,13 +551,14 @@ plotNetwork <- function(df_edges,
     visNetwork::visNetwork(
       nodes = df_nodes,
       edges = df_edges,
-      width = "100%"
+      width = "1000px",
+      height = "600px"
     )
   } else {
     visNetwork::visNetwork(
       nodes = df_nodes,
       edges = df_edges,
-      main = ifelse(test = !is.null(x = network_title), network_title, "Function Network"),
+      main = network_title,
       submain = list(
         text = paste0(
           'Functions without a test are <a style="color:#9c0000;">red</a> and ',
@@ -541,7 +570,8 @@ plotNetwork <- function(df_edges,
       footer = paste0(
         '<a href="https://github.com/dark-peak-analytics/assertHE/"',
         '>Created with assertHE</a>'),
-      width = "100%"
+      width = "1000px",
+      height = "600px"
     )
   }
   g <- g |>
@@ -554,13 +584,15 @@ plotNetwork <- function(df_edges,
         algorithm = "hierarchical"
       ),
       collapse = list(enabled = TRUE),
-      height = "500px",
-      width = "100%",
+      height = "600px",
+      width = "1000px",
       nodesIdSelection = TRUE
     )
 
   return(g)
 }
+
+
 
 #' Process Nodes
 #'
@@ -594,6 +626,7 @@ processNodes <- function(df_edges,
 #' Remove artefacts from file path
 #'
 #' @param file_location Character scalar specifying the path of a file.
+#' @param project_path Character scalar specifying the path of the project.
 #'
 #' @return A character scalar
 #'
@@ -611,14 +644,14 @@ processNodes <- function(df_edges,
 #'  )
 #' )
 #' }
-get_function_path <- function(file_location) {
+get_function_path <- function(file_location, project_path) {
 
   get_function_path <- gsub("#.*", "", file_location)
 
   full_file_path <- ifelse(
     test = is.na(get_function_path),
     yes =  "",
-    no = paste0(here::here(), "/", get_function_path)
+    no = paste0(project_path, "/", get_function_path)
   )
 
   return(full_file_path)
@@ -705,8 +738,10 @@ make_closable_tab <- function(
 
 #' Create Shiny app UI
 #'
+#' @param network_title Character string representing the title of the network to be displayed above the network.
+#'
 #' @return Shiny app user interface
-define_app_ui <- function() {
+define_app_ui <- function(network_title) {
 
   shiny::fluidPage(
     # Initialize shinyjs and waiter
@@ -867,7 +902,9 @@ define_app_ui <- function() {
         '<div id="titlehtmlwidget-b9361e0bc6cd12c5d6d9" style="font-family: ',
         'Georgia, &quot;Times New Roman&quot;, Times, serif; font-weight: ',
         'bold; font-size: 20px; text-align: center; background-color: ',
-        'inherit; display: block;">Function Network</div>'
+        'inherit; display: block;">',
+        network_title,
+        '</div>'
       )
     ),
     shiny::HTML(
@@ -924,7 +961,7 @@ define_app_ui <- function() {
 #' @inheritParams run_shiny_app
 #'
 #' @return Shiny app server logic
-define_app_server <- function(network_object) {
+define_app_server <- function(network_object, project_path) {
   function(input, output, session) {
     # Keep track of the current tab's output ID
     currentTabId <- shiny::reactiveVal(NULL)
@@ -1052,7 +1089,8 @@ define_app_server <- function(network_object) {
         # Open the file in RStudio
         file_location <- input$openInRStudio
         file_path <- get_function_path(
-          file_location = file_location
+          file_location = file_location,
+          project_path =  project_path
         )
         function_line <- get_function_line(
           file_location = file_location
@@ -1081,7 +1119,8 @@ define_app_server <- function(network_object) {
         if(input$openInShiny != "") {
           file_location <- input$openInShiny
           file_location <- get_function_path(
-            file_location = file_location
+            file_location = file_location,
+            project_path =  project_path
           )
           tab_name <- basename(file_location)
 
@@ -1165,6 +1204,8 @@ define_app_server <- function(network_object) {
 #' @param uiFunction Function defining shiny user-interface
 #' @param serverFunction Function defining shiny server logic
 #' @param network_object visNetwork object to be displayed in the shiny app
+#' @param network_title Title to be displayed in hte app above the title
+#' @param project_path Path to the project directory
 #'
 #' @return A shiny app
 #'
@@ -1184,10 +1225,13 @@ define_app_server <- function(network_object) {
 run_shiny_app <- function(
     uiFunction = define_app_ui,
     serverFunction = define_app_server,
-    network_object) {
+    network_object,
+    network_title = "Function Network",
+    project_path) {
 
   shiny::shinyApp(
-    ui = uiFunction(),
-    server = serverFunction(network_object = network_object)
+    ui = uiFunction(network_title),
+    server = serverFunction(network_object = network_object,
+                            project_path = project_path)
   )
 }

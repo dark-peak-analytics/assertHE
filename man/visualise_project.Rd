@@ -16,7 +16,8 @@ visualise_project(
   moderate_coverage_range = c(0.2, 0.8),
   print_isolated_foo = TRUE,
   show_in_shiny = FALSE,
-  network_title = NULL
+  network_title = "Function Network",
+  scale_node_size_by_degree = TRUE
 )
 }
 \arguments{
@@ -42,6 +43,8 @@ visualise_project(
 network using a built in shiny app. Default is \code{FALSE}.}
 
 \item{network_title}{title of the network plot.}
+
+\item{scale_node_size_by_degree}{Scale the node size by the degree centrality of the node.}
 }
 \value{
 A visNetwork object representing the network plot of function dependencies.

@@ -7,7 +7,9 @@
 run_shiny_app(
   uiFunction = define_app_ui,
   serverFunction = define_app_server,
-  network_object
+  network_object,
+  network_title = "Function Network",
+  project_path
 )
 }
 \arguments{
@@ -16,6 +18,10 @@ run_shiny_app(
 \item{serverFunction}{Function defining shiny server logic}
 
 \item{network_object}{visNetwork object to be displayed in the shiny app}
+
+\item{network_title}{Title to be displayed in hte app above the title}
+
+\item{project_path}{Path to the project directory}
 }
 \value{
 A shiny app
