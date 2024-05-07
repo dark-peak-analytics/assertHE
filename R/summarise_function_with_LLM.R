@@ -10,10 +10,11 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' summarise_function_with_LLM("calculate_costs")
+#' summarise_function_with_LLM("check_init")
 #' }
 #'
 summarise_function_with_LLM <- function(foo_name,
+                                        text_language = "English",
                                         llm_api_url = Sys.getenv("LLM_API_URL"),
                                         llm_api_key = Sys.getenv("LLM_API_KEY")){
   # get the function data list (function arguments and body)
@@ -27,6 +28,7 @@ summarise_function_with_LLM <- function(foo_name,
       foo_body = l_foo_data[["body"]],
       foo_title = l_foo_data[["title"]],
       foo_desc = l_foo_data[["desc"]],
+      text_language = text_language,
       model_name = "gpt-3.5-turbo-0125",
       llm_api_url = llm_api_url,
       llm_api_key = llm_api_key
@@ -114,6 +116,7 @@ summarise_function_from_arguments_and_body <- function(foo_name,
                                                        foo_body,
                                                        foo_title,
                                                        foo_desc,
+                                                       text_language = "English",
                                                        model_name = "gpt-3.5-turbo-0125",
                                                        llm_api_url = Sys.getenv("LLM_API_URL"),
                                                        llm_api_key = Sys.getenv("LLM_API_KEY")) {
@@ -122,7 +125,8 @@ summarise_function_from_arguments_and_body <- function(foo_name,
                           foo_body =  foo_body,
                           foo_name = foo_name,
                           foo_title = foo_title,
-                          foo_desc = foo_desc)
+                          foo_desc = foo_desc,
+                          text_language = text_language)
 
   # POST BODY
   body <- list(model = model_name,
@@ -157,6 +161,7 @@ summarise_function_from_arguments_and_body <- function(foo_name,
 #' @param foo_name      function name
 #' @param foo_title     function title
 #' @param foo_desc      function description
+#' @param text_language the language to return the summary in
 #'
 #' @return a single prompt in the form of a character string
 #' @export
@@ -164,6 +169,7 @@ summarise_function_from_arguments_and_body <- function(foo_name,
 #' @examples
 #' \dontrun{
 #' create_prompt(
+#' text_language = "Spanish",
 #' foo_arguments = LETTERS[1:3],
 #' foo_body = "D <- A+B+C; return(D)",
 #' foo_name = "calculate_QALYs",
@@ -174,15 +180,17 @@ create_prompt <- function(foo_arguments,
                           foo_body,
                           foo_name,
                           foo_desc,
-                          foo_title){
+                          foo_title,
+                          text_language = "English"){
 
   prompt <- paste0(
     collapse = " ",
     c(
-      "I am reviewing some R code. I have a single function called '",
-      paste0(foo_name),
-      paste0("' with a title, description, arguments and a body. Summarise what the function does in two paragraphs,"),
-      paste0("returning your output as HTML code. The Roxygen title and description is as follows"),
+      paste0("I am reviewing some R code. I have a single function called"),
+      paste0("'", foo_name, "'"),
+      paste0("with a title, description, arguments and a body. Summarise what the function does in two paragraphs,"),
+      paste0("in the language '", text_language, "' using the fewest tokens possible."),
+      paste0("The Roxygen title and description is as follows."),
       paste0("title: '", foo_title, "';"),
       paste0("description: '", foo_desc, "';"),
       paste0("The function arguments are: "),
