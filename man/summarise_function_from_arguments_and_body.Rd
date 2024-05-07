@@ -10,6 +10,7 @@ summarise_function_from_arguments_and_body(
   foo_body,
   foo_title,
   foo_desc,
+  text_language = "English",
   model_name = "gpt-3.5-turbo-0125",
   llm_api_url = Sys.getenv("LLM_API_URL"),
   llm_api_key = Sys.getenv("LLM_API_KEY")
@@ -25,6 +26,8 @@ summarise_function_from_arguments_and_body(
 \item{foo_title}{function title}
 
 \item{foo_desc}{function description}
+
+\item{text_language}{the language to return the summary in}
 
 \item{model_name}{name of the LLM to use (default gpt-3.5-turbo-0125)}
 

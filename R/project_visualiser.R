@@ -741,6 +741,8 @@ make_closable_tab <- function(
 #' @param network_title Character string representing the title of the network to be displayed above the network.
 #'
 #' @return Shiny app user interface
+#'
+#' @importFrom shinyWidgets pickerInput
 define_app_ui <- function(network_title) {
 
   languages <- c("English", "Spanish", "Mandarin", "Hindi", "Arabic",
@@ -948,7 +950,7 @@ define_app_ui <- function(network_title) {
     ),
     # Define network plot title/subtitle divs
     shiny::fluidRow(align = 'center',
-                    pickerInput(inputId = "language",
+                    shinyWidgets::pickerInput(inputId = "language",
                                 label = "Language:",
                                 choices = languages,
                                 selected = "English",
@@ -958,8 +960,8 @@ define_app_ui <- function(network_title) {
                                 choicesOpt = list(content =
                                        mapply(languages, flags,
                                               FUN = function(language, flagUrl) {
-                                                HTML(paste(
-                                                  tags$img(src=flagUrl,
+                                                shiny::HTML(paste(
+                                                  shiny::tags$img(src=flagUrl,
                                                            width=20,
                                                            height=15),
                                                   language
@@ -995,7 +997,7 @@ define_app_ui <- function(network_title) {
         ' to load its contents into a new browser tab.</div>'
       )
     ),
-    br(),
+    shiny::br(),
     # Define main panel
     shiny::fluidRow(
       shiny::column(
