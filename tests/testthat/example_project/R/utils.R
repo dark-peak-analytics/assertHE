@@ -15,3 +15,11 @@ utility_example2 <- function(){
 
   "function without a test"
 }
+
+# Bare code - not a function
+x = 15
+if(x == 20) {
+  message("impossible")
+} else {
+  message("Hello World")
+}
