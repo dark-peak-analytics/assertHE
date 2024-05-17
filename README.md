@@ -167,7 +167,8 @@ teaching model contained in a package. -
 [Alarid-Escudero et
 al. 2022](https://www.sciencedirect.com/science/article/pii/S1098301521017472). -
 [DOACs-AF-Economic-model](https://github.com/Bogdasayen/DOACs-AF-Economic-model) -
-The CGD AMR Cost model - in press.
+The CGD AMR Cost model - in press. - [Embedding Economics
+Analysis](https://github.com/DanPollardSheff/Embedding-Economic-Analysis)
 
 ## Get in contact
 

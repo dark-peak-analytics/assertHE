@@ -139,6 +139,7 @@ The following models have been visualized using the package, as test cases:
 - [cdx2cea](https://github.com/feralaes/cdx2cea) as described in [Alarid-Escudero et al. 2022](https://www.sciencedirect.com/science/article/pii/S1098301521017472).
 - [DOACs-AF-Economic-model](https://github.com/Bogdasayen/DOACs-AF-Economic-model) 
 - The CGD AMR Cost model - in press.
+- [Embedding Economics Analysis](https://github.com/DanPollardSheff/Embedding-Economic-Analysis)
 
 
 ## Get in contact
