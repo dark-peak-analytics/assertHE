@@ -153,6 +153,22 @@ check_trans_prob_array(a_P = a_P,
 # 10                                         H; at cycle 10
 ```
 
+## Using the package to review models
+
+Please get in contact if you would like to use the package to help
+review a model in R.
+
+The following models have been visualized using the package, as test
+cases: - [NICE RCC
+Model](https://github.com/nice-digital/NICE-model-repo) -
+[sicksickerPack](https://github.com/dark-peak-analytics/sicksickerPack)
+teaching model contained in a package. -
+[cdx2cea](https://github.com/feralaes/cdx2cea) as described in
+[Alarid-Escudero et
+al. 2022](https://www.sciencedirect.com/science/article/pii/S1098301521017472). -
+[DOACs-AF-Economic-model](https://github.com/Bogdasayen/DOACs-AF-Economic-model) -
+The CGD AMR Cost model - in press.
+
 ## Get in contact
 
 To get in contact about this project or other collaborations please feel
