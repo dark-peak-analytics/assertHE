@@ -155,6 +155,8 @@ find_function_calls_in_folder <- function(test_folder,
 #' Summarise the model functions in a single folder.
 #'
 #' @param foo_folder path to folder containing all functions for the model
+#' @param exclude_files A regular expression for files to NOT process (basename)
+#' @param exclude_dirs A regular expression for directories to NOT process (dirname)
 #' @param output_format output format to use, defaults to dataframe, options include latex and word.
 #' @param project_path path to the project folder, if not provided, will use current working directory.
 #' @inheritParams find_function_calls_in_folder
@@ -184,6 +186,8 @@ find_function_calls_in_folder <- function(test_folder,
 #' }
 summarise_model <- function(project_path = ".",
                             foo_folder = "R",
+                            exclude_files = NULL,
+                            exclude_dirs = NULL,
                             test_folder = NULL,
                             output_format = "dataframe") {
 
@@ -202,7 +206,9 @@ summarise_model <- function(project_path = ".",
   foo_folder <- paste0(project_path,"/", foo_folder)
 
   # function summary
-  df <- find_folder_function_definitions(foo_folder = foo_folder)
+  df <- find_folder_function_definitions(foo_folder = foo_folder,
+                                         f_excl = exclude_files,
+                                         d_excl = exclude_dirs)
 
   # if there is no test folder then there are no test locations...
   if (is.null(test_folder)) {
