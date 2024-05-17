@@ -77,6 +77,7 @@ visualise_project <- function(project_path,
   # so we have to source them all before we can run the code.
   # ideally we would not need to do this, although its hardly the end of the world
   source_files(path = foo_path,
+               funcs_only = TRUE,
                verbose = F,
                keep_source = FALSE)
 
