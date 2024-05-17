@@ -15,47 +15,111 @@
 #' }
 #'
 locate_funcs <-  function(file) {
-
   df <- utils::getParseData(parse(file, keep.source = TRUE), includeText = TRUE)
 
   # Find number of tokens which identify the use of the keyword 'function'
   func_cnt <- nrow(df[df$token == "FUNCTION", ])
 
-  apply(X = matrix(ncol = 1,
-                   data = 1:func_cnt),
-        MARGIN = 1,
-        FUN = function(func_id){
+  list_out <- lapply(
+    X = 1:func_cnt,
+    FUN = function(func_id) {
+      # get the 'id' of the expression defining a 'function'
+      parent_id <-
+        df[df$token == "FUNCTION", ][func_id, "parent"]
 
-          # get the 'id' of the expression defining a 'function'
-          parent_id <-
-            df[df$token == "FUNCTION", ][func_id, "parent"]
+      # get 'id' of the of expression assigning a name to the defined function
+      parent_of_assign <- df[df$id == parent_id, "parent"]
 
-          # get 'id' of the of expression assigning a name to the defined function
-          parent_of_assign <- df[df$id == parent_id, "parent"]
+      # We only need these elements, so remove everything else
+      filtered_df <-
+        df[df$parent %in% c(parent_id, parent_of_assign), ]
 
-          # We only need these elements, so remove everything else
-          filtered_df <-
-            df[df$parent %in% c(parent_id, parent_of_assign), ]
+      # Make sure we're not processing a 'lambda' ????
+      if (all(!c("EQ_ASSIGN", "LEFT_ASSIGN") %in% filtered_df$token)) {
+        # This causes a NULL to be returned !!!
+        return()
+      }
 
-          # Make sure we're not processing a 'lambda' ????
-          if (all(!c("EQ_ASSIGN", "LEFT_ASSIGN") %in% filtered_df$token)) {
-            return()
-          }
+      # get the start and end line numbers of the function definition
+      func_start <- filtered_df[1, "line1"]
+      # largest line2 val
+      func_end <- filtered_df[nrow(filtered_df), "line2"]
 
-          # get the start and end line numbers of the function definition
-          func_start <- filtered_df[1, "line1"]
-          # largest line2 val
-          func_end <- filtered_df[nrow(filtered_df), "line2"]
+      return (c(
+        "func_num" = func_id,
+        "func_start" = func_start,
+        "func_end" = func_end
+      ))
 
-          df_out <- data.frame(
-            func_num = func_id,
-            func_start = func_start,
-            func_end = func_end
-          )
+    }
+  )
 
-          return(df_out)
-        })
+  if (!is.null(list_out)) {
+    ret <- do.call(rbind, list_out)
+  } else {
+    ret <- NULL
+  }
+
+  return(ret)
 }
+
+
+
+#' @title find_files
+#' @description Find files based upon regular expression searching
+#' IMPORTANT - a Directory is NOT a file. (for most instances of file systems)
+#' @param file_regx = ".*" - a regular expression for files to source
+#' @param path = "." - a path to search
+#' @param recursive = TRUE - recurse into subdirectories
+#' @param exclude_files = NULL - regx for files to exclude
+#' @param exclude_dirs = NULL - regx for directories to exclude
+#'
+#' @return list of files
+#'
+#' @export
+#'
+#'
+#' @examples
+#' \dontrun{
+#' find_files(file_regx = ".*",  ## any file name
+#'  path = ".*",   # the current directory and all subdirectories
+#'  recursive = FALSE,  # don't recurse
+#'  exclude_files = ".*utility.*", # exclude "utility" anywhere in basename
+#'  exclude_dirs = "\/tmp\/"  # exclude any directory named "tmp", or subdirs
+#'  )
+#' }
+#'
+find_files <- function( file_regx = ".R",
+                          path = ".",
+                          recursive = TRUE,
+                          exclude_files = NULL,
+                          exclude_dirs = NULL) {
+
+  # Get the list of files matching file_regx in directories matching dir_regx
+  files <- list.files(path = path, pattern = file_regx, recursive=recursive, full.names = TRUE)
+
+  # Filter out directories - can't source a directory !
+  files <- files[file.info(files)$isdir == FALSE]
+
+  # Filter out any files which match the File exclude regex
+  if (!is.null(exclude_files)) {
+    files <- files[!grepl(exclude_files, basename(files))]
+  }
+
+  # Filter out any directories which match the Directory exclude regex
+  if (!is.null(exclude_dirs)) {
+    files <- files[!grepl(exclude_dirs, dirname(files))]
+  }
+
+  return (files)
+}
+
+
+
+
+
+
+
 
 #' @title source_files
 #' @description Source files based upon regular expression searching
@@ -66,6 +130,7 @@ locate_funcs <-  function(file) {
 #' @param recursive = TRUE - recurse into subdirectories
 #' @param exclude_files = NULL - regx for files to exclude
 #' @param exclude_dirs = NULL - regx for directories to exclude
+#' @param funcs_only = FALSE - source *only* identified functions, not the whole file
 #' @param verbose = FALSE - whether to emit the sourced files.
 #' @param keep_source = FALSE - whether to keep the source data when using source.
 #'
@@ -89,30 +154,22 @@ source_files <- function( file_regx = ".R",
                           recursive = TRUE,
                           exclude_files = NULL,
                           exclude_dirs = NULL,
+                          funcs_only = FALSE,
                           verbose=FALSE,
                           keep_source=FALSE) {
 
-  # Get the list of files matching file_regx in directories matching dir_regx
-  files <- list.files(path = path, pattern = file_regx, recursive=recursive, full.names = TRUE)
-
-  # Filter out directories - can't source a directory !
-  files <- files[file.info(files)$isdir == FALSE]
-
-  # Filter out any files which match the File exclude regex
-  if (!is.null(exclude_files)) {
-    files <- files[!grepl(exclude_files, basename(files))]
-  }
-
-  # Filter out any directories which match the Directory exclude regex
-  if (!is.null(exclude_dirs)) {
-    files <- files[!grepl(exclude_dirs, dirname(files))]
-  }
+  # Get matching file names
+  file_paths <- find_files(file_regx, path, recursive, exclude_files, exclude_dirs)
 
   # Source each file
-  for (f in files) {
-    source(file = f, echo=verbose, keep.source = keep_source)
+  for (f in file_paths) {
+    if(funcs_only){
+      source_funcs(file = f)
+    } else{
+      source(file = f, echo=verbose, keep.source = keep_source)
+    }
   }
-  return (files)
+  return (file_paths)
 }
 
 
@@ -142,7 +199,8 @@ source_lines <- function(file, lines){
   }
 
   # read all lines of the file
-  all_lines <- readLines(file)
+  all_lines <- suppressWarnings(readLines(file))
+
 
   # filter selected lines only
   selected_lines <- all_lines[lines]
@@ -175,7 +233,10 @@ source_lines <- function(file, lines){
 source_funcs <- function(file){
 
   # identify which lines of the file are defining functions
-  func_locs <- do.call(rbind, locate_funcs(file))
+  func_locs <- locate_funcs(file)
+
+  # If there are no functions, don't continue - (may cause problems from usage)
+  if(is.null(func_locs))  return()
 
   # for each function, generate the line numbers of interest (start...end)
   # into a vector of integers to be sourced

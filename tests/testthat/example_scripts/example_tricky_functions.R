@@ -94,7 +94,7 @@ print(output)
 
 
 # Example function with lots of comments everywhere
-# Messy function 10: add comment between
+# Messy function 11: add comment between
 #' a comment
      lots_of_comments_foo <- # comment here
   # comment between equals and function call
