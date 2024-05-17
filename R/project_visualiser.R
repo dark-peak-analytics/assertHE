@@ -501,6 +501,10 @@ plotNetwork <- function(df_edges,
 
   if (shiny::isTruthy(scale_node_size_by_degree)) {
     print("scale by degree")
+
+    # don't let igraph warn about replacing missing values
+    df_edges <- replace(df_edges, is.na(df_edges), "NA")
+
     # network
     graph_of_edges <- igraph::graph_from_data_frame(d = df_edges,
                                                     directed = TRUE)
