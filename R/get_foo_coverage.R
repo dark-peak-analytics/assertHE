@@ -41,10 +41,10 @@ get_foo_coverage <- function(foo_folder,
   tryCatch(
     expr = {
       invisible({
-        tmp <- #capture.output(
+        tmp <- suppressMessages({
           covr::file_coverage(source_files = source_files,
                                                   test_files = test_files)
-          #)
+          })
       })
     },
     error = function(cond) {

@@ -39,7 +39,7 @@ visualise_project <- function(project_path,
                               color_with_test = c("background" = "#e6ffe6", "border" = "#65a765", "highlight" = "#65a765"),
                               color_mod_coverage = c("background" = "#FFD580", "border" = "#E49B0F", "highlight" = "#E49B0F"),
                               moderate_coverage_range = c(0.2, 0.8),
-                              print_isolated_foo = TRUE,
+                              print_isolated_foo = FALSE,
                               show_in_shiny = FALSE,
                               network_title = "Function Network",
                               scale_node_size_by_degree = TRUE) {
@@ -500,12 +500,22 @@ plotNetwork <- function(df_edges,
   )
 
   if (shiny::isTruthy(scale_node_size_by_degree)) {
-    print("scale by degree")
+
+    # get the nodes with no edges
+    idx = is.na(df_edges$to)
+    nodes <- df_edges$from[idx]
+
     # network
-    graph_of_edges <- igraph::graph_from_data_frame(d = df_edges,
-                                                    directed = TRUE)
+    graph_of_edges <- igraph::graph_from_data_frame(d = df_edges[!idx,],
+                                                    directed = FALSE)
+
+    graph_of_edges <- #graph_of_edges +
+      igraph::add_vertices(graph_of_edges, length(nodes), attr=list(name=nodes))
+
+    # In-degree centrality for directed graphs
     degree_centrality <-
-      igraph::degree(graph_of_edges, mode = "out")  # In-degree centrality for directed graphs
+      igraph::degree(graph_of_edges,
+                     mode = "out")
     # remove NA
     degree_centrality <-
       degree_centrality[names(degree_centrality) != "NA"]
