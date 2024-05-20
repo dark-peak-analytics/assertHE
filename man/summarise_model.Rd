@@ -7,6 +7,8 @@
 summarise_model(
   project_path = ".",
   foo_folder = "R",
+  exclude_files = NULL,
+  exclude_dirs = NULL,
   test_folder = NULL,
   output_format = "dataframe"
 )
@@ -15,6 +17,10 @@ summarise_model(
 \item{project_path}{path to the project folder, if not provided, will use current working directory.}
 
 \item{foo_folder}{path to folder containing all functions for the model}
+
+\item{exclude_files}{A regular expression for files to NOT process (basename)}
+
+\item{exclude_dirs}{A regular expression for directories to NOT process (dirname)}
 
 \item{test_folder}{folder containing all tests}
 

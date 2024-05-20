@@ -165,6 +165,8 @@ find_function_definitions <- function(filename){
 #' @description Applies find_function_definitions to each file in a folder and aggregate results
 #'
 #' @param foo_folder A folder to apply find_function_definitions to each script in.
+#' @param f_excl A regular expression for files to NOT process (basename)
+#' @param d_excl A regular expression for directories to NOT process (dirname)
 #'
 #' @return A dataframe containing a column for function string and a column for function location.
 #'
@@ -174,18 +176,26 @@ find_function_definitions <- function(filename){
 #'
 #' @examples
 #' \dontrun{
+#' # Skip listed files "somefile.R", and "another_file.R"
 #' find_folder_function_definitions(
 #' foo_folder = "tests/testthat/example_project"
+#' f_excl = "\\b(somefile\\.R|another_file\\.R)\\b"
 #' )
 #' }
-find_folder_function_definitions <- function(foo_folder) {
+find_folder_function_definitions <- function(foo_folder = ".", f_excl=NULL, d_excl=NULL) {
   # get a list of the files in the folder
-  l_files <- list.files(
-    path = foo_folder,
-    recursive = T,
-    full.names = T,
-    pattern = "\\.R$"
-  )
+  # l_files <- list.files(
+  #   path = foo_folder,
+  #   recursive = T,
+  #   full.names = T,
+  #   pattern = "\\.R$"
+  # )
+
+  l_files <- find_files(file_regx = "\\.R$",
+                        path = foo_folder,
+                        recursive = T,
+                        exclude_files = f_excl,
+                        exclude_dirs = d_excl)
 
   # loop through, combine all results in single dataframe
   df_foo_summary <- lapply(X = l_files,

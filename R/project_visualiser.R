@@ -6,6 +6,8 @@
 #' @param project_path Path to the project folder.
 #' @param foo_path Path to the folder containing foo functions.
 #' @param test_path Path to the folder containing test functions.
+#' @param exclude_files A regular expression for files to NOT process (basename)
+#' @param exclude_dirs A regular expression for directories to NOT process (dirname)
 #' @param run_coverage Boolean determining whether to run coverage assessment
 #' @param print_isolated_foo Print the isolated functions to the console.
 #'
@@ -34,6 +36,8 @@
 visualise_project <- function(project_path,
                               foo_path = "R",
                               test_path = NULL,
+                              exclude_files = NULL,
+                              exclude_dirs = NULL,
                               run_coverage = F,
                               color_no_test = c("background" = "#fad1d0", "border" = "#9c0000", "highlight" = "#9c0000"),
                               color_with_test = c("background" = "#e6ffe6", "border" = "#65a765", "highlight" = "#65a765"),
@@ -52,6 +56,8 @@ visualise_project <- function(project_path,
   # Load and summarize the model
   df_summary <- summarise_model(project_path = project_path,
                                 foo_folder = foo_path,
+                                exclude_files = exclude_files,
+                                exclude_dirs = exclude_dirs,
                                 test_folder = test_path)
 
   # if test path is null then don't include them in summary...

@@ -8,6 +8,8 @@ visualise_project(
   project_path,
   foo_path = "R",
   test_path = NULL,
+  exclude_files = NULL,
+  exclude_dirs = NULL,
   run_coverage = F,
   color_no_test = c(background = "#fad1d0", border = "#9c0000", highlight = "#9c0000"),
   color_with_test = c(background = "#e6ffe6", border = "#65a765", highlight = "#65a765"),
@@ -26,6 +28,10 @@ visualise_project(
 \item{foo_path}{Path to the folder containing foo functions.}
 
 \item{test_path}{Path to the folder containing test functions.}
+
+\item{exclude_files}{A regular expression for files to NOT process (basename)}
+
+\item{exclude_dirs}{A regular expression for directories to NOT process (dirname)}
 
 \item{run_coverage}{Boolean determining whether to run coverage assessment}
 

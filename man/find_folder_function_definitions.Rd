@@ -4,10 +4,18 @@
 \alias{find_folder_function_definitions}
 \title{Creates summary of R files in folder with functions defined within and locations.}
 \usage{
-find_folder_function_definitions(foo_folder)
+find_folder_function_definitions(
+  foo_folder = ".",
+  f_excl = NULL,
+  d_excl = NULL
+)
 }
 \arguments{
 \item{foo_folder}{A folder to apply find_function_definitions to each script in.}
+
+\item{f_excl}{A regular expression for files to NOT process (basename)}
+
+\item{d_excl}{A regular expression for directories to NOT process (dirname)}
 }
 \value{
 A dataframe containing a column for function string and a column for function location.
@@ -17,8 +25,10 @@ Applies find_function_definitions to each file in a folder and aggregate results
 }
 \examples{
 \dontrun{
+# Skip listed files "somefile.R", and "another_file.R"
 find_folder_function_definitions(
 foo_folder = "tests/testthat/example_project"
+f_excl = "\\\\b(somefile\\\\.R|another_file\\\\.R)\\\\b"
 )
 }
 }
