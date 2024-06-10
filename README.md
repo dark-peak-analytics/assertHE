@@ -83,6 +83,17 @@ alt="Function network for cdx2cea" />
 <figcaption aria-hidden="true">Function network for cdx2cea</figcaption>
 </figure>
 
+## Sharing interactive model networks
+
+Once the model has been generated, it is possible to share the HTML for the 
+interactive network. In the visualisation tab click the downward arrow on the
+'export' button and then click 'save as web page'.
+
+![image](https://github.com/dark-peak-analytics/assertHE/assets/41961614/3f0b46a7-d74f-432c-8628-2225a3533bec)
+
+The visualisation for the HTML file may take a while to load for large networks. 
+However, all the funtionality from the HTML version (not the shiny version with the links) should be there.
+
 ### Internal checks for modellers
 
 The package has a series of functions to be used **within models** to
@@ -173,17 +184,6 @@ cases:
 - [Embedding Economics
   Analysis](https://github.com/DanPollardSheff/Embedding-Economic-Analysis)
   Diabetes Microsimulation model described in (in press).
-
-# Sharing interactive model networks
-
-Once the model has been generated, it is possible to share the HTML for the 
-interactive network. In the visualisation tab click the downward arrow on the
-'export' button and then click 'save as web page'.
-
-![image](https://github.com/dark-peak-analytics/assertHE/assets/41961614/3f0b46a7-d74f-432c-8628-2225a3533bec)
-
-The visualisation for the HTML file may take a while to load for large networks. 
-However, all the funtionality from the HTML version (not the shiny version with the links) should be there.
 
 ## Get in contact
 
