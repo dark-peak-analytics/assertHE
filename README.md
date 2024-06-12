@@ -185,6 +185,9 @@ cases:
   Analysis](https://github.com/DanPollardSheff/Embedding-Economic-Analysis)
   Diabetes Microsimulation model described in (in press).
 
+Health Economics Modelling Packages:
+- [voi R package](https://cran.rstudio.com/web/packages/voi/index.html) reviewed by GSK team.
+
 ## Get in contact
 
 To get in contact about this project or other collaborations please feel
