@@ -6,12 +6,15 @@
 \usage{
 summarise_function_with_LLM(
   foo_name,
+  text_language = "English",
   llm_api_url = Sys.getenv("LLM_API_URL"),
   llm_api_key = Sys.getenv("LLM_API_KEY")
 )
 }
 \arguments{
 \item{foo_name}{function name}
+
+\item{text_language}{the language to return the summary in}
 
 \item{llm_api_url}{url to the API for the LLM}
 
@@ -25,7 +28,7 @@ This function summarizes another function using a Language Model.
 }
 \examples{
 \dontrun{
-summarise_function_with_LLM("calculate_costs")
+summarise_function_with_LLM("check_init")
 }
 
 }

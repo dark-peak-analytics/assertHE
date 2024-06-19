@@ -4,7 +4,14 @@
 \alias{create_prompt}
 \title{Create a prompt for a LLM}
 \usage{
-create_prompt(foo_arguments, foo_body, foo_name, foo_desc, foo_title)
+create_prompt(
+  foo_arguments,
+  foo_body,
+  foo_name,
+  foo_desc,
+  foo_title,
+  text_language = "English"
+)
 }
 \arguments{
 \item{foo_arguments}{the arguments to the function}
@@ -16,6 +23,8 @@ create_prompt(foo_arguments, foo_body, foo_name, foo_desc, foo_title)
 \item{foo_desc}{function description}
 
 \item{foo_title}{function title}
+
+\item{text_language}{the language to return the summary in}
 }
 \value{
 a single prompt in the form of a character string
@@ -27,6 +36,7 @@ for the LLM.
 \examples{
 \dontrun{
 create_prompt(
+text_language = "Spanish",
 foo_arguments = LETTERS[1:3],
 foo_body = "D <- A+B+C; return(D)",
 foo_name = "calculate_QALYs",
