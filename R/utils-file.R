@@ -179,6 +179,7 @@ source_files <- function( file_regx = ".R",
 #' sourcing *this* file is a mistake - may result in infinite recursion
 #' @param file = a connection object or a character string path to a file.
 #' @param lines = A vector of integers specifying the lines to be sourced.
+#' @param env the environment in which to source the lines
 #'
 #' @return NULL
 #'
@@ -191,7 +192,7 @@ source_files <- function( file_regx = ".R",
 #'              lines = c(4, 5, 6) )     ## source lines 4-6
 #' }
 #'
-source_lines <- function(file, lines){
+source_lines <- function(file, lines, env = .GlobalEnv){
 
   # Check if 'file' is a character string
   if (is.character(file) && !file.exists(file)) {
@@ -209,7 +210,7 @@ source_lines <- function(file, lines){
   connection <- textConnection(object = selected_lines)
 
   # source the lines of code
-  source(connection)
+  source(connection, local = env)
 
 }
 
@@ -218,6 +219,7 @@ source_lines <- function(file, lines){
 #' # IMPORTANT !!!
 #' sourcing *this* file is a mistake - may result in infinite recursion
 #' @param file = a connection object or a character string path to a file.
+#' @param env the environment in which to source the functions
 #'
 #' @return NULL
 #'
@@ -230,7 +232,7 @@ source_lines <- function(file, lines){
 #' source_funcs(file)
 #' }
 #'
-source_funcs <- function(file){
+source_funcs <- function(file, env = .GlobalEnv){
 
   # identify which lines of the file are defining functions
   func_locs <- locate_funcs(file)
@@ -251,7 +253,8 @@ source_funcs <- function(file){
 
   # source the functions
   source_lines(file = file,
-               lines = func_lines)
+               lines = func_lines,
+               env = env)
 
 }
 

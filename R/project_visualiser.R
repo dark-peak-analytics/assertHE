@@ -79,16 +79,15 @@ visualise_project <- function(project_path,
     df_coverage <- NULL
   }
 
-  # the scripts must be loaded in the namespace...
-  # so we have to source them all before we can run the code.
-  # ideally we would not need to do this, although its hardly the end of the world
-  source_files(path = foo_path,
-               funcs_only = TRUE,
-               verbose = F,
-               keep_source = FALSE)
+  # Create a new environment to avoid sourcing scripts into the namespace
+  pkg_env <- new.env(parent = baseenv())
+
+  # Load all functions into this environment
+  load_functions_into_env(foo_path, pkg_env)
 
   # Identify function dependencies and create a network plot
-  df_edges <- identify_dependencies(v_unique_foo = df_summary$foo_string)
+  df_edges <- identify_dependencies(v_unique_foo = df_summary$foo_string,
+                                    pkg_env = pkg_env)
 
   # identify which functions are isolated (not child or parent of any other function)
   # this means that there is no to (or its NA), and no from (or its NA)
@@ -157,6 +156,23 @@ get_isolated_foo <- function(df_edges){
   return(v_isolated)
 }
 
+#' Load Functions into an Environment
+#'
+#' @param path Path to the folder containing the R scripts.
+#' @param env The environment into which the functions will be loaded.
+#'
+#' @returns None
+#'
+#' @noRd
+load_functions_into_env <- function(path, env) {
+  files <- find_files(path = path, file_regx = ".R")
+  for (file in files) {
+    source_funcs(file, env = env)
+  }
+}
+
+
+
 
 
 #' Identify Dependencies
@@ -164,18 +180,20 @@ get_isolated_foo <- function(df_edges){
 #' Identify dependencies between functions.
 #'
 #' @param v_unique_foo Vector of unique function strings.
+#' @param pkg_env The package environment where the functions are defined
+#'   (e.g. global).
 #'
 #' @return A data.table with two columns ("from" and "to") representing the dependencies.
 #'
 #' @importFrom data.table rbindlist
 #'
 #' @export
-identify_dependencies <- function(v_unique_foo) {
+identify_dependencies <- function(v_unique_foo, pkg_env = environment()) {
   lapply(
     X = v_unique_foo,
     FUN = .called_by,
     all_functions = v_unique_foo,
-    pkg_env = environment()
+    pkg_env = pkg_env
   ) |>
     data.table::rbindlist(fill = TRUE) |>
     unique() |>
