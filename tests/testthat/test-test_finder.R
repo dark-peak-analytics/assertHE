@@ -73,7 +73,7 @@ test_that(desc = "Check find_function_calls_in_folder works for sicksickerPack e
             })
 
             expect_equal(object = df_output_2$foo_string, expected = "THIS_IS_NOT_A_FUNCTION")
-            expect_equal(object = df_output_2$location, expected = NA)
+            expect_equal(object = df_output_2$test_location, expected = NA)
 
           })
 

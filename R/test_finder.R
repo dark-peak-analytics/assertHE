@@ -129,7 +129,8 @@ find_function_calls_in_folder <- function(test_folder,
   l_foo_test_paths <- l_foo_test_paths |>
     Filter(f = Negate(is.null))
 
-  if(length(l_foo_test_paths) == 0) return(data.frame(foo_string = foo_strings, location = NA))
+  if(length(l_foo_test_paths) == 0) return(data.frame(foo_string = foo_strings,
+                                                      test_location = NA))
 
   # get summary dataframe
   df_summary <- dplyr::bind_rows(l_foo_test_paths) |>
