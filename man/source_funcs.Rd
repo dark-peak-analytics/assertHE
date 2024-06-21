@@ -4,10 +4,12 @@
 \alias{source_funcs}
 \title{source_funcs}
 \usage{
-source_funcs(file)
+source_funcs(file, env = .GlobalEnv)
 }
 \arguments{
 \item{file}{= a connection object or a character string path to a file.}
+
+\item{env}{the environment in which to source the functions}
 }
 \description{
 Sources \emph{only} the functions discovered in an R file

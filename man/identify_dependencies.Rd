@@ -4,10 +4,13 @@
 \alias{identify_dependencies}
 \title{Identify Dependencies}
 \usage{
-identify_dependencies(v_unique_foo)
+identify_dependencies(v_unique_foo, pkg_env = environment())
 }
 \arguments{
 \item{v_unique_foo}{Vector of unique function strings.}
+
+\item{pkg_env}{The package environment where the functions are defined
+(e.g. global).}
 }
 \value{
 A data.table with two columns ("from" and "to") representing the dependencies.
