@@ -109,3 +109,38 @@ test_that(desc = "Check summarise_model works for sicksickerPack example",
           })
 
 
+
+
+
+
+test_that(desc = "Check model summarises for an example with no tests",
+          code = {
+
+            foo_folder  <- testthat::test_path("example_notests/R")
+            test_folder <- testthat::test_path("example_notests/tests/testthat")
+
+            expect_silent({
+              tmp <- summarise_model(foo_folder = foo_folder,
+                                     test_folder =  test_folder)
+            })
+
+            expect_true(nrow(tmp) > 0)
+            expect_true(all(is.na(tmp$test_location)))
+
+            expect_no_error({
+              summarise_model(foo_folder = foo_folder,
+                              test_folder =  test_folder,
+                              output_format = "latex")
+            })
+
+            expect_no_error({
+              summarise_model(foo_folder = foo_folder,
+                              test_folder =  test_folder,
+                              output_format = "word")
+            })
+
+
+
+
+          })
+
