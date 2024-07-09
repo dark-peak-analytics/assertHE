@@ -64,3 +64,6 @@ importFrom(utils,getParseData)
 importFrom(visNetwork,visEdges)
 importFrom(visNetwork,visNetwork)
 importFrom(visNetwork,visOptions)
+
+export(visualise_project_addin)
+
