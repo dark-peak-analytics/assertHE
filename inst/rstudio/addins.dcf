@@ -1,0 +1,4 @@
+Name: Visualise Project
+Description: Visualise project structure and coverage
+Binding: visualise_project_addin
+Interactive: true
