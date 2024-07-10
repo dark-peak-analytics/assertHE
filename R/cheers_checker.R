@@ -197,17 +197,24 @@ find_folder_function_definitions <- function(foo_folder = ".", f_excl=NULL, d_ex
                         exclude_files = f_excl,
                         exclude_dirs = d_excl)
 
-  # loop through, combine all results in single dataframe
-  df_foo_summary <- lapply(X = l_files,
-                           FUN = find_function_definitions) |>
-    dplyr::bind_rows() |>
-    as.data.frame() |>
-    dplyr::rename("foo_string" = "text",
-                  "foo_location" = "source")
+  if (length(l_files) > 0) {
+    # loop through, combine all results in single dataframe
+    df_foo_summary <- lapply(X = l_files,
+                             FUN = find_function_definitions) |>
+      dplyr::bind_rows() |>
+      as.data.frame() |>
+      dplyr::rename("foo_string" = "text",
+                    "foo_location" = "source")
 
-  df_foo_summary$foo_location <-
-    paste0(df_foo_summary$foo_location, "#L", df_foo_summary$line1)
+    # Proceed only if df_foo_summary is not empty
+    if (nrow(df_foo_summary) > 0) {
+      df_foo_summary$foo_location <- paste0(df_foo_summary$foo_location, "#L", df_foo_summary$line1)
+    }
 
+  } else {
+    # Create an empty data frame with the expected column names
+    df_foo_summary <- data.frame(foo_string = character(), foo_location = character())
+  }
 
   return(df_foo_summary[, c("foo_string", "foo_location")])
 }

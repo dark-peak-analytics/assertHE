@@ -102,15 +102,16 @@ find_files <- function( file_regx = ".R",
   files <- files[file.info(files)$isdir == FALSE]
 
   # Filter out any files which match the File exclude regex
-  if (!is.null(exclude_files)) {
+  if (!is.null(exclude_files) && !is.na(exclude_files)) {
     files <- files[!grepl(exclude_files, basename(files))]
   }
 
   # Filter out any directories which match the Directory exclude regex
-  if (!is.null(exclude_dirs)) {
+  if (!is.null(exclude_dirs) && !is.na(exclude_dirs)) {
     files <- files[!grepl(exclude_dirs, dirname(files))]
   }
 
+  files <- files[!is.na(files)]
   return (files)
 }
 

@@ -37,6 +37,7 @@ visualise_project_addin <- function() {
 
   server <- function(input, output, session) {
     shiny::observeEvent(input$visualize, {
+
       exclude_files <- ifelse(is.null(input$exclude_files), NULL, unlist(strsplit(input$exclude_files, ",")))
       exclude_dirs <- ifelse(is.null(input$exclude_dirs), NULL, unlist(strsplit(input$exclude_dirs, ",")))
 
@@ -44,7 +45,7 @@ visualise_project_addin <- function() {
       color_with_test <- c("background" = input$color_with_test_bg, "border" = input$color_with_test_border, "highlight" = input$color_with_test_highlight)
       color_mod_coverage <- c("background" = input$color_mod_coverage_bg, "border" = input$color_mod_coverage_border, "highlight" = input$color_mod_coverage_highlight)
 
-      visualise_project(
+      assertHE::visualise_project(
         project_path = input$project_path,
         foo_path = input$foo_path,
         test_path = input$test_path,
