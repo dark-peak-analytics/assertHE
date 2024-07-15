@@ -147,6 +147,15 @@ The following models have been visualized using the package, as test cases: \
 * Several internal models at Maple Health. \
 * The National Institute for Health and Care Excellence (NICE) have built the `assertHE` visualiser into their template for model reviews.
 
+## Sharing interactive model networks
+
+Once the model has been generated, it is possible to share the HTML for the 
+interactive network. In the visualisation tab click the downward arrow on the
+'export' button and then click 'save as web page'.
+
+The visualisation for the HTML file may take a while to load for large networks. 
+However, all the funtionality from the HTML version (not the shiny version with the links) should be there.
+
 ## Get in contact
 
 To get in contact about this project or other collaborations please feel free to message me on any of the below.
