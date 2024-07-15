@@ -183,6 +183,10 @@ cases:
 - The National Institute for Health and Care Excellence (NICE) have
   built the `assertHE` visualiser into their template for model reviews.
 
+Health Economics Modelling Packages:  
+- [voi R package](https://cran.rstudio.com/web/packages/voi/index.html)
+reviewed by GSK team.  
+
 ## Sharing interactive model networks
 
 Once the model has been generated, it is possible to share the HTML for
