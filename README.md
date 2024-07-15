@@ -26,6 +26,11 @@ functions color coded by test coverage. Users can click on the nodes to
 see function and test source code, test coverage and create an AI
 generated summary of the function.
 
+Rob outlined the package at R-HTA 2024 with a
+[video](https://www.youtube.com/watch?v=wr8-w-6QGno) and
+[slides](https://github.com/RobertASmith/talks/blob/master/RHTA24-assertHE%20(1).pdf)
+publicly available for those interested in finding out more.
+
 We are continiuing to work to improve the package and welcome
 contributions. To get involved, please see the [Contribution
 guide](https://github.com/dark-peak-analytics/assertHE/blob/main/CONTRIBUTING.md).
@@ -82,17 +87,6 @@ src="https://github.com/dark-peak-analytics/assertHE/assets/41961614/0d330730-1e
 alt="Function network for cdx2cea" />
 <figcaption aria-hidden="true">Function network for cdx2cea</figcaption>
 </figure>
-
-## Sharing interactive model networks
-
-Once the model has been generated, it is possible to share the HTML for the 
-interactive network. In the visualisation tab click the downward arrow on the
-'export' button and then click 'save as web page'.
-
-![image](https://github.com/dark-peak-analytics/assertHE/assets/41961614/3f0b46a7-d74f-432c-8628-2225a3533bec)
-
-The visualisation for the HTML file may take a while to load for large networks. 
-However, all the funtionality from the HTML version (not the shiny version with the links) should be there.
 
 ### Internal checks for modellers
 
@@ -183,10 +177,11 @@ cases:
 - The CGD AMR Cost model - in press.  
 - [Embedding Economics
   Analysis](https://github.com/DanPollardSheff/Embedding-Economic-Analysis)
-  Diabetes Microsimulation model described in (in press).
-
-Health Economics Modelling Packages:
-- [voi R package](https://cran.rstudio.com/web/packages/voi/index.html) reviewed by GSK team.
+  Diabetes Microsimulation model described in (in press).  
+- Several internal models at Dark Peak Analytics.  
+- Several internal models at Maple Health.  
+- The National Institute for Health and Care Excellence (NICE) have
+  built the `assertHE` visualiser into their template for model reviews.
 
 ## Get in contact
 
