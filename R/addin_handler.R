@@ -1,4 +1,23 @@
+app_env <- new.env()
 
+app_env$p_project_path = NULL
+app_env$p_foo_path = NULL
+app_env$p_test_path = NULL
+app_env$p_exclude_files = NULL
+app_env$p_exclude_dirs = NULL
+app_env$p_run_coverage = NULL
+app_env$p_color_no_test = NULL
+app_env$p_color_with_test = NULL
+app_env$p_color_mod_coverage = NULL
+app_env$p_moderate_coverage_range = NULL
+app_env$p_print_isolated_foo = NULL
+app_env$p_show_in_shiny = NULL
+app_env$p_network_title = NULL
+app_env$p_scale_node_size_by_degree = NULL
+
+# Environment to track app state
+
+app_env$closed <- FALSE
 
 # Addin handler
 visualise_project_addin <- function() {
@@ -36,7 +55,9 @@ visualise_project_addin <- function() {
   )
 
   server <- function(input, output, session) {
+
     shiny::observeEvent(input$visualize, {
+
 
       exclude_files <- ifelse(is.null(input$exclude_files), NULL, unlist(strsplit(input$exclude_files, ",")))
       exclude_dirs <- ifelse(is.null(input$exclude_dirs), NULL, unlist(strsplit(input$exclude_dirs, ",")))
@@ -45,24 +66,50 @@ visualise_project_addin <- function() {
       color_with_test <- c("background" = input$color_with_test_bg, "border" = input$color_with_test_border, "highlight" = input$color_with_test_highlight)
       color_mod_coverage <- c("background" = input$color_mod_coverage_bg, "border" = input$color_mod_coverage_border, "highlight" = input$color_mod_coverage_highlight)
 
-      assertHE::visualise_project(
-        project_path = input$project_path,
-        foo_path = input$foo_path,
-        test_path = input$test_path,
-        exclude_files = exclude_files,
-        exclude_dirs = exclude_dirs,
-        run_coverage = input$run_coverage,
-        color_no_test = color_no_test,
-        color_with_test = color_with_test,
-        color_mod_coverage = color_mod_coverage,
-        moderate_coverage_range = input$moderate_coverage_range,
-        print_isolated_foo = input$print_isolated_foo,
-        show_in_shiny = input$show_in_shiny,
-        network_title = input$network_title,
-        scale_node_size_by_degree = input$scale_node_size_by_degree
-      )
+      app_env$p_project_path = input$project_path
+      app_env$p_foo_path = input$foo_path
+      app_env$p_test_path = input$test_path
+      app_env$p_exclude_files = exclude_files
+      app_env$p_exclude_dirs = exclude_dirs
+      app_env$p_run_coverage = input$run_coverage
+      app_env$p_color_no_test = color_no_test
+      app_env$p_color_with_test = color_with_test
+      app_env$p_color_mod_coverage = color_mod_coverage
+      app_env$p_moderate_coverage_range = input$moderate_coverage_range
+      app_env$p_print_isolated_foo = input$print_isolated_foo
+      app_env$p_show_in_shiny = input$show_in_shiny
+      app_env$p_network_title = input$network_title
+      app_env$p_scale_node_size_by_degree = input$scale_node_size_by_degree
+
+      app_env$closed <- TRUE
+      stopApp()
+
     })
   }
 
-  shiny::shinyApp(ui = ui, server = server)
+  # Run the application and capture the reactive value
+  inputApp <- shiny::shinyApp(ui = ui, server = server)
+  rv <- runApp(inputApp)
+
+  # Wait for the button to be clicked
+  while (!app_env$closed) {
+    Sys.sleep(0.1)
+  }
+
+  assertHE::visualise_project(
+    project_path = app_env$p_project_path,
+    foo_path = app_env$p_foo_path,
+    test_path = app_env$p_test_path,
+    exclude_files = app_env$p_exclude_files,
+    exclude_dirs = app_env$p_exclude_dirs,
+    run_coverage = app_env$p_run_coverage,
+    color_no_test = app_env$p_color_no_test,
+    color_with_test = app_env$p_color_with_test,
+    color_mod_coverage = app_env$p_color_mod_coverage,
+    moderate_coverage_range = app_env$p_moderate_coverage_range,
+    print_isolated_foo = app_env$p_print_isolated_foo,
+    show_in_shiny = app_env$p_show_in_shiny,
+    network_title = app_env$p_network_title,
+    scale_node_size_by_degree = app_env$p_scale_node_size_by_degree)
+
 }
