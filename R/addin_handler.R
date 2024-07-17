@@ -26,7 +26,7 @@ visualise_project_addin <- function() {
     shiny::titlePanel("Visualise Project"),
     shiny::sidebarLayout(
       shiny::sidebarPanel(
-        shiny::textInput("project_path", "Project Path", value = ""),
+        shiny::textInput("project_path", "Project Path", value = "."),
         shiny::textInput("foo_path", "Foo Path", value = "R"),
         shiny::textInput("test_path", "Test Path", value = NULL),
         shiny::textInput("exclude_files", "Exclude Files (comma-separated)", value = NULL),
@@ -82,14 +82,14 @@ visualise_project_addin <- function() {
       app_env$p_scale_node_size_by_degree = input$scale_node_size_by_degree
 
       app_env$closed <- TRUE
-      stopApp()
+      shiny::stopApp()
 
     })
   }
 
   # Run the application and capture the reactive value
   inputApp <- shiny::shinyApp(ui = ui, server = server)
-  rv <- runApp(inputApp)
+  rv <- shiny::runApp(inputApp)
 
   # Wait for the button to be clicked
   while (!app_env$closed) {
