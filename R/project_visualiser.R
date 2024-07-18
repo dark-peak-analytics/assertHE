@@ -752,7 +752,59 @@ make_closable_tab <- function(
 #' @param network_title Character string representing the title of the network to be displayed above the network.
 #'
 #' @return Shiny app user interface
+#'
+#' @importFrom shinyWidgets pickerInput
 define_app_ui <- function(network_title) {
+
+  languages <- c("English", "Spanish", "Mandarin", "Hindi", "Arabic",
+                 "Bengali", "Portuguese", "Russian", "Japanese", "German",
+                 "Javanese", "Punjabi", "Wu", "Telugu", "Marathi",
+                 "Vietnamese", "Korean", "French", "Turkish", "Tamil",
+                 "Bulgarian", "Croatian", "Czech", "Danish", "Dutch",
+                 "Estonian", "Finnish", "Greek", "Hungarian", "Irish",
+                 "Italian", "Latvian", "Lithuanian", "Maltese", "Polish",
+                 "Romanian", "Slovak", "Slovenian", "Swedish")
+
+  flags <- c("https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/gb.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/es.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/cn.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/in.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/sa.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/bd.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/pt.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/ru.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/jp.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/de.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/id.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/in.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/us.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/in.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/in.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/vn.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/kr.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/fr.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/tr.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/in.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/bg.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/hr.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/cz.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/dk.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/nl.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/ee.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/fi.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/gr.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/hu.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/ie.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/it.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/lv.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/lt.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/mt.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/pl.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/ro.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/sk.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/si.svg",
+             "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/se.svg")
+
 
   shiny::fluidPage(
     # Initialize shinyjs and waiter
@@ -908,6 +960,27 @@ define_app_ui <- function(network_title) {
     ")
     ),
     # Define network plot title/subtitle divs
+    shiny::fluidRow(align = 'center',
+                    shinyWidgets::pickerInput(inputId = "language",
+                                label = "Language:",
+                                choices = languages,
+                                selected = "English",
+                                width = "fit",
+                                options = list(
+                                  `live-search` = TRUE),
+                                choicesOpt = list(content =
+                                       mapply(languages, flags,
+                                              FUN = function(language, flagUrl) {
+                                                shiny::HTML(paste(
+                                                  shiny::tags$img(src=flagUrl,
+                                                           width=20,
+                                                           height=15),
+                                                  language
+                                                ))
+                                              },
+                                              SIMPLIFY = FALSE,
+                                              USE.NAMES = FALSE)))
+    ),
     shiny::HTML(
       paste0(
         '<div id="titlehtmlwidget-b9361e0bc6cd12c5d6d9" style="font-family: ',
@@ -935,6 +1008,7 @@ define_app_ui <- function(network_title) {
         ' to load its contents into a new browser tab.</div>'
       )
     ),
+    shiny::br(),
     # Define main panel
     shiny::fluidRow(
       shiny::column(
@@ -973,7 +1047,9 @@ define_app_ui <- function(network_title) {
 #'
 #' @return Shiny app server logic
 define_app_server <- function(network_object, project_path) {
+
   function(input, output, session) {
+
     # Keep track of the current tab's output ID
     currentTabId <- shiny::reactiveVal(NULL)
 
@@ -1031,7 +1107,9 @@ define_app_server <- function(network_object, project_path) {
               currentTabId(tab_name)
 
               # Query AI:
+              print(input$language)
               ai_response <- summarise_function_with_LLM(
+                text_language = input$language,
                 foo_name = function_name,
                 llm_api_url = Sys.getenv("LLM_API_URL"),
                 llm_api_key = Sys.getenv("LLM_API_KEY")

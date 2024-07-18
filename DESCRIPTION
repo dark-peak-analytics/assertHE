@@ -38,4 +38,5 @@ Imports:
     methods,
     waiter,
     igraph,
-    httr
+    httr,
+    shinyWidgets
