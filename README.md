@@ -31,7 +31,7 @@ Rob outlined the package at R-HTA 2024 with a
 [slides](https://github.com/RobertASmith/talks/blob/master/RHTA24-assertHE%20(1).pdf)
 publicly available for those interested in finding out more.
 
-We are continiuing to work to improve the package and welcome
+We are continuing to work to improve the package and welcome
 contributions. To get involved, please see the [Contribution
 guide](https://github.com/dark-peak-analytics/assertHE/blob/main/CONTRIBUTING.md).
 For more context about the aims of the wider project please read [the
