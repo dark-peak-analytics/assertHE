@@ -63,6 +63,10 @@ The below is an example of using the function on the cdx2cea model. The red node
 
 ![Function network for cdx2cea](https://github.com/dark-peak-analytics/assertHE/assets/41961614/0d330730-1e0b-40d9-b18b-b2ee14511cb6)
 
+#### Using the LLM function summary tool
+
+To use the LLM function summary tool follow the guide [here](https://github.com/dark-peak-analytics/assertHE/wiki/Using-the-LLM-functionality-in-assertHE).
+
 ### Internal checks for modellers 
 
 The package has a series of functions to be used **within models** to check that 

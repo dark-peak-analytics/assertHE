@@ -88,6 +88,11 @@ alt="Function network for cdx2cea" />
 <figcaption aria-hidden="true">Function network for cdx2cea</figcaption>
 </figure>
 
+#### Using the LLM function summary tool
+
+To use the LLM function summary tool follow the guide
+[here](https://github.com/dark-peak-analytics/assertHE/wiki/Using-the-LLM-functionality-in-assertHE).
+
 ### Internal checks for modellers
 
 The package has a series of functions to be used **within models** to
