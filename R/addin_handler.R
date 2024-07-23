@@ -22,37 +22,210 @@ app_env$closed <- FALSE
 # Addin handler
 visualise_project_addin <- function() {
 
-  ui <- shiny::fluidPage(
-    shiny::titlePanel("Visualise Project"),
-    shiny::sidebarLayout(
-      shiny::sidebarPanel(
-        shiny::textInput("project_path", "Project Path", value = "."),
-        shiny::textInput("foo_path", "Foo Path", value = "R"),
-        shiny::textInput("test_path", "Test Path", value = NULL),
-        shiny::textInput("exclude_files", "Exclude Files (comma-separated)", value = NULL),
-        shiny::textInput("exclude_dirs", "Exclude Dirs (comma-separated)", value = NULL),
-        shiny::checkboxInput("run_coverage", "Run Coverage", value = FALSE),
-        shiny::textInput("color_no_test_bg", "No Test Background Color", value = "#fad1d0"),
-        shiny::textInput("color_no_test_border", "No Test Border Color", value = "#9c0000"),
-        shiny::textInput("color_no_test_highlight", "No Test Highlight Color", value = "#9c0000"),
-        shiny::textInput("color_with_test_bg", "With Test Background Color", value = "#e6ffe6"),
-        shiny::textInput("color_with_test_border", "With Test Border Color", value = "#65a765"),
-        shiny::textInput("color_with_test_highlight", "With Test Highlight Color", value = "#65a765"),
-        shiny::textInput("color_mod_coverage_bg", "Moderate Coverage Background Color", value = "#FFD580"),
-        shiny::textInput("color_mod_coverage_border", "Moderate Coverage Border Color", value = "#E49B0F"),
-        shiny::textInput("color_mod_coverage_highlight", "Moderate Coverage Highlight Color", value = "#E49B0F"),
-        shiny::sliderInput("moderate_coverage_range", "Moderate Coverage Range", min = 0, max = 1, value = c(0.2, 0.8)),
-        shiny::checkboxInput("print_isolated_foo", "Print Isolated Foo", value = TRUE),
-        shiny::checkboxInput("show_in_shiny", "Show in Shiny", value = FALSE),
-        shiny::textInput("network_title", "Network Title", value = "Function Network"),
-        shiny::checkboxInput("scale_node_size_by_degree", "Scale Node Size by Degree", value = TRUE),
-        shiny::actionButton("visualize", "Visualize")
-      ),
-      shiny::mainPanel(
-        shiny::plotOutput("network_plot")
+  essentials_panel <- shiny::tabPanel(
+    "Essential",
+    htmltools::br(),
+    shiny::fluidRow(
+      shiny::column(align="center",
+                    width = 12,
+                    shiny::textInput(
+                      inputId = "network_title",
+                      label = "Network Title",
+                      value = "Function Network"
+                    ),
+                    shiny::textInput(
+                      inputId = "project_path",
+                      label = "Project Path",
+                      value = "."
+                    ),
+                    shiny::textInput(
+                      inputId = "foo_path",
+                      label = "Function folder Path",
+                      value = "R"
+                    ),
+                    shiny::textInput(
+                      inputId = "test_path",
+                      label = "Test folder Path",
+                      value = NULL,
+                      placeholder = "tests/testthat"
+                    ),
+                    shiny::textInput(
+                      inputId = "exclude_files",
+                      label = "Exclude Files (comma-separated)",
+                      value = NULL
+                    ),
+                    shiny::textInput(
+                      inputId = "exclude_dirs",
+                      label = "Exclude Directories (comma-separated)",
+                      value = NULL
+                    ),
+                    shiny::checkboxInput(
+                      inputId = "run_coverage",
+                      label = "Run Coverage",
+                      value = FALSE
+                    ),
+                    shiny::checkboxInput("show_in_shiny", "Show in Shiny", value = FALSE)
       )
     )
   )
+
+  color_panel <- shiny::tabPanel(
+    "Node colours",
+    htmltools::br(),
+    shiny::fluidRow(
+      shiny::column(
+        align = "center",
+        width = 4,
+        offset = 0,
+        colourpicker::colourInput(width = "80%",
+                                  inputId = "color_no_test_bg",
+                                  label =  "No Test Background",
+                                  value = "#fad1d0",
+                                  showColour = "both",
+                                  closeOnClick = T
+        ),
+        colourpicker::colourInput(width = "80%",
+                                  inputId = "color_no_test_border",
+                                  label =  "No Test Background",
+                                  value = "#9c0000",
+                                  showColour = "both",
+                                  closeOnClick = T
+        ),
+        colourpicker::colourInput(width = "80%",
+                                  inputId = "color_no_test_highlight",
+                                  label =  "No Test Highlight",
+                                  value = "#9c0000",
+                                  showColour = "both",
+                                  closeOnClick = T
+        )
+      ),
+      shiny::column(
+        width = 4,
+        offset = 0,
+        align = "center",
+        colourpicker::colourInput(width = "80%",
+                                  inputId = "color_with_test_bg",
+                                  label =  "With Test Background",
+                                  value = "#e6ffe6",
+                                  showColour = "both",
+                                  closeOnClick = T
+        ),
+        colourpicker::colourInput(width = "80%",
+                                  inputId = "color_with_test_border",
+                                  label =  "With Test Border",
+                                  value = "#65a765",
+                                  showColour = "both",
+                                  closeOnClick = T
+        ),
+        colourpicker::colourInput(width = "80%",
+                                  inputId = "color_with_test_highlight",
+                                  label =  "With Test Highlight",
+                                  value = "#65a765",
+                                  showColour = "both",
+                                  closeOnClick = T
+        )
+      ),
+      shiny::column(
+        width = 4,
+        offset = 0,
+        align="center",
+        colourpicker::colourInput(width = "80%",
+                                  inputId = "color_mod_coverage_bg",
+                                  label =  "Moderate Coverage Background",
+                                  value = "#FFD580",
+                                  showColour = "both",
+                                  closeOnClick = T
+        ),
+        colourpicker::colourInput(width = "80%",
+                                  inputId = "color_mod_coverage_border",
+                                  label =  "Moderate Coverage Border",
+                                  value = "#E49B0F",
+                                  showColour = "both",
+                                  closeOnClick = T
+        ),
+        colourpicker::colourInput(width = "80%",
+                                  inputId = "color_mod_coverage_highlight",
+                                  label =  "Moderate Coverage Highlight",
+                                  value = "#E49B0F",
+                                  showColour = "both",
+                                  closeOnClick = T
+        )
+      )
+    ) # close row,
+  )
+
+
+
+  extra_panel <- shiny::tabPanel(
+    "Other options",
+    htmltools::br(),
+    shiny::column(
+      align = "center",
+      width = 12,
+      offset = 0,
+      shiny::sliderInput(
+        "moderate_coverage_range",
+        "Moderate Coverage Range",
+        min = 0,
+        max = 1,
+        value = c(0.2, 0.8)
+      ),
+      shiny::checkboxInput("print_isolated_foo", "Print Isolated Functions", value = TRUE),
+      shiny::checkboxInput("scale_node_size_by_degree", "Scale Node Size by Degree", value = TRUE)
+    )
+  )
+
+
+
+  # App UI design
+  ui <- shiny::fluidPage(
+    htmltools::tags$head(# Note the wrapping of the string in HTML()
+      htmltools::tags$style(
+        htmltools::HTML(
+          ".nav-tabs {
+          display: flex !important;
+          justify-content: center !important;
+          width: 100%;
+          }
+          .col-sm-8 {
+          float:none;
+          }
+          .tab-panel > div {
+          width: 100%;
+          }
+          .nav-tabs>li>a{
+          color: black;
+          }"
+        )
+      )),
+
+    # title section at top
+    shiny::titlePanel(htmltools::h1("Visualise Project",
+                                    align = 'center')),
+    # short description
+    htmltools::p(
+      "Select from the options below and click the 'Visualize' button at the bottom to generate the network graph.",
+      align = 'center'
+    ),
+
+    # three tabs here created in objects above
+    shiny::tabsetPanel(essentials_panel,
+                       color_panel,
+                       extra_panel),
+
+
+
+    # Action button
+    htmltools::hr(),
+    shiny::column(
+      align = "center",
+      offset = 0,
+      width = 12,
+      shiny::actionButton("visualize", "Visualize",
+                          style = "background-color: #1f883d; color: white; font-weight: bold")
+    )
+
+  ) # close page
 
   server <- function(input, output, session) {
 
