@@ -262,7 +262,7 @@ visualise_project_addin <- function() {
 
   # Run the application and capture the reactive value
   inputApp <- shiny::shinyApp(ui = ui, server = server)
-  rv <- shiny::runApp(inputApp)
+  shiny::runApp(inputApp)
 
   # Wait for the button to be clicked
   while (!app_env$closed) {
