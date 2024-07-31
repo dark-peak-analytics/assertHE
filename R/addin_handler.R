@@ -285,4 +285,29 @@ visualise_project_addin <- function() {
     network_title = app_env$p_network_title,
     scale_node_size_by_degree = app_env$p_scale_node_size_by_degree)
 
+  # Construct the function call string from the parameters provided
+  func_text <- NULL
+
+  if(is.null(func_text)){
+    func_text <- sprintf(
+      "assertHE::visualise_project(project_path = '%s', foo_path = '%s', test_path = '%s', exclude_files = '%s', exclude_dirs = '%s', run_coverage = %s, color_no_test = c(%s, %s, %s), color_with_test = c(%s, %s, %s), color_mod_coverage = c(%s, %s, %s), moderate_coverage_range = c(%g, %g), print_isolated_foo = %s, show_in_shiny = %s, network_title = '%s', scale_node_size_by_degree = %s",
+       app_env$p_project_path,
+       app_env$p_foo_path,
+       app_env$p_test_path,
+       app_env$p_exclude_files,
+       app_env$p_exclude_dirs,
+       ifelse(app_env$p_run_coverage, "TRUE", "FALSE"),
+       app_env$p_color_no_test[1], app_env$p_color_no_test[2], app_env$p_color_no_test[3],
+       app_env$p_color_with_test[1], app_env$p_color_with_test[2], app_env$p_color_with_test[3],
+       app_env$p_color_mod_coverage[1], app_env$p_color_mod_coverage[2], app_env$p_color_mod_coverage[3],
+       app_env$p_moderate_coverage_range[1],app_env$p_moderate_coverage_range[2],
+       ifelse(app_env$p_print_isolated_foo, "TRUE", "FALSE"),
+       ifelse(app_env$p_show_in_shiny, "TRUE", "FALSE"),
+       app_env$p_network_title,
+       ifelse(app_env$p_scale_node_size_by_degree,  "TRUE", "FALSE")
+      )
+
+   cat("\n\n", func_text, "\n\n")
+
+  }
 }
