@@ -9,7 +9,7 @@
 #' @param exclude_files A regular expression for files to NOT process (basename)
 #' @param exclude_dirs A regular expression for directories to NOT process (dirname)
 #' @param run_coverage Boolean determining whether to run coverage assessment
-#' @param print_isolated_foo Print the isolated functions to the console.
+#' @param print_isolated_foo Print the isolated functions to the console (default false)
 #'
 #' @return A visNetwork object representing the network plot of function dependencies.
 #'
@@ -43,7 +43,7 @@ visualise_project <- function(project_path,
                               color_with_test = c("background" = "#e6ffe6", "border" = "#65a765", "highlight" = "#65a765"),
                               color_mod_coverage = c("background" = "#FFD580", "border" = "#E49B0F", "highlight" = "#E49B0F"),
                               moderate_coverage_range = c(0.2, 0.8),
-                              print_isolated_foo = TRUE,
+                              print_isolated_foo = FALSE,
                               show_in_shiny = FALSE,
                               network_title = "Function Network",
                               scale_node_size_by_degree = TRUE) {
@@ -524,7 +524,6 @@ plotNetwork <- function(df_edges,
   )
 
   if (shiny::isTruthy(scale_node_size_by_degree)) {
-    print("scale by degree")
 
     # don't let igraph warn about replacing missing values
     df_edges <- replace(df_edges, is.na(df_edges), "NA")

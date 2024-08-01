@@ -170,7 +170,7 @@ visualise_project_addin <- function() {
         max = 1,
         value = c(0.2, 0.8)
       ),
-      shiny::checkboxInput("print_isolated_foo", "Print Isolated Functions", value = TRUE),
+      shiny::checkboxInput("print_isolated_foo", "Print Isolated Functions", value = FALSE),
       shiny::checkboxInput("scale_node_size_by_degree", "Scale Node Size by Degree", value = TRUE)
     )
   )
@@ -331,6 +331,10 @@ visualise_project_addin <- function() {
                         p_str12,
                         p_str13,
                         p_str14)
+   cat("\n\nFunction call:\n")
+   cat("\n", func_text, "\n\n")
 
-   cat("\n\n", func_text, "\n\n")
+   # copy the function call to the clipboard
+   clipr::write_clip(func_text)
+   cat("\n\n'assertHE::visualise_project' function call copied to the clipboard\n\n")
 }
