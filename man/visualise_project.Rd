@@ -16,7 +16,7 @@ visualise_project(
   color_mod_coverage = c(background = "#FFD580", border = "#E49B0F", highlight =
     "#E49B0F"),
   moderate_coverage_range = c(0.2, 0.8),
-  print_isolated_foo = TRUE,
+  print_isolated_foo = FALSE,
   show_in_shiny = FALSE,
   network_title = "Function Network",
   scale_node_size_by_degree = TRUE
@@ -43,7 +43,7 @@ visualise_project(
 
 \item{moderate_coverage_range}{vector of two values giving range defined as moderate coverage.}
 
-\item{print_isolated_foo}{Print the isolated functions to the console.}
+\item{print_isolated_foo}{Print the isolated functions to the console (default false)}
 
 \item{show_in_shiny}{logical scalar indicating whether to prepare/deploy the
 network using a built in shiny app. Default is \code{FALSE}.}
