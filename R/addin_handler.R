@@ -262,7 +262,7 @@ visualise_project_addin <- function() {
 
   # Run the application and capture the reactive value
   inputApp <- shiny::shinyApp(ui = ui, server = server)
-  rv <- shiny::runApp(inputApp)
+  shiny::runApp(inputApp)
 
   # Wait for the button to be clicked
   while (!app_env$closed) {
@@ -285,4 +285,52 @@ visualise_project_addin <- function() {
     network_title = app_env$p_network_title,
     scale_node_size_by_degree = app_env$p_scale_node_size_by_degree)
 
+  # Construct the function call string from the parameters provided
+
+  p_str1 <- sprintf("project_path = \"%s\"",
+                       app_env$p_project_path)
+  p_str2 <- sprintf("foo_path = \"%s\"",
+                       app_env$p_foo_path)
+  p_str3 <- sprintf("test_path = \"%s\"",
+                    app_env$p_test_path)
+  p_str4 <- sprintf("exclude_files = \"%s\"",
+                    app_env$p_exclude_files)
+  p_str5 <- sprintf("exclude_dirs = \"%s\"",
+                    app_env$p_exclude_dirs)
+  p_str6 <- sprintf("run_coverage = %s",
+                    ifelse(app_env$p_run_coverage, "TRUE", "FALSE") )
+  p_str7 <- sprintf("color_no_test = c(\"background\" = \"%s\", \"border\" = \"%s\", \"highlight\" = \"%s\")",
+                    app_env$p_color_no_test[1], app_env$p_color_no_test[2], app_env$p_color_no_test[3])
+  p_str8 <- sprintf("color_with_test = c(\"background\" = \"%s\", \"border\" = \"%s\", \"highlight\" = \"%s\")",
+                    app_env$p_color_with_test[1], app_env$p_color_with_test[2], app_env$p_color_with_test[3])
+  p_str9 <- sprintf("color_mod_coverage = c(\"background\" = \"%s\", \"border\" = \"%s\", \"highlight\" = \"%s\")",
+                    app_env$p_color_mod_coverage[1], app_env$p_color_mod_coverage[2], app_env$p_color_mod_coverage[3])
+  p_str10 <- sprintf("moderate_coverage_range = c(%g, %g)",
+                    app_env$p_moderate_coverage_range[1],app_env$p_moderate_coverage_range[2])
+  p_str11 <- sprintf("print_isolated_foo = %s",
+                    ifelse(app_env$p_print_isolated_foo, "TRUE", "FALSE") )
+  p_str12 <- sprintf("show_in_shiny = %s",
+                    ifelse(app_env$p_show_in_shiny, "TRUE", "FALSE"))
+  p_str13 <- sprintf("network_title = \"%s\"",
+                    app_env$p_network_title)
+  p_str14 <- sprintf("scale_node_size_by_degree = %s",
+                       ifelse(app_env$p_scale_node_size_by_degree,  "TRUE", "FALSE"))
+
+  func_text <- sprintf( "assertHE::visualise_project(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        p_str1,
+                        p_str2,
+                        p_str3,
+                        p_str4,
+                        p_str5,
+                        p_str6,
+                        p_str7,
+                        p_str8,
+                        p_str9,
+                        p_str10,
+                        p_str11,
+                        p_str12,
+                        p_str13,
+                        p_str14)
+
+   cat("\n\n", func_text, "\n\n")
 }
