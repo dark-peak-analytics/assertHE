@@ -170,7 +170,7 @@ load_functions_into_env <- function(path, env) {
   for (file in files) {
     print(file)
     source_funcs(file, env = env)
-    env
+    print(env)
   }
 }
 
