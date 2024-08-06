@@ -168,9 +168,7 @@ get_isolated_foo <- function(df_edges){
 load_functions_into_env <- function(path, env) {
   files <- find_files(path = path, file_regx = ".R")
   for (file in files) {
-    print(file)
     source_funcs(file, env = env)
-    print(env)
   }
 }
 
@@ -994,6 +992,14 @@ define_app_ui <- function(network_title) {
 #' @return Shiny app server logic
 define_app_server <- function(network_object, project_path, foo_path) {
   function(input, output, session) {
+
+    # Create a new environment to avoid sourcing scripts into the namespace
+    pkg_env <- new.env(parent = baseenv())
+
+    # Load all functions into this environment
+    load_functions_into_env(path = foo_path, env =  pkg_env)
+
+
     # Keep track of the current tab's output ID
     currentTabId <- shiny::reactiveVal(NULL)
 
@@ -1020,16 +1026,6 @@ define_app_server <- function(network_object, project_path, foo_path) {
         if(input$aiAssist != "") {
           function_name <- input$aiAssist
           tab_name <- paste(function_name)
-
-          # Create a new environment to avoid sourcing scripts into the namespace
-          pkg_env <- new.env(parent = baseenv())
-
-          print("-----------------")
-          # get the full function paths including project path and use from here on wards
-          foo_path <- paste0(project_path, "/", foo_path)
-
-          # Load all functions into this environment
-          load_functions_into_env(foo_path, pkg_env)
 
           # Check if the function name refers to an existing function
           if (is.function(get(x = function_name, envir = pkg_env))) {
@@ -1060,12 +1056,12 @@ define_app_server <- function(network_object, project_path, foo_path) {
               # Set the ID of the new tab to be the current one
               currentTabId(tab_name)
 
-              print("summarise function call")
               # Query AI:
               ai_response <- summarise_function_with_LLM(
                 foo_name = function_name,
                 llm_api_url = Sys.getenv("LLM_API_URL"),
-                llm_api_key = Sys.getenv("LLM_API_KEY")
+                llm_api_key = Sys.getenv("LLM_API_KEY"),
+                envir = pkg_env
               )
 
               # Create the new tab and output its content

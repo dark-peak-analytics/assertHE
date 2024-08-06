@@ -10,19 +10,17 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' summarise_function_with_LLM("calculate_costs")
+# summarise_function_with_LLM(foo_name = "get_active_functions",
+#                             envir = rlang::ns_env("assertHE"))
 #' }
 #'
 summarise_function_with_LLM <- function(foo_name,
                                         llm_api_url = Sys.getenv("LLM_API_URL"),
-                                        llm_api_key = Sys.getenv("LLM_API_KEY")){
+                                        llm_api_key = Sys.getenv("LLM_API_KEY"),
+                                        envir = environment()){
 
-
-  print("just before get_function_data")
   # get the function data list (function arguments and body)
-  l_foo_data <- get_function_data(foo_name)
-  print("just after get_function_data")
-
+  l_foo_data <- get_function_data(foo_name, envir = envir)
 
   # API request created and sent
   response <-
@@ -60,10 +58,15 @@ summarise_function_with_LLM <- function(foo_name,
 #' \dontrun{
 #' get_function_data(foo_name = "create_Markov_trace")
 #' }
-get_function_data <- function(foo_name) {
+get_function_data <- function(foo_name, envir = environment()) {
+
   # get data on arguments and body
-  foo_arguments <- methods::formalArgs(def = foo_name)
-  foo_body      <- base::body(foo_name)
+  foo_arguments <- names(formals(foo_name, envir = envir))
+  #foo_body      <- base::body(foo_name)
+  fun <- get(foo_name, mode = "function", envir = envir)
+  foo_body <- .Internal(body(fun))
+
+
   descriptors   <- tryCatch({
     get_roxygen_description_from_foo(foo_name = foo_name)
   }, error = function(e)
