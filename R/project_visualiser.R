@@ -988,6 +988,7 @@ define_app_ui <- function(network_title) {
 #' Create Shiny app server logic
 #'
 #' @inheritParams run_shiny_app
+#' @param foo_path path to the function folder
 #'
 #' @return Shiny app server logic
 define_app_server <- function(network_object, project_path, foo_path) {
@@ -1244,6 +1245,7 @@ define_app_server <- function(network_object, project_path, foo_path) {
 #' @param network_object visNetwork object to be displayed in the shiny app
 #' @param network_title Title to be displayed in hte app above the title
 #' @param project_path Path to the project directory
+#' @param foo_path Path to the function folder
 #'
 #' @return A shiny app
 #'

@@ -4,14 +4,15 @@
 #'
 #' @inheritParams create_prompt
 #' @inheritParams summarise_function_from_arguments_and_body
+#' @param envir The environment in which to look for the function.
 #'
 #' @return A character string with a summary of the function based on its arguments and body.
 #'
 #' @export
 #' @examples
 #' \dontrun{
-# summarise_function_with_LLM(foo_name = "get_active_functions",
-#                             envir = rlang::ns_env("assertHE"))
+#' summarise_function_with_LLM(foo_name = "get_active_functions",
+#'                             envir = rlang::ns_env("assertHE"))
 #' }
 #'
 summarise_function_with_LLM <- function(foo_name,
@@ -51,6 +52,7 @@ summarise_function_with_LLM <- function(foo_name,
 #' This function retrieves data about the arguments and body of a specified function.
 #'
 #' @param foo_name The name of the function to retrieve data from.
+#' @param envir The environment in which to look for the function.
 #' @return A list with elements for 'arguments' and 'body' of the specified function.
 #' @export
 #' @importFrom methods formalArgs
@@ -64,7 +66,7 @@ get_function_data <- function(foo_name, envir = environment()) {
   foo_arguments <- names(formals(foo_name, envir = envir))
   #foo_body      <- base::body(foo_name)
   fun <- get(foo_name, mode = "function", envir = envir)
-  foo_body <- .Internal(body(fun))
+  foo_body <- body(fun)
 
 
   descriptors   <- tryCatch({
