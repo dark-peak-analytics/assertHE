@@ -19,7 +19,7 @@ utility_example2 <- function(){
 # Bare code - not a function
 x = 15
 if(x == 20) {
-  message("impossible")
+  x <- "impossible"
 } else {
-  message("Hello World")
+  x <- "Hello World"
 }
