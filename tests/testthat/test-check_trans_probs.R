@@ -118,10 +118,27 @@ test_that(desc = "check_trans_prob_mat should issue warnings (or errors) for inv
             check_trans_prob_mat(m_P, stop_if_not = T) |>
               expect_error()
 
+            m_P <-
+              matrix(
+                data = c(1, 0, 0,
+                         0, 1, 0,
+                         0, 0.2, 0.8),
+                byrow = T,
+                nrow = n_hs,
+                ncol = n_hs,
+                dimnames = list(v_hs_names, v_hs_names)
+              )
+
+            check_trans_prob_mat(m_P, dead_state = "D", stop_if_not = F) |>
+              capture_warnings() |>
+              expect_equal(expected = "Death state row does not equal 1 in the death state column.")
+
+            check_trans_prob_mat(m_P, dead_state = "D", stop_if_not = T) |>
+              expect_error()
           })
 
 
-
+# tests on check_trans_prob_array
 test_that(desc = "check_trans_prob_array is silent where no error and flags error",
           code = {
             v_hs_names <- c("H", "S", "D")
@@ -174,4 +191,28 @@ test_that(desc = "check_trans_prob_array is silent where no error and flags erro
             check_trans_prob_array(a_P = a_P, stop_if_not = T) |>
               expect_error()
 
+            # create array
+            a_P <- array(
+              data = 0,
+              dim = c(n_hs, n_hs, 1000),
+              dimnames = list(v_hs_names, v_hs_names, 1:1000)
+            )
+            # add in values.
+            a_P["H", "S", ] <- 0.3
+            a_P["H", "D", ] <- 0.01
+            a_P["S", "D", ] <- 0.1
+            a_P["S", "H", ] <- 0.5
+
+            for (x in 1:1000) {
+              diag(a_P[, , x]) <- 1 - rowSums(a_P[, , x])
+            }
+
+            # introduce error in one cycle of the array, in the death state transition probability row
+            a_P["D", "D", c(200, 201)] <- 0.8
+            a_P["D", "H", c(200, 201)] <- 0.2
+
+            # expect only 1 warning because all previous checks should pass
+            check_trans_prob_array(a_P = a_P, dead_state = "D", stop_if_not = F) |>
+              capture_warnings() |>
+              expect_length(n = 1)
           })
