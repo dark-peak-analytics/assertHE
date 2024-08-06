@@ -16,8 +16,13 @@
 summarise_function_with_LLM <- function(foo_name,
                                         llm_api_url = Sys.getenv("LLM_API_URL"),
                                         llm_api_key = Sys.getenv("LLM_API_KEY")){
+
+
+  print("just before get_function_data")
   # get the function data list (function arguments and body)
   l_foo_data <- get_function_data(foo_name)
+  print("just after get_function_data")
+
 
   # API request created and sent
   response <-

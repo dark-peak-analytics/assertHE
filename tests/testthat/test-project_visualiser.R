@@ -11,7 +11,8 @@ test_that("test that nothing blows up with visualiser run ", {
       project_path = project_path,
       foo_path = "R",
       test_path = "tests/testthat",
-      run_coverage = T)
+      run_coverage = F,
+      show_in_shiny = T)
 
   })
 
