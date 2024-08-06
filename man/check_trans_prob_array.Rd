@@ -4,10 +4,12 @@
 \alias{check_trans_prob_array}
 \title{Check Transition Probability Array}
 \usage{
-check_trans_prob_array(a_P, stop_if_not = F)
+check_trans_prob_array(a_P, dead_state = NULL, stop_if_not = F)
 }
 \arguments{
 \item{a_P}{The transition probability array to be checked.}
+
+\item{dead_state}{character vector length 1 denoting dead state (e.g. "D")}
 
 \item{stop_if_not}{return error messages. The default (F) returns warnings.}
 }
@@ -18,6 +20,8 @@ A message indicating whether the array passed all the checks or a warning/error 
 This function checks the properties of a transition probability array with
 2 or three dimensions conform to standard expectations. That it is that each slice is:
 symmetric, numeric, values are between 0 and 1 with all rows summing to 1.
+If a dead state is provided, it checks that the dead state -> dead state probability
+in each slice is equal to 1.
 }
 \examples{
 \dontrun{
