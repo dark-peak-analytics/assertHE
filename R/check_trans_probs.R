@@ -7,6 +7,7 @@
 #' @param m_P The transition probability matrix to be checked.
 #' @param confirm_ok if OK, return a message confirming all checks passed.
 #' @param stop_if_not return error messages. The default (F) returns warnings.
+#' @param dead_state character vector length 1 denoting dead state (e.g. "D")
 #'
 #' @examples
 #' \dontrun{
@@ -31,6 +32,7 @@
 #'
 #' @importFrom utils capture.output
 check_trans_prob_mat <- function(m_P,
+                                 dead_state = NULL,
                                  confirm_ok = F,
                                  stop_if_not = F){
 
@@ -93,6 +95,26 @@ check_trans_prob_mat <- function(m_P,
     } else{
       warning(message)
     }
+  }
+
+  # Death state checks
+  if(!is.null(dead_state)) {
+
+    dead_state_row <- m_P[dead_state, ]
+
+    # death state row has a value of 1 for the death state column
+    if (dead_state_row[dead_state] != 1){
+      message <- "Death state row does not equal 1 in the death state column."
+      no_warnings <- F
+      if (stop_if_not) {
+        stop(message)
+      } else{
+        warning(message)
+      }
+    }
+
+    rm(dead_state_row)
+
   }
 
   # Return a message indicating successful checks
@@ -202,6 +224,43 @@ check_array_names_complete <- function(a_P, stop_if_not = F){
 
 }
 
+check_dead_state_rows <- function(a_P, dead_state = NULL, stop_if_not = F) {
+
+  a_P <- as.array(a_P)
+
+  # subset all "dead state -> dead state" values
+  dead_states_subset <- a_P[dead_state, dead_state, , drop = FALSE]
+
+  # invalid "dead state -> dead state" indices.
+  invalid_indices <- arrayInd(which(dead_states_subset != 1), .dim = dim(dead_states_subset))
+
+  if(dim(invalid_indices)[1] != 0){
+    v_rows_notval <- dimnames(dead_states_subset)[[1]][invalid_indices[, 1]]
+    v_cols_notval <- dimnames(dead_states_subset)[[2]][invalid_indices[, 2]]
+    v_cycles_notval <- dimnames(dead_states_subset)[[3]][invalid_indices[, 3]]
+
+    df_notvalid <- data.frame(`Death state to death state probabilities are not valid from Health States:` =
+                                matrix(paste0(v_rows_notval,
+                                              " to ",
+                                              v_cols_notval,
+                                              "; at cycle ",
+                                              v_cycles_notval), ncol = 1),
+                              check.names = FALSE)
+
+    if (stop_if_not) {
+      stop("Not valid transition probabilities\n",
+           paste(utils::capture.output(df_notvalid),
+                 collapse = "\n"))
+    } else{
+      warning("Not valid transition probabilities\n",
+              paste(utils::capture.output(df_notvalid),
+                    collapse = "\n"))
+    }
+
+  }
+
+}
+
 #' Check Transition Probability Array
 #'
 #' This function checks the properties of a transition probability array with
@@ -210,6 +269,7 @@ check_array_names_complete <- function(a_P, stop_if_not = F){
 #'
 #' @param a_P The transition probability array to be checked.
 #' @param stop_if_not return error messages. The default (F) returns warnings.
+#' @param dead_state character vector length 1 denoting dead state (e.g. "D")
 #'
 #' @examples
 #' \dontrun{
@@ -240,7 +300,7 @@ check_array_names_complete <- function(a_P, stop_if_not = F){
 #' @return A message indicating whether the array passed all the checks or a warning/error message if any check failed.
 #'
 #' @export
-check_trans_prob_array <- function(a_P, stop_if_not = F){
+check_trans_prob_array <- function(a_P, dead_state = NULL, stop_if_not = F){
 
   if(!is.numeric(a_P) | length(dim(a_P)) != 3) stop("a_P must be a numeric 3 dimensional transition probability array")
 
@@ -250,4 +310,7 @@ check_trans_prob_array <- function(a_P, stop_if_not = F){
 
   check_array_values(a_P, stop_if_not = stop_if_not)
 
+  if(!is.null(dead_state)){
+    check_dead_state_rows(a_P, dead_state = dead_state, stop_if_not = stop_if_not)
+  }
 }
