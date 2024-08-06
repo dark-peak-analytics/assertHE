@@ -2,7 +2,8 @@
 #'
 #' This function checks the properties of a transition probability matrix conform to
 #' standard expectations. That it is: symmetric, numeric, values are between 0
-#' and 1 with all rows summing to 1.
+#' and 1 with all rows summing to 1. If a dead state is provided, it checks that the dead
+#' state -> dead state probability is 1.
 #'
 #' @param m_P The transition probability matrix to be checked.
 #' @param confirm_ok if OK, return a message confirming all checks passed.
@@ -266,6 +267,8 @@ check_dead_state_rows <- function(a_P, dead_state = NULL, stop_if_not = F) {
 #' This function checks the properties of a transition probability array with
 #' 2 or three dimensions conform to standard expectations. That it is that each slice is:
 #' symmetric, numeric, values are between 0 and 1 with all rows summing to 1.
+#' If a dead state is provided, it checks that the dead state -> dead state probability
+#' in each slice is equal to 1.
 #'
 #' @param a_P The transition probability array to be checked.
 #' @param stop_if_not return error messages. The default (F) returns warnings.

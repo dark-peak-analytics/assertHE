@@ -4,10 +4,12 @@
 \alias{check_trans_prob_mat}
 \title{Check Transition Probability Matrix}
 \usage{
-check_trans_prob_mat(m_P, confirm_ok = F, stop_if_not = F)
+check_trans_prob_mat(m_P, dead_state = NULL, confirm_ok = F, stop_if_not = F)
 }
 \arguments{
 \item{m_P}{The transition probability matrix to be checked.}
+
+\item{dead_state}{character vector length 1 denoting dead state (e.g. "D")}
 
 \item{confirm_ok}{if OK, return a message confirming all checks passed.}
 
@@ -19,7 +21,8 @@ A message indicating whether the matrix passed all the checks or a warning/error
 \description{
 This function checks the properties of a transition probability matrix conform to
 standard expectations. That it is: symmetric, numeric, values are between 0
-and 1 with all rows summing to 1.
+and 1 with all rows summing to 1. If a dead state is provided, it checks that the dead
+state -> dead state probability is 1.
 }
 \examples{
 \dontrun{
