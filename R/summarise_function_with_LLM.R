@@ -4,20 +4,24 @@
 #'
 #' @inheritParams create_prompt
 #' @inheritParams summarise_function_from_arguments_and_body
+#' @param envir The environment in which to look for the function.
 #'
 #' @return A character string with a summary of the function based on its arguments and body.
 #'
 #' @export
 #' @examples
 #' \dontrun{
-#' summarise_function_with_LLM("calculate_costs")
+#' summarise_function_with_LLM(foo_name = "get_active_functions",
+#'                             envir = rlang::ns_env("assertHE"))
 #' }
 #'
 summarise_function_with_LLM <- function(foo_name,
                                         llm_api_url = Sys.getenv("LLM_API_URL"),
-                                        llm_api_key = Sys.getenv("LLM_API_KEY")){
+                                        llm_api_key = Sys.getenv("LLM_API_KEY"),
+                                        envir = environment()){
+
   # get the function data list (function arguments and body)
-  l_foo_data <- get_function_data(foo_name)
+  l_foo_data <- get_function_data(foo_name, envir = envir)
 
   # API request created and sent
   response <-
@@ -48,6 +52,7 @@ summarise_function_with_LLM <- function(foo_name,
 #' This function retrieves data about the arguments and body of a specified function.
 #'
 #' @param foo_name The name of the function to retrieve data from.
+#' @param envir The environment in which to look for the function.
 #' @return A list with elements for 'arguments' and 'body' of the specified function.
 #' @export
 #' @importFrom methods formalArgs
@@ -55,10 +60,15 @@ summarise_function_with_LLM <- function(foo_name,
 #' \dontrun{
 #' get_function_data(foo_name = "create_Markov_trace")
 #' }
-get_function_data <- function(foo_name) {
+get_function_data <- function(foo_name, envir = environment()) {
+
   # get data on arguments and body
-  foo_arguments <- methods::formalArgs(def = foo_name)
-  foo_body      <- base::body(foo_name)
+  foo_arguments <- names(formals(foo_name, envir = envir))
+  #foo_body      <- base::body(foo_name)
+  fun <- get(foo_name, mode = "function", envir = envir)
+  foo_body <- body(fun)
+
+
   descriptors   <- tryCatch({
     get_roxygen_description_from_foo(foo_name = foo_name)
   }, error = function(e)

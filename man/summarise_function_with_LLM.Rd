@@ -7,7 +7,8 @@
 summarise_function_with_LLM(
   foo_name,
   llm_api_url = Sys.getenv("LLM_API_URL"),
-  llm_api_key = Sys.getenv("LLM_API_KEY")
+  llm_api_key = Sys.getenv("LLM_API_KEY"),
+  envir = environment()
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ summarise_function_with_LLM(
 \item{llm_api_url}{url to the API for the LLM}
 
 \item{llm_api_key}{key for the API for the LLM}
+
+\item{envir}{The environment in which to look for the function.}
 }
 \value{
 A character string with a summary of the function based on its arguments and body.
@@ -25,7 +28,8 @@ This function summarizes another function using a Language Model.
 }
 \examples{
 \dontrun{
-summarise_function_with_LLM("calculate_costs")
+summarise_function_with_LLM(foo_name = "get_active_functions",
+                            envir = rlang::ns_env("assertHE"))
 }
 
 }

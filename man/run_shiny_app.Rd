@@ -9,7 +9,8 @@ run_shiny_app(
   serverFunction = define_app_server,
   network_object,
   network_title = "Function Network",
-  project_path
+  project_path,
+  foo_path
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ run_shiny_app(
 \item{network_title}{Title to be displayed in hte app above the title}
 
 \item{project_path}{Path to the project directory}
+
+\item{foo_path}{Path to the function folder}
 }
 \value{
 A shiny app

@@ -126,7 +126,8 @@ visualise_project <- function(project_path,
   } else {
     run_shiny_app(network_object = p,
                   network_title = network_title,
-                  project_path = project_path)
+                  project_path = project_path,
+                  foo_path = foo_path)
   }
 
 }
@@ -987,10 +988,19 @@ define_app_ui <- function(network_title) {
 #' Create Shiny app server logic
 #'
 #' @inheritParams run_shiny_app
+#' @param foo_path path to the function folder
 #'
 #' @return Shiny app server logic
-define_app_server <- function(network_object, project_path) {
+define_app_server <- function(network_object, project_path, foo_path) {
   function(input, output, session) {
+
+    # Create a new environment to avoid sourcing scripts into the namespace
+    pkg_env <- new.env(parent = baseenv())
+
+    # Load all functions into this environment
+    load_functions_into_env(path = foo_path, env =  pkg_env)
+
+
     # Keep track of the current tab's output ID
     currentTabId <- shiny::reactiveVal(NULL)
 
@@ -1019,7 +1029,7 @@ define_app_server <- function(network_object, project_path) {
           tab_name <- paste(function_name)
 
           # Check if the function name refers to an existing function
-          if (is.function(get(x = function_name))) {
+          if (is.function(get(x = function_name, envir = pkg_env))) {
             # Check if the number of calls did not exceed a maximum:
             if(aiAssit_calls() < 5) {
               # Waiter
@@ -1051,7 +1061,8 @@ define_app_server <- function(network_object, project_path) {
               ai_response <- summarise_function_with_LLM(
                 foo_name = function_name,
                 llm_api_url = Sys.getenv("LLM_API_URL"),
-                llm_api_key = Sys.getenv("LLM_API_KEY")
+                llm_api_key = Sys.getenv("LLM_API_KEY"),
+                envir = pkg_env
               )
 
               # Create the new tab and output its content
@@ -1234,6 +1245,7 @@ define_app_server <- function(network_object, project_path) {
 #' @param network_object visNetwork object to be displayed in the shiny app
 #' @param network_title Title to be displayed in hte app above the title
 #' @param project_path Path to the project directory
+#' @param foo_path Path to the function folder
 #'
 #' @return A shiny app
 #'
@@ -1255,11 +1267,13 @@ run_shiny_app <- function(
     serverFunction = define_app_server,
     network_object,
     network_title = "Function Network",
-    project_path) {
+    project_path,
+    foo_path) {
 
   shiny::shinyApp(
     ui = uiFunction(network_title),
     server = serverFunction(network_object = network_object,
-                            project_path = project_path)
+                            project_path = project_path,
+                            foo_path = foo_path)
   )
 }

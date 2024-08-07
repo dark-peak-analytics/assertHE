@@ -4,10 +4,12 @@
 \alias{get_function_data}
 \title{Retrieve Function data to a list}
 \usage{
-get_function_data(foo_name)
+get_function_data(foo_name, envir = environment())
 }
 \arguments{
 \item{foo_name}{The name of the function to retrieve data from.}
+
+\item{envir}{The environment in which to look for the function.}
 }
 \value{
 A list with elements for 'arguments' and 'body' of the specified function.
