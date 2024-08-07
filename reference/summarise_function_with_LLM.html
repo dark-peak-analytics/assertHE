@@ -40,7 +40,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">summarise_function_with_LLM</span><span class="op">(</span></span>
 <span>  <span class="va">foo_name</span>,</span>
 <span>  llm_api_url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"LLM_API_URL"</span><span class="op">)</span>,</span>
-<span>  llm_api_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"LLM_API_KEY"</span><span class="op">)</span></span>
+<span>  llm_api_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"LLM_API_KEY"</span><span class="op">)</span>,</span>
+<span>  envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environment</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -59,6 +60,10 @@
 <dt id="arg-llm-api-key">llm_api_key<a class="anchor" aria-label="anchor" href="#arg-llm-api-key"></a></dt>
 <dd><p>key for the API for the LLM</p></dd>
 
+
+<dt id="arg-envir">envir<a class="anchor" aria-label="anchor" href="#arg-envir"></a></dt>
+<dd><p>The environment in which to look for the function.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -68,7 +73,8 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="fu">summarise_function_with_LLM</span><span class="op">(</span><span class="st">"calculate_costs"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">summarise_function_with_LLM</span><span class="op">(</span>foo_name <span class="op">=</span> <span class="st">"get_active_functions"</span>,</span></span>
+<span class="r-in"><span>                            envir <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/ns_env.html" class="external-link">ns_env</a></span><span class="op">(</span><span class="st">"assertHE"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
