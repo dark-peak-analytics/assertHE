@@ -20,7 +20,7 @@ A message indicating whether the matrix passed all the checks or a warning/error
 }
 \description{
 This function checks the properties of a transition probability matrix conform to
-standard expectations. That it is: symmetric, numeric, values are between 0
+standard expectations. That it is: square, numeric, values are between 0
 and 1 with all rows summing to 1. If a dead state is provided, it checks that the dead
 state -> dead state probability is 1.
 }

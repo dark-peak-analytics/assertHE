@@ -102,7 +102,7 @@ for(x in 1:n_t){
 }
 
 # Use the function from the package.
-# This check should return no error, the array is symmetric, numeric, values 
+# This check should return no error, the array is square, numeric, values 
 # are between 0 and 1 and all rows sum to 1.
 # Note: stop_if_not = F returns warnings, stop_if_not = T returns errors.
 check_trans_prob_array(a_P = a_P, 
