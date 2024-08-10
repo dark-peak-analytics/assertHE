@@ -1,7 +1,7 @@
 #' Check Transition Probability Matrix
 #'
 #' This function checks the properties of a transition probability matrix conform to
-#' standard expectations. That it is: symmetric, numeric, values are between 0
+#' standard expectations. That it is: square, numeric, values are between 0
 #' and 1 with all rows summing to 1. If a dead state is provided, it checks that the dead
 #' state -> dead state probability is 1.
 #'
@@ -40,9 +40,9 @@ check_trans_prob_mat <- function(m_P,
   # no warnings
   no_warnings <- T
 
-  # Check that the matrix is symmetric
+  # Check that the matrix is square
   if (ncol(m_P) != nrow(m_P)) {
-    message <- "Transition matrix is not symmetric."
+    message <- "Transition matrix is not square."
     no_warnings <- F
     if (stop_if_not) {
       stop(message)
@@ -200,9 +200,9 @@ check_array_names_complete <- function(a_P, stop_if_not = F){
   n_row <- dim(a_P)[1]
   n_col <- dim(a_P)[2]
 
-  # Check that the array is symmetric on dim 1 and 2
+  # Check that the array is square on dim 1 and 2
   if (n_row != n_col) {
-    message <- paste0("Transition array is not symmetric: ", n_row, " rows, and ", n_col, " columns")
+    message <- paste0("Transition array is not square: ", n_row, " rows, and ", n_col, " columns")
     no_warnings <- F
     if (stop_if_not) {
       stop(message)
@@ -266,7 +266,7 @@ check_dead_state_rows <- function(a_P, dead_state = NULL, stop_if_not = F) {
 #'
 #' This function checks the properties of a transition probability array with
 #' 2 or three dimensions conform to standard expectations. That it is that each slice is:
-#' symmetric, numeric, values are between 0 and 1 with all rows summing to 1.
+#' square, numeric, values are between 0 and 1 with all rows summing to 1.
 #' If a dead state is provided, it checks that the dead state -> dead state probability
 #' in each slice is equal to 1.
 #'

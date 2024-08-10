@@ -64,7 +64,7 @@ test_that(desc = "check_trans_prob_mat should issue warnings (or errors) for inv
 
             check_trans_prob_mat(m_P, stop_if_not = F) |>
               capture_warnings() |>
-              expect_equal(expected = "Transition matrix is not symmetric.")
+              expect_equal(expected = "Transition matrix is not square.")
 
             check_trans_prob_mat(m_P, stop_if_not = T) |>
               expect_error()
