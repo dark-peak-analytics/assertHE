@@ -14,7 +14,7 @@ plot_PSA_stability(
   comparator = NULL,
   output = "inmb",
   include_reference_line = T,
-  log_x = F
+  log_x = FALSE
 )
 }
 \arguments{
@@ -47,32 +47,31 @@ incremental cost-effectiveness ratio (ICER), incremental costs, or incremental e
 for different strategies compared to a specified comparator.
 }
 \examples{
-
-\dontrun{
 # create example matrices
-m_eff <- as.matrix(gskVEOutils::Hyperphosphatemia_PSA$e)[,1:5]
-colnames(m_eff) <- LETTERS[1:length(colnames(m_eff))]
+n_psa <- 10000
 
-m_cost <- as.matrix(gskVEOutils::Hyperphosphatemia_PSA$c)[,1:5]
-colnames(m_cost) <- LETTERS[1:length(colnames(m_cost))]
+m_eff <- matrix(data = runif(n = n_psa * 4, min = 0, max = 1),
+                nrow = n_psa,
+                ncol = 4,
+                dimnames = list(NULL, paste0("Strategy ", c("A", "B", "C", "D"))))
 
-v_strategy_labels <- setNames(object = paste0("Strategy ", colnames(m_eff)),
-                              nm = colnames(m_eff))
+m_cost <- matrix(data = runif(n = n_psa * 4, min = 5000, max = 20000),
+                 nrow = n_psa,
+                 ncol = 4,
+                 dimnames = list(NULL, paste0("Strategy ", c("A", "B", "C", "D"))))
 
 v_strategy_colors <- setNames(object = grDevices::palette.colors(n = ncol(m_eff)),
                               nm = colnames(m_eff))
 
-plot_PSA_stability(m_eff = m_eff[, 1:5],
-                   m_cost = m_cost[, 1:5],
+plot_PSA_stability(m_eff = m_eff,
+                   m_cost = m_cost,
                    lambda = 20000,
                    currency_symbol = "\u0024",
-                   v_strategy_labels = v_strategy_labels,
+                   v_strategy_labels = colnames(m_eff),
                    v_strategy_colors = v_strategy_colors,
                    comparator  = colnames(m_eff)[1],
-                   output = "icer",
-                   include_reference_line = T,
-                   log_x = F)
-
-} # end don't run.
+                   output = "inmb",
+                   include_reference_line = TRUE,
+                   log_x = FALSE)
 
 }

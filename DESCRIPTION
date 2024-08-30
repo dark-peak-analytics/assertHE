@@ -1,11 +1,18 @@
 Package: assertHE
-Title: An R package designed to aid in verification of health economic decision models
-Version: 0.0.0.9000
+Title: Visualisation and Verification of Health Economic Decision Models
+Version: 1.0.0
 Authors@R: c(
-    person("Robert", "Smith", , "rsmith@darkpeakanalytics.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0003-0245-3217"))
+    person("Robert", "Smith", , "rsmith@darkpeakanalytics.com", role = c("aut", "cre", "cph"),
+           comment = c(ORCID = "0000-0003-0245-3217")),
+    person("Wael", "Mohammed", , "wmohammed@darkpeakanalytics.com", role = c("aut"),
+           comment = c(ORCID = "0000-0003-0370-4903")),
+    person("Jack", "Smith", , "", role = c("aut")),
+    person("Dark Peak Analytics Ltd", role = c("cph", "fnd"))
   )
-Description: An R package designed to help health economic modellers when writing unit tests for their models. The asserts contained in this package include black-box and white-box tests for common errors in health economic models. They are not designed to be exhaustive, but rather to provide a starting point with a set of 'standard' tests to free up modellers to focus on tests specific to the individual model in development or review.
+Description: An R package designed to help health economic modellers when building and reviewing models. 
+    The visualisation functions allow users to more easily review the network of functions 
+    in a project, and get lay summaries of them. The asserts included are intended to check for common errors,
+    thereby freeing up time for modellers to focus on tests specific to the individual model in development or review.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -41,4 +48,5 @@ Imports:
     waiter,
     igraph,
     httr
-URL: https://dark-peak-analytics.github.io/assertHE/
+URL: https://dark-peak-analytics.github.io/assertHE/, https://github.com/dark-peak-analytics/assertHE
+BugReports: https://github.com/dark-peak-analytics/assertHE/issues

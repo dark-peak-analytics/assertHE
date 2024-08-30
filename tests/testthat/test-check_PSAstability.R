@@ -49,7 +49,7 @@ test_that("plot_PSA_stability handles valid input", {
       comparator  = colnames(m_eff)[1],
       output = "icer",
       include_reference_line = T,
-      log_x = F
+      log_x = FALSE
     )
   })
 
@@ -121,7 +121,7 @@ test_that("plot_PSA_stability flags errors", {
       comparator  = colnames(m_eff)[1],
       output = "icer",
       include_reference_line = T,
-      log_x = F
+      log_x = FALSE
     )
   })
 
