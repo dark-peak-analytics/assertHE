@@ -39,7 +39,16 @@ wiki](https://github.com/dark-peak-analytics/assertHE/wiki/assertHE:-an-R-packag
 
 ## Installation
 
-You can install the development version of assertHE from
+You can install the CRAN version of assertHE from
+[CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("assertHE")
+
+library(assertHE)
+```
+
+Alternatively the development version of assertHE can be installed from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -176,7 +185,7 @@ cases:
   teaching model contained in a package.  
 - [cdx2cea](https://github.com/feralaes/cdx2cea) as described in
   [Alarid-Escudero et
-  al. 2022](https://www.sciencedirect.com/science/article/pii/S1098301521017472)  
+  al. 2022](https://doi.org/10.1016/j.jval.2021.07.019)  
 - [DOACs-AF-Economic-model](https://github.com/Bogdasayen/DOACs-AF-Economic-model)
   developed by Bristol University  
 - The CGD AMR Cost model - in press.  
@@ -187,10 +196,6 @@ cases:
 - Several internal models at Maple Health.  
 - The National Institute for Health and Care Excellence (NICE) have
   built the `assertHE` visualiser into their template for model reviews.
-
-Health Economics Modelling Packages:  
-- [voi R package](https://cran.rstudio.com/web/packages/voi/index.html)
-reviewed by GSK team.  
 
 ## Sharing interactive model networks
 
@@ -205,10 +210,4 @@ shiny version with the links) should be there.
 ## Get in contact
 
 To get in contact about this project or other collaborations please feel
-free to message me on any of the below.
-
-[Dr. Robert Smith](https://www.linkedin.com/in/robert-smith-53b28438)
-
-Contact: <rsmith@darkpeakanalytics.com>
-
-Website: [Dark Peak Analytics](https://www.darkpeakanalytics.com)
+free to email me at <rsmith@darkpeakanalytics.com>.
