@@ -11,7 +11,6 @@
 #' @param dead_state character vector length 1 denoting dead state (e.g. "D")
 #'
 #' @examples
-#' \dontrun{
 #' v_hs_names <- c("H", "S", "D")
 #' n_hs <- length(v_hs_names)
 #' m_P <- matrix(data = 0, nrow = n_hs, ncol = n_hs,
@@ -22,9 +21,11 @@
 #' m_P["S", "H"] <- 0.5
 #' diag(m_P) <- (1 - rowSums(m_P))
 #' check_trans_prob_mat(m_P)
+#'
+#' \dontrun{
 #' # introduce error
 #' m_P["H", "S"] <- 0.2
-#' check_trans_prob_mat(m_P,  confirm_ok = T, stop_if_not = T)
+#' check_trans_prob_mat(m_P,  confirm_ok = TRUE, stop_if_not = TRUE)
 #' }
 #'
 #' @return A message indicating whether the matrix passed all the checks or a warning/error message if any check failed.

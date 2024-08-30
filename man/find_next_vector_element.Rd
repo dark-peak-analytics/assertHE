@@ -20,11 +20,9 @@ The next element of the vector after the value
 Find the next element of the vector after a value
 }
 \examples{
-\dontrun{
 find_next_vector_element(value = 5, vector = 1:10)
 find_next_vector_element(value = 5, vector = 1:4)
-find_next_vector_element(value = 5, vector = 1:5, LTE = F)
-find_next_vector_element(value = 5, vector = 1:5, LTE = T)
-}
+find_next_vector_element(value = 5, vector = 1:5, LTE = FALSE)
+find_next_vector_element(value = 5, vector = 1:5, LTE = TRUE)
 
 }
