@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>An R package designed to aid in verification of health economic decision models • assertHE</title>
+<title>Visualisation and Verification of Health Economic Decision Models • assertHE</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="An R package designed to aid in verification of health economic decision models">
-<meta name="description" content="An R package designed to help health economic modellers when writing unit tests for their models. The asserts contained in this package include black-box and white-box tests for common errors in health economic models. They are not designed to be exhaustive, but rather to provide a starting point with a set of standard tests to free up modellers to focus on tests specific to the individual model in development or review.">
-<meta property="og:description" content="An R package designed to help health economic modellers when writing unit tests for their models. The asserts contained in this package include black-box and white-box tests for common errors in health economic models. They are not designed to be exhaustive, but rather to provide a starting point with a set of standard tests to free up modellers to focus on tests specific to the individual model in development or review.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Visualisation and Verification of Health Economic Decision Models">
+<meta name="description" content="An R package designed to help health economic modellers when building and reviewing models. The visualisation functions allow users to more easily review the network of functions in a project, and get lay summaries of them. The asserts included are intended to check for common errors, thereby freeing up time for modellers to focus on tests specific to the individual model in development or review.">
+<meta property="og:description" content="An R package designed to help health economic modellers when building and reviewing models. The visualisation functions allow users to more easily review the network of functions in a project, and get lay summaries of them. The asserts included are intended to check for common errors, thereby freeing up time for modellers to focus on tests specific to the individual model in development or review.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">assertHE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,11 +32,13 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/dark-peak-analytics/assertHE/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -59,8 +61,13 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of assertHE from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>You can install the CRAN version of assertHE from <a href="https://CRAN.R-project.org" class="external-link">CRAN</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"assertHE"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dark-peak-analytics.github.io/assertHE/">assertHE</a></span><span class="op">)</span></span></code></pre></div>
+<p>Alternatively the development version of assertHE can be installed from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"dark-peak-analytics/assertHE"</span><span class="op">)</span></span>
 <span></span>
@@ -73,7 +80,7 @@
 <h3 id="reviewing-model-structure">Reviewing model structure<a class="anchor" aria-label="anchor" href="#reviewing-model-structure"></a>
 </h3>
 <p>The below code creates a visual representation of the model structure for a given project. The user must provide a path to the project folder, the location of functions (typically “R”) and the location of tests (typically “tests/testthat”).</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="reference/visualise_project.html">visualise_project</a></span><span class="op">(</span></span>
 <span>  project_path <span class="op">=</span> <span class="st">"path_to_project_directory"</span>,</span>
@@ -95,7 +102,7 @@ Function network for cdx2cea
 </h3>
 <p>The package has a series of functions to be used <strong>within models</strong> to check that the objects created conform to standard rules (e.g. probabilities between 0 and 1).</p>
 <p>The code below shows a basic example which shows you how to use <code>check_trans_prob_array</code> to ensure that the time dependent transition probability array is balanced.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dark-peak-analytics.github.io/assertHE/">assertHE</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># create a transition probability array</span></span>
@@ -168,7 +175,7 @@ Function network for cdx2cea
 <a href="https://github.com/dark-peak-analytics/sicksickerPack" class="external-link">sicksickerPack</a> teaching model contained in a package.<br>
 </li>
 <li>
-<a href="https://github.com/feralaes/cdx2cea" class="external-link">cdx2cea</a> as described in <a href="https://www.sciencedirect.com/science/article/pii/S1098301521017472" class="external-link">Alarid-Escudero et al. 2022</a><br>
+<a href="https://github.com/feralaes/cdx2cea" class="external-link">cdx2cea</a> as described in <a href="https://doi.org/10.1016/j.jval.2021.07.019" class="external-link">Alarid-Escudero et al. 2022</a><br>
 </li>
 <li>
 <a href="https://github.com/Bogdasayen/DOACs-AF-Economic-model" class="external-link">DOACs-AF-Economic-model</a> developed by Bristol University<br>
@@ -184,8 +191,6 @@ Function network for cdx2cea
 </li>
 <li>The National Institute for Health and Care Excellence (NICE) have built the <code>assertHE</code> visualiser into their template for model reviews.</li>
 </ul>
-<p>Health Economics Modelling Packages:<br>
-- <a href="https://cran.rstudio.com/web/packages/voi/index.html" class="external-link">voi R package</a> reviewed by GSK team.</p>
 </div>
 <div class="section level2">
 <h2 id="sharing-interactive-model-networks">Sharing interactive model networks<a class="anchor" aria-label="anchor" href="#sharing-interactive-model-networks"></a>
@@ -196,13 +201,18 @@ Function network for cdx2cea
 <div class="section level2">
 <h2 id="get-in-contact">Get in contact<a class="anchor" aria-label="anchor" href="#get-in-contact"></a>
 </h2>
-<p>To get in contact about this project or other collaborations please feel free to message me on any of the below.</p>
-<p><a href="https://www.linkedin.com/in/robert-smith-53b28438" class="external-link">Dr. Robert Smith</a></p>
-<p>Contact: <a href="mailto:rsmith@darkpeakanalytics.com" class="email">rsmith@darkpeakanalytics.com</a></p>
-<p>Website: <a href="https://www.darkpeakanalytics.com" class="external-link">Dark Peak Analytics</a></p>
+<p>To get in contact about this project or other collaborations please feel free to email me at <a href="mailto:rsmith@darkpeakanalytics.com" class="email">rsmith@darkpeakanalytics.com</a>.</p>
 </div>
 </div>
-  </main><aside class="col-md-3"><div class="license">
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/dark-peak-analytics/assertHE/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/dark-peak-analytics/assertHE/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
@@ -228,7 +238,10 @@ Function network for cdx2cea
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Robert Smith <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-0245-3217" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Robert Smith <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0003-0245-3217" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Wael Mohammed <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-0370-4903" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Jack Smith <br><small class="roles"> Author </small>  </li>
+<li>Dark Peak Analytics Ltd <br><small class="roles"> Copyright holder, funder </small>  </li>
 </ul>
 </div>
 
@@ -244,7 +257,7 @@ Function network for cdx2cea
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Robert Smith.</p>
+  <p>Developed by Robert Smith, Wael Mohammed, Jack Smith, Dark Peak Analytics Ltd.</p>
 </div>
 
 <div class="pkgdown-footer-right">

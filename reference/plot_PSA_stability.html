@@ -11,7 +11,7 @@ for different strategies compared to a specified comparator."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">assertHE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,8 +20,10 @@ for different strategies compared to a specified comparator."></head><body>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/dark-peak-analytics/assertHE/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -31,7 +33,7 @@ for different strategies compared to a specified comparator."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Plot cumulative mean Probabilistic Sensitivity Analysis results</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/dark-peak-analytics/assertHE/blob/main/R/check_PSAstability.R" class="external-link"><code>R/check_PSAstability.R</code></a></small>
       <div class="d-none name"><code>plot_PSA_stability.Rd</code></div>
     </div>
 
@@ -53,7 +55,7 @@ for different strategies compared to a specified comparator.</p>
 <span>  comparator <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"inmb"</span>,</span>
 <span>  include_reference_line <span class="op">=</span> <span class="cn">T</span>,</span>
-<span>  log_x <span class="op">=</span> <span class="cn">F</span></span>
+<span>  log_x <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -108,33 +110,33 @@ for different strategies compared to a specified comparator.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="co"># create example matrices</span></span></span>
-<span class="r-in"><span><span class="va">m_eff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu">gskVEOutils</span><span class="fu">::</span><span class="va">Hyperphosphatemia_PSA</span><span class="op">$</span><span class="va">e</span><span class="op">)</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">m_eff</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">m_eff</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># create example matrices</span></span></span>
+<span class="r-in"><span><span class="va">n_psa</span> <span class="op">&lt;-</span> <span class="fl">10000</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">m_cost</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu">gskVEOutils</span><span class="fu">::</span><span class="va">Hyperphosphatemia_PSA</span><span class="op">$</span><span class="va">c</span><span class="op">)</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">m_cost</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">m_cost</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">m_eff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n_psa</span> <span class="op">*</span> <span class="fl">4</span>, min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                nrow <span class="op">=</span> <span class="va">n_psa</span>,</span></span>
+<span class="r-in"><span>                ncol <span class="op">=</span> <span class="fl">4</span>,</span></span>
+<span class="r-in"><span>                dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Strategy "</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">v_strategy_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span>object <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Strategy "</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">m_eff</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                              nm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">m_eff</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m_cost</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n_psa</span> <span class="op">*</span> <span class="fl">4</span>, min <span class="op">=</span> <span class="fl">5000</span>, max <span class="op">=</span> <span class="fl">20000</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                 nrow <span class="op">=</span> <span class="va">n_psa</span>,</span></span>
+<span class="r-in"><span>                 ncol <span class="op">=</span> <span class="fl">4</span>,</span></span>
+<span class="r-in"><span>                 dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Strategy "</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">v_strategy_colors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span>object <span class="op">=</span> <span class="fu">grDevices</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grDevices/palette.html" class="external-link">palette.colors</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">m_eff</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                              nm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">m_eff</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">plot_PSA_stability</span><span class="op">(</span>m_eff <span class="op">=</span> <span class="va">m_eff</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>,</span></span>
-<span class="r-in"><span>                   m_cost <span class="op">=</span> <span class="va">m_cost</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span><span class="fu">plot_PSA_stability</span><span class="op">(</span>m_eff <span class="op">=</span> <span class="va">m_eff</span>,</span></span>
+<span class="r-in"><span>                   m_cost <span class="op">=</span> <span class="va">m_cost</span>,</span></span>
 <span class="r-in"><span>                   lambda <span class="op">=</span> <span class="fl">20000</span>,</span></span>
 <span class="r-in"><span>                   currency_symbol <span class="op">=</span> <span class="st">"\u0024"</span>,</span></span>
-<span class="r-in"><span>                   v_strategy_labels <span class="op">=</span> <span class="va">v_strategy_labels</span>,</span></span>
+<span class="r-in"><span>                   v_strategy_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">m_eff</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                   v_strategy_colors <span class="op">=</span> <span class="va">v_strategy_colors</span>,</span></span>
 <span class="r-in"><span>                   comparator  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">m_eff</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span></span>
-<span class="r-in"><span>                   output <span class="op">=</span> <span class="st">"icer"</span>,</span></span>
-<span class="r-in"><span>                   include_reference_line <span class="op">=</span> <span class="cn">T</span>,</span></span>
-<span class="r-in"><span>                   log_x <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># } # end don't run.</span></span></span>
+<span class="r-in"><span>                   output <span class="op">=</span> <span class="st">"inmb"</span>,</span></span>
+<span class="r-in"><span>                   include_reference_line <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                   log_x <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot_PSA_stability-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -143,7 +145,7 @@ for different strategies compared to a specified comparator.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Robert Smith.</p>
+  <p>Developed by Robert Smith, Wael Mohammed, Jack Smith, Dark Peak Analytics Ltd.</p>
 </div>
 
 <div class="pkgdown-footer-right">
