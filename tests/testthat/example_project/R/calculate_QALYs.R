@@ -105,8 +105,11 @@ calculate_QALYs <- function(Markov_trace_,
   )
 
   ## Calculate QALYs:
+  mat_mult <- function(m_TR, v_u) {
+    m_TR %*% v_u
+  }
 
-  QALYs <- Markov_trace_ %*% utilities_
+  QALYs <- mat_mult(m_TR = Markov_trace_, v_u = utilities_)
   discounted_QALYs <- QALYs * discounting_weights_
 
   return(discounted_QALYs)
