@@ -5,8 +5,8 @@
 \title{Run a Shiny app to host a network visualization}
 \usage{
 run_shiny_app(
-  uiFunction = define_app_ui,
-  serverFunction = define_app_server,
+  uiFunction = app_ui,
+  serverFunction = app_server,
   network_object,
   network_title = "Function Network",
   project_path,
