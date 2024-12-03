@@ -50,3 +50,16 @@
     font-size: 15px;
   }
 }
+
+/* sweet alert */
+.swal2-container {
+  z-index: 10001 !important;
+}
+
+.swal2-title {
+  text-align: center !important;
+}
+
+.swal2-close {
+  grid-row: 1 !important;
+}

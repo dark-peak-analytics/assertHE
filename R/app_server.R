@@ -1,3 +1,6 @@
+#' Help text
+#' @importFrom shiny div icon span br
+#' @return A shiny HTML element
 help_text <- div(
   class = "subtitle-container",
   span(
@@ -6,17 +9,17 @@ help_text <- div(
     "Functions without a test are ", span(class="text-danger fw-bolder", "red"),
     "and those with a test are ", span(class="text-success fw-bolder", "green"), ". ",
     br(),
-    "Click on", shiny::icon(
+    "Click on", icon(
       name = "robot",
       style = "color: #337ab7; margin-right: 5px; margin-left: 5px;"
     ),
     " to request an AI generated summary of the corresponding function.", br(),
-    shiny::icon(
+    icon(
       name = "up-right-from-square",
       style = "color: #75AADB; margin-right: 5px; margin-left: 5px;"
     ),
     " to open the file in RStudio, or", br(),
-    shiny::icon(
+    icon(
       name = "eye",
       style = "color: #337ab7; margin-right: 5px; margin-left: 5px;"
     ),
@@ -167,7 +170,7 @@ app_server <- function(network_object, project_path, foo_path) {
         title = "Help",
         text = help_text,
         type = "info",
-        timer = 30000,
+        timer = 0,
         width = "500px"
       )
     })
