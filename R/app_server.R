@@ -143,7 +143,7 @@ make_closable_tab <- function(
 #'
 #' @inheritParams run_shiny_app
 #' @param foo_path path to the function folder
-#' @importFrom shinyWidgets show_toast
+#' @importFrom shinyWidgets show_toast show_alert
 #' @importFrom shinyjs onclick
 #'
 #' @return Shiny app server logic
@@ -163,7 +163,9 @@ app_server <- function(network_object, project_path, foo_path) {
     aiAssit_calls <- shiny::reactiveVal(0)
 
     # Render the network visual
-    output$networkPlot <- visNetwork::renderVisNetwork(network_object)
+    output$networkPlot <- visNetwork::renderVisNetwork({
+      network_object
+    })
 
     onclick("question-icon-click", {
       show_toast(
@@ -190,6 +192,20 @@ app_server <- function(network_object, project_path, foo_path) {
         }
 
         if(input$aiAssist != "") {
+          LLM_API_URL <- Sys.getenv("LLM_API_URL")
+          LLM_API_KEY <- Sys.getenv("LLM_API_KEY")
+          if (LLM_API_URL == "" || LLM_API_KEY == "") {
+            show_alert(
+              title = "LLM API not set",
+              text = "LLM_API_URL and LLM_API_KEY must be set. See README for more details.",
+              type = "error",
+              html = FALSE,
+              closeOnClickOutside = TRUE,
+              showCloseButton = FALSE,
+              session = shiny::getDefaultReactiveDomain()
+            )
+            return()
+          }
           function_name <- input$aiAssist
           tab_name <- paste(function_name)
 
