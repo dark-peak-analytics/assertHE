@@ -14,7 +14,7 @@ You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-da
 <!-- badges: start -->
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13969179.svg)](https://doi.org/10.5281/zenodo.13969179)
-[![DOI:10.12688](http://img.shields.io/badge/DOI-10.12688/wellcomeopenres.23180.1-#FF0000.svg)](https://doi.org/10.12688/wellcomeopenres.23180.1)
+[![DOI:10.12688/wellcomeopenres.23180.1](http://img.shields.io/badge/DOI-10.12688/wellcomeopenres.23180.1.svg)](https://doi.org/10.1101/2021.01.08.425840)
 [![R-CMD-check](https://github.com/dark-peak-analytics/assertHE/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dark-peak-analytics/assertHE/actions/workflows/R-CMD-check.yaml)
 
 <!-- badges: end -->
