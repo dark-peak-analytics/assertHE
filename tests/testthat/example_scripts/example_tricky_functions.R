@@ -107,4 +107,14 @@ print(output)
     output <- generate_output(result) # comment here
     return(output) # another comment here
     # final comment
+     }
+
+
+
+# Function defined inside another
+foo_outside <- function(x){
+  foo_inside <- function(y){
+    return(x + y)
   }
+  return(foo_inside(10))
+}
