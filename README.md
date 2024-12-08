@@ -6,7 +6,6 @@ You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-da
 # assertHE
 
 <div class="logos">
-<img src = "https://github.com/user-attachments/assets/904db635-69ea-43ac-92bd-f84c93f57d5a" width="120px" align="right">
 <img src="https://github.com/dark-peak-analytics/darkpeak/blob/main/man/figures/logo_concise.PNG?raw=true" width="120px" align="right">
 </div>
 
