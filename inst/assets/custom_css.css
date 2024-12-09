@@ -1,0 +1,65 @@
+/* Make tab content scrollable */
+.tab-content {
+  /* Enable vertical scrolling */
+  overflow-y: auto;
+}
+
+/* Style for custom tab content background */
+.custom-tab-content {
+  background-color: #f5f5f5;
+  padding-bottom: 5px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+/* Reduce padding around close actionButton */
+.close-tab {
+  border: none;
+  padding: 5px;
+  margin: 5px;
+  color: red;
+}
+
+/* Waiter */
+.waiter-overlay  {
+  position: fixed;
+  height: 919px;
+  width: 1375px;
+  top: 0px;
+  left: 0px;
+  background-color: rgba(51, 62, 72, 0.5) !important;
+}
+
+.title-container {
+  text-align: center;
+
+  .title-text {
+    font-size: 2em;
+    font-weight: bold;
+  }
+
+  .help-icon-container {
+    font-size: 1.5em;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+}
+
+.subtitle-container {
+  .subtitle-text {
+    font-size: 15px;
+  }
+}
+
+/* sweet alert */
+.swal2-container {
+  z-index: 10001 !important;
+}
+
+.swal2-title {
+  text-align: center !important;
+}
+
+.swal2-close {
+  grid-row: 1 !important;
+}
