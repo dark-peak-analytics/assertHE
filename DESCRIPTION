@@ -47,6 +47,7 @@ Imports:
     methods,
     waiter,
     igraph,
-    httr
+    httr,
+    codetools
 URL: https://dark-peak-analytics.github.io/assertHE/, https://github.com/dark-peak-analytics/assertHE
 BugReports: https://github.com/dark-peak-analytics/assertHE/issues
