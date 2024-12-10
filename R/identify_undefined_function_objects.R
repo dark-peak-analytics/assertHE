@@ -72,30 +72,34 @@ identify_undefined_function_objects <- function(func, env = .GlobalEnv) {
 
 
 
-#' #' Function to source all files in folder & check for undefined objects
-#' #'
-#' #' @param foo_folder A character vector of the folder path
-#' #'
+#' Function to source all files in folder & check for undefined objects
+#'
+#' It loads the functions to the global environment, which is not ideal.
+#' But it works for now.
+#'
+#' @param foo_folder A character vector of the folder path
+#'
+#' @examples
+#'
 #' foo_folder  <- testthat::test_path("example_project/R")
 #' test_folder <- testthat::test_path("example_project/tests/testthat")
 #'
-#' test_foo <- function(foo_folder){
-#'
-#'   # Create a new environment to avoid sourcing scripts into the namespace
-#'   pkg_env <- new.env(parent = baseenv())
-#'
-#'   # Load all functions into this environment
-#'   assertHE:::load_functions_into_env(foo_folder, pkg_env)
-#'
-#'   #print(ls(envir = environment()))
-#'   # identify function objects in environment
-#'   list_of_functions_in_env <- lsf.str(envir = pkg_env) |> as.vector()
-#'
-#'   sapply(X = list_of_functions_in_env,
-#'          USE.NAMES = TRUE,
-#'          env = pkg_env,
-#'          FUN = identify_undefined_function_objects)
-#'
-#' }
-#'
-#' test_foo(foo_folder)
+#' identify_undefined_function_objects_in_folder(foo_folder)
+identify_undefined_function_objects_in_folder <- function(foo_folder){
+
+  # to be changed, for now.
+  pkg_env <- .GlobalEnv
+  # Load all functions into this environment
+  assertHE:::load_functions_into_env(foo_folder, env = pkg_env)
+
+  #print(ls(envir = environment()))
+  # identify function objects in environment
+  list_of_functions_in_env <- lsf.str(envir = pkg_env) |> as.vector()
+
+  sapply(X = list_of_functions_in_env,
+         USE.NAMES = TRUE,
+         env = pkg_env,
+         FUN = identify_undefined_function_objects)
+
+}
+
