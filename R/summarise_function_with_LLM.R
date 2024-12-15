@@ -140,6 +140,7 @@ summarise_function_from_arguments_and_body <- function(foo_name,
 
   # POST BODY
   body <- list(model = model_name,
+               temperature = 0,
                messages = list(list(role = "system",
                                     content = context),
                                list(role = "user",
