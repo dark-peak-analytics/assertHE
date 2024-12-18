@@ -88,3 +88,41 @@ test_that("identify_undefined_function_objects handles complex cases", {
     c("undefined_object1", "undefined_object2")
   )
 })
+
+
+
+
+
+
+test_that("identify_undefined_function_objects_in_folder works as intended in test cases",
+          {
+            test_folder <- testthat::test_path("example_scripts")
+
+            x <- identify_undefined_function_objects_in_folder(foo_folder = test_folder)
+
+            expect_contains(object = unlist(x),
+                            expected =  c(paste0("undefined_object", 1:4),
+                                          "another_condition",
+                                          "some_condition",
+                                          "global_var"))
+
+
+          })
+
+
+
+test_that("identify_undefined_function_objects_in_folder works as intended in test cases",
+          {
+            test_folder <- testthat::test_path("cdx2cea_master", "R")
+
+            expect_no_error({
+              x <- identify_undefined_function_objects_in_folder(foo_folder = test_folder)
+              })
+
+            expect_contains(object = x,
+                            expected = "df_calibration_targets")
+          })
+
+
+
+

@@ -9,6 +9,7 @@
 #' @importFrom codetools findGlobals
 #'
 #' @examples
+#' \dontrun{
 #'
 #' # Example function
 #' noArgFunction <- function(y) {
@@ -22,12 +23,25 @@
 #'  return(x)
 #'  }
 #'
+#' noArgFunction3 <- function(y = T) {
+#'  x <- undefined_object2 * T
+#'  return(x)
+#'  }
+#'
+#'  noArgFunction4 <- function(examp_list = list("A" = 1, "B" = 2)) {
+#'  x <- with(examp_list, A + B)
+#'  return(x)
+#'  }
+#'
 #'  # Check for undefined objects
 #'  identify_undefined_function_objects("noArgFunction")
 #'
 #'  # currently fails for the second example!!!
 #'  identify_undefined_function_objects(noArgFunction2)
 #'
+#'  identify_undefined_function_objects(noArgFunction3)
+#'  identify_undefined_function_objects(noArgFunction4)
+#'  }
 identify_undefined_function_objects <- function(func, env = .GlobalEnv) {
 
   # Extract global variables from the function
@@ -39,10 +53,11 @@ identify_undefined_function_objects <- function(func, env = .GlobalEnv) {
   # Get the function arguments
   func_args <- names(formals(fun = func, envir = env))
 
+  # does the function contain a 'with' statement?
+  has_with_statement <- grepl(pattern = "with", paste0(collapse = "", body(func)))
+
   # Identify undefined objects
   undefined_objects <- setdiff(used_globals, func_args)
-
-  # sensecheck
 
   # For each of the undefined objects, identify if they are a function
   # or a variable:
@@ -51,14 +66,22 @@ identify_undefined_function_objects <- function(func, env = .GlobalEnv) {
                 X = undefined_objects,
                 FUN = function(x) {
                   if (methods::existsFunction(x)) {
-                    paste0(x, " (function?)")
-                  } else {
-                    x
-                  }})
+                    x <- paste0(x, " (function?)")
+                  }
+                  if(has_with_statement) {
+                    x <- paste0(x, " (with?)")
+                  }
+                  if(x == "T") {
+                      x <- NA
+                  }
+                  return(x)
+                  })
 
   if(length(ret) == 0) {
     return(NA)
   }
+
+  ret <- ret[!is.na(ret)]
 
   return(ret)
 }
@@ -79,27 +102,41 @@ identify_undefined_function_objects <- function(func, env = .GlobalEnv) {
 #'
 #' @param foo_folder A character vector of the folder path
 #'
+#' @return A list of character vectors of undefined objects in each function in a folder
+#'
+#' @importFrom utils lsf.str
+#'
 #' @examples
+#' \dontrun{
 #'
 #' foo_folder  <- testthat::test_path("example_project/R")
 #' test_folder <- testthat::test_path("example_project/tests/testthat")
 #'
 #' identify_undefined_function_objects_in_folder(foo_folder)
-identify_undefined_function_objects_in_folder <- function(foo_folder){
+#' }
+identify_undefined_function_objects_in_folder <- function(foo_folder) {
+  # Create a temporary environment
+  temp_env <- rlang::env()
 
-  # to be changed, for now.
-  pkg_env <- .GlobalEnv
-  # Load all functions into this environment
-  assertHE:::load_functions_into_env(foo_folder, env = pkg_env)
+  # Load all functions into the temporary environment
+  load_functions_into_env(foo_folder, env = temp_env)
 
-  #print(ls(envir = environment()))
-  # identify function objects in environment
-  list_of_functions_in_env <- lsf.str(envir = pkg_env) |> as.vector()
+  # Identify function objects in the temporary environment
+  list_of_functions_in_env <- utils::lsf.str(envir = temp_env) |> as.vector()
 
-  sapply(X = list_of_functions_in_env,
-         USE.NAMES = TRUE,
-         env = pkg_env,
-         FUN = identify_undefined_function_objects)
+  # Evaluate each function and identify undefined objects in the temporary environment
+  results <- sapply(
+    X = list_of_functions_in_env,
+    USE.NAMES = TRUE,
+    FUN = function(fn_name) {
+      # Use rlang::eval_bare() to ensure the function body is evaluated in the temp_env
+      fn <- get(fn_name, envir = temp_env)
+      identify_undefined_function_objects(func = fn, env = temp_env)
+    }
+  )
 
+  # Return results
+  return(results)
 }
+
 

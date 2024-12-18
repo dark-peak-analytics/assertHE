@@ -18,6 +18,7 @@ A character vector of undefined objects contained in the function body
 Function to check for undefined objects in the function body
 }
 \examples{
+\dontrun{
 
 # Example function
 noArgFunction <- function(y) {
@@ -31,10 +32,23 @@ noArgFunction2 <- function(y) {
  return(x)
  }
 
+noArgFunction3 <- function(y = T) {
+ x <- undefined_object2 * T
+ return(x)
+ }
+
+ noArgFunction4 <- function(examp_list = list("A" = 1, "B" = 2)) {
+ x <- with(examp_list, A + B)
+ return(x)
+ }
+
  # Check for undefined objects
  identify_undefined_function_objects("noArgFunction")
 
  # currently fails for the second example!!!
  identify_undefined_function_objects(noArgFunction2)
 
+ identify_undefined_function_objects(noArgFunction3)
+ identify_undefined_function_objects(noArgFunction4)
+ }
 }
