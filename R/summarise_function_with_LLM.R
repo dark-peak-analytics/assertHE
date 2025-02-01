@@ -75,15 +75,11 @@ get_function_data <- function(foo_name, envir = environment()) {
     NULL)
 
   # create list containing data
-  output <- list(arguments = foo_arguments,
+  output <- list(name = foo_name,
+                 arguments = foo_arguments,
                  body      = foo_body,
                  title     = descriptors$title,
-                 desc   = descriptors$description)
-
-  #if(!is.null(descriptors)){
-  #  output$title  = descriptors$title
-  #  output$desc   = descriptors$description
-  #}
+                 desc      = descriptors$description)
 
   return(output)
 }
@@ -127,17 +123,28 @@ summarise_function_from_arguments_and_body <- function(foo_name,
                                                        model_name = "gpt-3.5-turbo-0125",
                                                        llm_api_url = Sys.getenv("LLM_API_URL"),
                                                        llm_api_key = Sys.getenv("LLM_API_KEY")) {
-  # create the prompt:
-  prompt <- create_prompt(foo_arguments = foo_arguments,
-                          foo_body =  foo_body,
-                          foo_name = foo_name,
-                          foo_title = foo_title,
-                          foo_desc = foo_desc)
+
+  context <- readLines(system.file("system_prompt.md", package = "assertHE")) |>
+                paste0(collapse = "\n")
+
+  func_json_data <-
+    jsonlite::toJSON(
+      list(
+        "name" = paste0(as.character(foo_name), collapse = "\n"),
+        "title" = paste0(as.character(foo_title), collapse = "\n"),
+        "description" = paste0(as.character(foo_desc), collapse = "\n"),
+        "arguments" = paste0(as.character(foo_arguments), collapse = "\n"),
+        "body" = paste0(as.character(foo_body), collapse = "\n")
+      )
+    )
 
   # POST BODY
   body <- list(model = model_name,
-               messages = list(list(role = "user",
-                                    content = prompt)))
+               temperature = 0,
+               messages = list(list(role = "system",
+                                    content = context),
+                               list(role = "user",
+                                    content = func_json_data)))
 
   # Run the
   response <- httr::POST(
@@ -298,43 +305,6 @@ get_roxygen_description <- function(parsed_list) {
 
   title <- parsed_list[[title_index]][["val"]]
 
-  #string <- paste0(paste0("Title: ", title), paste0("; Description: ", description))
-
-  #out <- sub(x =  string, pattern = "\n", replacement = " ")
-
   return(list("title" = title,
               "description" = sub(x =  description, pattern = "\n", replacement = " ")))
 }
-
-
-#get_function_data("define_transition_matrix")
-#
-
-#get_roxygen_description_from_foo("define_transition_matrix")
-
-
-
-
-# foo_name <- "check_markov_trace"
-# l_function_data <- get_function_data(foo_name)
-# create_prompt(l_function_data$arguments, l_function_data$body)
-
-# call function from R
-# response <- summarise_function_with_LLM(foo_name = "define_transition_matrix")
-
-
-# convert_to_html <- function(input_string) {
-#   # Replace inline code snippets within `` with <code> tags
-#   html_code <- gsub("`([^`]+)`", "<code>\\1</code>", input_string)
-#   # Wrap the whole string within <p> tags
-#   html_code <- paste("<p>", html_code, "</p>")
-#   return(html_code)
-# }
-
-# Test the function
-#html_output <- convert_to_html(response)
-
-
-# writeLines(html_output, con = here::here("example.html"))
-# (code to write some content to the file)
-#rstudioapi::viewer("example.html")
