@@ -6,19 +6,24 @@ You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-da
 # assertHE
 
 <div class="logos">
-<img src = "https://github.com/user-attachments/assets/904db635-69ea-43ac-92bd-f84c93f57d5a" width="150px" align="right">
+
+<img src="https://github.com/dark-peak-analytics/darkpeak/blob/main/man/figures/logo_concise.PNG?raw=true" width="120px" align="right">
+
 </div>
 
 <!-- badges: start -->
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13969179.svg)](https://doi.org/10.5281/zenodo.13969179)
+
 [![R-CMD-check](https://github.com/dark-peak-analytics/assertHE/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dark-peak-analytics/assertHE/actions/workflows/R-CMD-check.yaml)
 
 <!-- badges: end -->
 
-This work is now published in Wellcome Open Research, please cite as
+This work is now published in Wellcome Open Research, please cite as:
 
-> Smith RA, Samyshkin Y, Mohammed W et al. assertHE: an R package to improve quality assurance of HTA models [version 1; peer review: awaiting peer review]. Wellcome Open Res 2024, 9:701 (https://doi.org/10.12688/wellcomeopenres.23180.1)
+> Smith RA, Samyshkin Y, Mohammed W et al. assertHE: an R package to
+> improve quality assurance of HTA models. Wellcome Open Res 2024,
+> 9:701. <https://doi.org/10.12688/wellcomeopenres.23180.1>
 
 The goal of `assertHE` is to help modellers build and review health
 economic models in R. The package provides functions which can be
