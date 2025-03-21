@@ -9,7 +9,7 @@ Authors@R: c(
     person("Jack", "Smith", , "", role = c("aut")),
     person("Dark Peak Analytics Ltd", role = c("cph", "fnd"))
   )
-Description: An R package designed to help health economic modellers when building and reviewing models. 
+Description: Designed to help health economic modellers when building and reviewing models. 
     The visualisation functions allow users to more easily review the network of functions 
     in a project, and get lay summaries of them. The asserts included are intended to check for common errors,
     thereby freeing up time for modellers to focus on tests specific to the individual model in development or review.
