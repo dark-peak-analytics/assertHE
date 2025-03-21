@@ -13,6 +13,7 @@ Description: Designed to help health economic modellers when building and review
     The visualisation functions allow users to more easily review the network of functions 
     in a project, and get lay summaries of them. The asserts included are intended to check for common errors,
     thereby freeing up time for modellers to focus on tests specific to the individual model in development or review.
+    For more details see Smith and colleagues (2024)<doi:10.12688/wellcomeopenres.23180.1>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
