@@ -82,21 +82,21 @@ visualise_project_addin <- function() {
                                   label =  "No Test Background",
                                   value = "#fad1d0",
                                   showColour = "both",
-                                  closeOnClick = T
+                                  closeOnClick = TRUE
         ),
         colourpicker::colourInput(width = "80%",
                                   inputId = "color_no_test_border",
                                   label =  "No Test Background",
                                   value = "#9c0000",
                                   showColour = "both",
-                                  closeOnClick = T
+                                  closeOnClick = TRUE
         ),
         colourpicker::colourInput(width = "80%",
                                   inputId = "color_no_test_highlight",
                                   label =  "No Test Highlight",
                                   value = "#9c0000",
                                   showColour = "both",
-                                  closeOnClick = T
+                                  closeOnClick = TRUE
         )
       ),
       shiny::column(
@@ -108,21 +108,21 @@ visualise_project_addin <- function() {
                                   label =  "With Test Background",
                                   value = "#e6ffe6",
                                   showColour = "both",
-                                  closeOnClick = T
+                                  closeOnClick = TRUE
         ),
         colourpicker::colourInput(width = "80%",
                                   inputId = "color_with_test_border",
                                   label =  "With Test Border",
                                   value = "#65a765",
                                   showColour = "both",
-                                  closeOnClick = T
+                                  closeOnClick = TRUE
         ),
         colourpicker::colourInput(width = "80%",
                                   inputId = "color_with_test_highlight",
                                   label =  "With Test Highlight",
                                   value = "#65a765",
                                   showColour = "both",
-                                  closeOnClick = T
+                                  closeOnClick = TRUE
         )
       ),
       shiny::column(
@@ -134,21 +134,21 @@ visualise_project_addin <- function() {
                                   label =  "Moderate Coverage Background",
                                   value = "#FFD580",
                                   showColour = "both",
-                                  closeOnClick = T
+                                  closeOnClick = TRUE
         ),
         colourpicker::colourInput(width = "80%",
                                   inputId = "color_mod_coverage_border",
                                   label =  "Moderate Coverage Border",
                                   value = "#E49B0F",
                                   showColour = "both",
-                                  closeOnClick = T
+                                  closeOnClick = TRUE
         ),
         colourpicker::colourInput(width = "80%",
                                   inputId = "color_mod_coverage_highlight",
                                   label =  "Moderate Coverage Highlight",
                                   value = "#E49B0F",
                                   showColour = "both",
-                                  closeOnClick = T
+                                  closeOnClick = TRUE
         )
       )
     ) # close row,

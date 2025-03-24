@@ -7,7 +7,7 @@
 #'
 #' @param m_P The transition probability matrix to be checked.
 #' @param confirm_ok if OK, return a message confirming all checks passed.
-#' @param stop_if_not return error messages. The default (F) returns warnings.
+#' @param stop_if_not return error messages. The default (FALSE) returns warnings.
 #' @param dead_state character vector length 1 denoting dead state (e.g. "D")
 #'
 #' @examples
@@ -35,16 +35,16 @@
 #' @importFrom utils capture.output
 check_trans_prob_mat <- function(m_P,
                                  dead_state = NULL,
-                                 confirm_ok = F,
-                                 stop_if_not = F){
+                                 confirm_ok = FALSE,
+                                 stop_if_not = FALSE){
 
   # no warnings
-  no_warnings <- T
+  no_warnings <- TRUE
 
   # Check that the matrix is square
   if (ncol(m_P) != nrow(m_P)) {
     message <- "Transition matrix is not square."
-    no_warnings <- F
+    no_warnings <- FALSE
     if (stop_if_not) {
       stop(message)
     } else{
@@ -53,10 +53,10 @@ check_trans_prob_mat <- function(m_P,
   }
 
   # Check that the row and column names match in the same order
-  if (no_warnings == T) {
+  if (no_warnings == TRUE) {
     if (any(rownames(m_P) != colnames(m_P))) {
       message <- "Row and column names do not match."
-      no_warnings <- F
+      no_warnings <- FALSE
       if (stop_if_not) {
         stop(message)
       } else{
@@ -69,7 +69,7 @@ check_trans_prob_mat <- function(m_P,
   # Check that the matrix contains numeric values
   if (!is.numeric(m_P)) {
     message <- "Transition matrix is not numeric."
-    no_warnings <- F
+    no_warnings <- FALSE
     if (stop_if_not) {
       stop(message)
     } else{
@@ -80,7 +80,7 @@ check_trans_prob_mat <- function(m_P,
   # Check that matrix values are between 0 and 1
   if (!all(m_P >= 0 & m_P <= 1)) {
     message <- "Transition matrix has values below 0 or above 1."
-    no_warnings <- F
+    no_warnings <- FALSE
     if (stop_if_not) {
       stop(message)
     } else{
@@ -91,7 +91,7 @@ check_trans_prob_mat <- function(m_P,
   # Check that rows sum to 1, indicating valid transition probabilities
   if (any(abs(rowSums(m_P) - 1) > 1E-08)){
     message <- "Rows of transition matrix don't sum to 1."
-    no_warnings <- F
+    no_warnings <- FALSE
     if (stop_if_not) {
       stop(message)
     } else{
@@ -107,7 +107,7 @@ check_trans_prob_mat <- function(m_P,
     # death state row has a value of 1 for the death state column
     if (dead_state_row[dead_state] != 1){
       message <- "Death state row does not equal 1 in the death state column."
-      no_warnings <- F
+      no_warnings <- FALSE
       if (stop_if_not) {
         stop(message)
       } else{
@@ -126,7 +126,7 @@ check_trans_prob_mat <- function(m_P,
 
 # Runs checks on the external validity of a deterministic model
 
-check_array_values <- function(a_P, stop_if_not = F){
+check_array_values <- function(a_P, stop_if_not = FALSE){
 
   # Check which entries are not valid
   m_indices_notvalid <- arrayInd(which(a_P < 0 | a_P > 1),
@@ -157,7 +157,7 @@ check_array_values <- function(a_P, stop_if_not = F){
 }
 
 
-check_array_rows_balanced <- function(a_P, stop_if_not = F){
+check_array_rows_balanced <- function(a_P, stop_if_not = FALSE){
 
   a_P <- as.array(a_P)
 
@@ -193,10 +193,10 @@ check_array_rows_balanced <- function(a_P, stop_if_not = F){
 }
 
 
-check_array_names_complete <- function(a_P, stop_if_not = F){
+check_array_names_complete <- function(a_P, stop_if_not = FALSE){
 
   # no warnings
-  no_warnings <- T
+  no_warnings <- TRUE
 
   n_row <- dim(a_P)[1]
   n_col <- dim(a_P)[2]
@@ -204,7 +204,7 @@ check_array_names_complete <- function(a_P, stop_if_not = F){
   # Check that the array is square on dim 1 and 2
   if (n_row != n_col) {
     message <- paste0("Transition array is not square: ", n_row, " rows, and ", n_col, " columns")
-    no_warnings <- F
+    no_warnings <- FALSE
     if (stop_if_not) {
       stop(message)
     } else{
@@ -212,10 +212,10 @@ check_array_names_complete <- function(a_P, stop_if_not = F){
     }
   }
 
-  if (no_warnings == T) {
+  if (no_warnings == TRUE) {
     if (any(dimnames(a_P)[[1]] != dimnames(a_P)[[2]])){
       message <- "Row and column names of the array do not match."
-      no_warnings <- F
+      no_warnings <- FALSE
       if (stop_if_not) {
         stop(message)
       } else{
@@ -226,7 +226,7 @@ check_array_names_complete <- function(a_P, stop_if_not = F){
 
 }
 
-check_dead_state_rows <- function(a_P, dead_state = NULL, stop_if_not = F) {
+check_dead_state_rows <- function(a_P, dead_state = NULL, stop_if_not = FALSE) {
 
   a_P <- as.array(a_P)
 
@@ -272,7 +272,7 @@ check_dead_state_rows <- function(a_P, dead_state = NULL, stop_if_not = F) {
 #' in each slice is equal to 1.
 #'
 #' @param a_P The transition probability array to be checked.
-#' @param stop_if_not return error messages. The default (F) returns warnings.
+#' @param stop_if_not return error messages. The default (FALSE) returns warnings.
 #' @param dead_state character vector length 1 denoting dead state (e.g. "D")
 #'
 #' @examples
@@ -293,18 +293,18 @@ check_dead_state_rows <- function(a_P, dead_state = NULL, stop_if_not = F) {
 #'   diag(a_P[,,x]) <- 1 - rowSums(a_P[,,x])
 #' }
 #'
-#' check_trans_prob_array(a_P = a_P, stop_if_not = F)
+#' check_trans_prob_array(a_P = a_P, stop_if_not = FALSE)
 #' # introduce error
 #' a_P["H", "S", 1:10] <- 0
 #'
-#' check_trans_prob_array(a_P = a_P, stop_if_not = F)
+#' check_trans_prob_array(a_P = a_P, stop_if_not = FALSE)
 #'
 #' }
 #'
 #' @return A message indicating whether the array passed all the checks or a warning/error message if any check failed.
 #'
 #' @export
-check_trans_prob_array <- function(a_P, dead_state = NULL, stop_if_not = F){
+check_trans_prob_array <- function(a_P, dead_state = NULL, stop_if_not = FALSE){
 
   if(!is.numeric(a_P) | length(dim(a_P)) != 3) stop("a_P must be a numeric 3 dimensional transition probability array")
 

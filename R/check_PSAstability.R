@@ -57,7 +57,7 @@ plot_PSA_stability <- function(m_eff,
                                v_strategy_colors = NULL,
                                comparator = NULL,
                                output = "inmb",
-                               include_reference_line = T,
+                               include_reference_line = TRUE,
                                log_x = FALSE) {
   assertthat::assert_that(is.matrix(m_eff) &
                             is.matrix(m_cost) & is.numeric(m_eff) & is.numeric(m_cost),

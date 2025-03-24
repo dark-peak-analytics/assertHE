@@ -102,7 +102,7 @@ find_function_calls_in_file <- function(relative_path = NULL,
 #' }
 find_function_calls_in_folder <- function(test_folder,
                                           foo_strings,
-                                          filter_for_test_that = F) {
+                                          filter_for_test_that = FALSE) {
 
   # quick checks
   assertthat::assert_that(msg = paste("Can't find folder at:", test_folder),
@@ -142,7 +142,7 @@ find_function_calls_in_folder <- function(test_folder,
     x = df_summary,
     y = data.frame(foo_string = foo_strings),
     by = "foo_string",
-    all = T
+    all = TRUE
   )
 
   return(df_out)
@@ -225,7 +225,7 @@ summarise_model <- function(project_path = ".",
   df <- merge(x = df,
               y = df_test_summary,
               by = "foo_string",
-              all.x = T)
+              all.x = TRUE)
 
   }
 

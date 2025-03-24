@@ -224,7 +224,7 @@ create_prompt <- function(foo_arguments,
 #'
 #' @return A single string summary of the content of the LLM response
 return_message <- function(API_response,
-                           verbose = T){
+                           verbose = TRUE){
 
   if (verbose) message(paste("Tokens used:", httr::content(API_response)$usage$total_tokens))
 
