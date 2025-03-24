@@ -10,7 +10,7 @@ visualise_project(
   test_path = NULL,
   exclude_files = NULL,
   exclude_dirs = NULL,
-  run_coverage = F,
+  run_coverage = FALSE,
   color_no_test = c(background = "#fad1d0", border = "#9c0000", highlight = "#9c0000"),
   color_with_test = c(background = "#e6ffe6", border = "#65a765", highlight = "#65a765"),
   color_mod_coverage = c(background = "#FFD580", border = "#E49B0F", highlight =

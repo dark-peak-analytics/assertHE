@@ -4,7 +4,12 @@
 \alias{check_markov_trace}
 \title{Check Markov Trace}
 \usage{
-check_markov_trace(m_TR, dead_state = NULL, confirm_ok = F, stop_if_not = F)
+check_markov_trace(
+  m_TR,
+  dead_state = NULL,
+  confirm_ok = FALSE,
+  stop_if_not = FALSE
+)
 }
 \arguments{
 \item{m_TR}{The markov trace to be checked.}
@@ -13,7 +18,7 @@ check_markov_trace(m_TR, dead_state = NULL, confirm_ok = F, stop_if_not = F)
 
 \item{confirm_ok}{if OK, return a message confirming all checks passed.}
 
-\item{stop_if_not}{return error messages. The default (F) returns warnings.}
+\item{stop_if_not}{return error messages. The default (FALSE) returns warnings.}
 }
 \value{
 A message indicating whether the matrix passed all the checks or an error message if any check failed.
@@ -42,7 +47,7 @@ check_markov_trace(m_TR = m_TR, dead_state = "D", confirm_ok = TRUE)
 # the following results in an error because the trace has infeasible values
 m_TR[10, "D"] <- 0
 m_TR[9, "S"] <- 1
-check_markov_trace(m_TR = m_TR, stop_if_not = T, dead_state = "D", confirm_ok = TRUE)
+check_markov_trace(m_TR = m_TR, stop_if_not = TRUE, dead_state = "D", confirm_ok = TRUE)
 
 }
 }

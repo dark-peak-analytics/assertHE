@@ -4,7 +4,7 @@
 \alias{return_message}
 \title{Extract the content from the output of the LLM}
 \usage{
-return_message(API_response, verbose = T)
+return_message(API_response, verbose = TRUE)
 }
 \arguments{
 \item{API_response}{response from the LLM API}

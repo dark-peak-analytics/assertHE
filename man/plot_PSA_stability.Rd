@@ -13,7 +13,7 @@ plot_PSA_stability(
   v_strategy_colors = NULL,
   comparator = NULL,
   output = "inmb",
-  include_reference_line = T,
+  include_reference_line = TRUE,
   log_x = FALSE
 )
 }
