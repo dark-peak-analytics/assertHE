@@ -134,7 +134,7 @@ head(m_TR)  # head shows us the first six rows by default.
 #  we can check the markov trace #
 # ============================== #
 
-check_markov_trace(m_TR = m_TR, dead_state = "D", confirm_ok = T)
+check_markov_trace(m_TR = m_TR, dead_state = "D", confirm_ok = TRUE)
 
 # ============================== #
 

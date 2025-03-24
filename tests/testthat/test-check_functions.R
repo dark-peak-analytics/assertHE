@@ -10,7 +10,7 @@
 #       assertHE::tabulate_functions_in_folder(
 #         path = testthat::test_path(),
 #         path_exclude = NULL,
-#         collapse = T,
+#         collapse = TRUE,
 #         packages_to_exclude = c("base", "stats", "utils")
 #       )
 #     )
@@ -18,7 +18,7 @@
 #     tmp <- assertHE::tabulate_functions_in_folder(
 #       path = testthat::test_path("."),
 #       path_exclude = NULL,
-#       collapse = T,
+#       collapse = TRUE,
 #       packages_to_exclude = c("base", "stats", "utils")
 #     )
 #
@@ -29,7 +29,7 @@
 #       assertHE::tabulate_functions_in_folder(
 #         path = testthat::test_path("."),
 #         path_exclude = NULL,
-#         collapse = F,
+#         collapse = FALSE,
 #         packages_to_exclude = c("base", "stats", "utils")
 #       ),
 #       "list"
@@ -40,7 +40,7 @@
 #       assertHE::tabulate_functions_in_folder(
 #         path = testthat::test_path("."),
 #         path_exclude = NULL,
-#         collapse = F,
+#         collapse = FALSE,
 #         packages_to_exclude = NULL
 #       ),
 #       "list"

@@ -11,8 +11,8 @@ test_that("test that nothing blows up with visualiser run ", {
       project_path = project_path,
       foo_path = "R",
       test_path = "tests/testthat",
-      run_coverage = F,
-      show_in_shiny = T)
+      run_coverage = FALSE,
+      show_in_shiny = TRUE)
 
   })
 
@@ -29,7 +29,7 @@ test_that("Visualiser cx2cea model without coverage", {
     visualise_project(project_path = cdx2cea_project_path,
                       foo_path = "R",
                       test_path = "tests/testthat",
-                      run_coverage = F)
+                      run_coverage = FALSE)
 
   })
 
@@ -48,7 +48,7 @@ test_that("Visualiser cx2cea model without coverage", {
 #     project_path = cdx2cea_project_path,
 #     foo_path = "R",
 #     test_path = "tests/testthat",
-#     run_coverage = T
+#     run_coverage = TRUE
 #   )
 #
 #   sink()

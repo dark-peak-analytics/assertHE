@@ -63,7 +63,7 @@ test_that(desc = "check_markov_trace should issue error for non-numeric values",
           code = {
 
             expect_error(
-              check_markov_trace(m_TR = m_TR_non_numeric, stop_if_not = T)
+              check_markov_trace(m_TR = m_TR_non_numeric, stop_if_not = TRUE)
             )
 
           })
@@ -71,11 +71,11 @@ test_that(desc = "check_markov_trace should issue error for non-numeric values",
 test_that(desc = "check_markov_trace should issue warning & error for values outside the range 0-1",
           code = {
             expect_warning(
-              check_markov_trace(m_TR = m_TR_outside_range, stop_if_not = F)
+              check_markov_trace(m_TR = m_TR_outside_range, stop_if_not = FALSE)
             )
 
             expect_error(
-              check_markov_trace(m_TR = m_TR_outside_range, stop_if_not = T)
+              check_markov_trace(m_TR = m_TR_outside_range, stop_if_not = TRUE)
             )
 
           })
@@ -84,11 +84,11 @@ test_that(desc = "check_markov_trace should issue warning & error for values out
 test_that(desc = "check_markov_trace should issue warning & error for rows that do not sum to 1",
           code = {
             expect_warning(
-              check_markov_trace(m_TR = m_TR_rows_not_sum_to_1, stop_if_not = F)
+              check_markov_trace(m_TR = m_TR_rows_not_sum_to_1, stop_if_not = FALSE)
             )
 
             expect_error(
-              check_markov_trace(m_TR = m_TR_rows_not_sum_to_1, stop_if_not = T)
+              check_markov_trace(m_TR = m_TR_rows_not_sum_to_1, stop_if_not = TRUE)
             )
 
           })
@@ -98,11 +98,11 @@ test_that(desc = "check_markov_trace should issue warning & error for rows that 
 test_that(desc = "check_markov_trace should issue warning & error for dead state values that do not increase monotonically",
           code = {
             expect_warning(
-              check_markov_trace(m_TR = m_TR_dead_not_monotonic, stop_if_not = F, dead_state = "D")
+              check_markov_trace(m_TR = m_TR_dead_not_monotonic, stop_if_not = FALSE, dead_state = "D")
             )
 
             expect_error(
-              check_markov_trace(m_TR = m_TR_dead_not_monotonic, stop_if_not = T, dead_state = "D")
+              check_markov_trace(m_TR = m_TR_dead_not_monotonic, stop_if_not = TRUE, dead_state = "D")
             )
 
           })
@@ -112,11 +112,11 @@ test_that(desc = "check_markov_trace should issue warning & error for dead state
 test_that(desc = "check_markov_trace should issue error for 1d or 3d arrays",
           code = {
             expect_error(
-              check_markov_trace(m_TR = m_TR_3d, stop_if_not = T)
+              check_markov_trace(m_TR = m_TR_3d, stop_if_not = TRUE)
             )
 
             expect_error(
-              check_markov_trace(m_TR = m_TR_1d, stop_if_not = T)
+              check_markov_trace(m_TR = m_TR_1d, stop_if_not = TRUE)
             )
 
           })
@@ -126,11 +126,11 @@ test_that(desc = "check_markov_trace should issue error for 1d or 3d arrays",
 test_that(desc = "check_markov_trace issues warning for missing column name and error for duplicate column name",
           code = {
             expect_warning(
-              check_markov_trace(m_TR = m_TR_missing_column_name, stop_if_not = T)
+              check_markov_trace(m_TR = m_TR_missing_column_name, stop_if_not = TRUE)
             )
 
             expect_error(
-              check_markov_trace(m_TR = m_TR_duplicate_column_name, stop_if_not = T)
+              check_markov_trace(m_TR = m_TR_duplicate_column_name, stop_if_not = TRUE)
             )
 
           })
@@ -139,7 +139,7 @@ test_that(desc = "check_markov_trace issues warning for missing column name and 
 test_that(desc = "Check confirm OK works as expected",
           code = {
             expect_match(
-              check_markov_trace(m_TR = m_TR, stop_if_not = T, confirm_ok = T),
+              check_markov_trace(m_TR = m_TR, stop_if_not = TRUE, confirm_ok = TRUE),
               "Markov Trace passed all checks."
             )
 

@@ -8,6 +8,6 @@
 
 library(testthat)
 
-v_files <- list.files("./tests/testthat/example_notests/tests/testthat", full.names = T)
+v_files <- list.files("./tests/testthat/example_notests/tests/testthat", full.names = TRUE)
 for(i in v_files)  source(i)
 

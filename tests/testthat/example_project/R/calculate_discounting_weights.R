@@ -59,7 +59,7 @@ calculate_discounting_weights <- function(discount_rate_ = 0.035,
     assertthat::is.flag(first_cycle_),
     msg = paste(
       "The object passed to the first_cycle_ argument is not a logical; please",
-      "use TRUE or FALSE, T or F, only"
+      "use TRUE or FALSE only"
     )
   )
 

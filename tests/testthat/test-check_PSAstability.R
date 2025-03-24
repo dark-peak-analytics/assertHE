@@ -48,7 +48,7 @@ test_that("plot_PSA_stability handles valid input", {
       v_strategy_colors = v_strategy_colors,
       comparator  = colnames(m_eff)[1],
       output = "icer",
-      include_reference_line = T,
+      include_reference_line = TRUE,
       log_x = FALSE
     )
   })
@@ -75,8 +75,8 @@ test_that("plot_PSA_stability handles valid input", {
         v_strategy_colors = v_strategy_colors,
         comparator  = colnames(m_eff)[1],
         output = output,
-        include_reference_line = T,
-        log_x = T
+        include_reference_line = TRUE,
+        log_x = TRUE
       )
     )
   }
@@ -86,7 +86,7 @@ test_that("plot_PSA_stability handles valid input", {
 
     columns_chosen <- sample(x = 3:5,
                              size = x,
-                             replace = F)
+                             replace = FALSE)
 
     expect_no_error(
       plot_PSA_stability(
@@ -98,8 +98,8 @@ test_that("plot_PSA_stability handles valid input", {
         v_strategy_colors = v_strategy_colors,
         comparator  = colnames(m_eff)[columns_chosen[1]],
         output = "icer",
-        include_reference_line = T,
-        log_x = T
+        include_reference_line = TRUE,
+        log_x = TRUE
       )
     )
   }
@@ -120,7 +120,7 @@ test_that("plot_PSA_stability flags errors", {
       v_strategy_colors = v_strategy_colors,
       comparator  = colnames(m_eff)[1],
       output = "icer",
-      include_reference_line = T,
+      include_reference_line = TRUE,
       log_x = FALSE
     )
   })
@@ -146,8 +146,8 @@ test_that("plot_PSA_stability flags errors", {
       v_strategy_colors = v_strategy_colors,
       comparator  = colnames(m_eff)[1],
       output = "abc",
-      include_reference_line = T,
-      log_x = T
+      include_reference_line = TRUE,
+      log_x = TRUE
     )
   )
 
@@ -162,8 +162,8 @@ test_that("plot_PSA_stability flags errors", {
       v_strategy_colors = v_strategy_colors,
       comparator  = "Z",
       output = "icer",
-      include_reference_line = T,
-      log_x = T
+      include_reference_line = TRUE,
+      log_x = TRUE
     )
   )
 

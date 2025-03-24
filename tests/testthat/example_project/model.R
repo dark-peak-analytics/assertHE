@@ -5,7 +5,7 @@ library(sicksickerPack)
 library(assertHE)
 
 # source local functions
-v_files <- list.files("./inst/example_project", full.names = T)
+v_files <- list.files("./inst/example_project", full.names = TRUE)
 v_files <- v_files[-grep(x = v_files, pattern = "example_script.R")]
 for(i in v_files)  source(i)
 

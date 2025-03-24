@@ -149,7 +149,7 @@
 #'                11)
 #'   expect_equal(find_next_vector_element(value = 4, vector = 1:4),
 #'                as.logical(NA))
-#'   expect_equal(find_next_vector_element(value = 4, vector = 1:4, LTE = T),
+#'   expect_equal(find_next_vector_element(value = 4, vector = 1:4, LTE = TRUE),
 #'                4)
 #'   expect_equal(find_next_vector_element(value = 4, vector = rep(NA, 10)),
 #'                as.integer(NA))
@@ -161,7 +161,7 @@
 #'                9)
 #'   expect_equal(find_previous_vector_element(4, 4:12),
 #'                as.logical(NA))
-#'   expect_equal(find_previous_vector_element(4, 1:12, LTE = T),
+#'   expect_equal(find_previous_vector_element(4, 1:12, LTE = TRUE),
 #'                4)
 #'   expect_equal(find_next_vector_element(value = 4, vector = rep(NA, 10)),
 #'                as.integer(NA))
@@ -204,7 +204,7 @@
 #'  test_that("get_file_cheers_classifications works for each script in a project folder",
 #'            {
 #'              v_files <-
-#'                list.files(testthat::test_path("example_project/R"), full.names = T)
+#'                list.files(testthat::test_path("example_project/R"), full.names = TRUE)
 #'
 #'              v_target_tags <-
 #'                c(
