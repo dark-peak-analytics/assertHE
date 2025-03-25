@@ -16,7 +16,7 @@ test_that(desc = "check_trans_prob_mat shouldn't issue warnings for valid input"
 
             diag(m_P) <- 1
 
-            check_trans_prob_mat(m_P = m_P, stop_if_not = F) |>
+            check_trans_prob_mat(m_P = m_P, stop_if_not = FALSE) |>
               capture_warnings() |>
               expect_length(n = 0)
 
@@ -29,7 +29,7 @@ test_that(desc = "check_trans_prob_mat shouldn't issue warnings for valid input"
                 ncol = n_hs
               )
 
-            check_trans_prob_mat(m_P, stop_if_not = F) |>
+            check_trans_prob_mat(m_P, stop_if_not = FALSE) |>
               capture_warnings() |>
               expect_length(n = 0)
 
@@ -41,7 +41,7 @@ test_that(desc = "check_trans_prob_mat shouldn't issue warnings for valid input"
                 ncol = n_hs
               )
 
-            check_trans_prob_mat(m_P, stop_if_not = F) |>
+            check_trans_prob_mat(m_P, stop_if_not = FALSE) |>
               capture_error() |>
               expect_length(n = 0)
 
@@ -62,11 +62,11 @@ test_that(desc = "check_trans_prob_mat should issue warnings (or errors) for inv
                 dimnames = list(v_hs_names, v_hs_names[1:2])
               )
 
-            check_trans_prob_mat(m_P, stop_if_not = F) |>
+            check_trans_prob_mat(m_P, stop_if_not = FALSE) |>
               capture_warnings() |>
               expect_equal(expected = "Transition matrix is not square.")
 
-            check_trans_prob_mat(m_P, stop_if_not = T) |>
+            check_trans_prob_mat(m_P, stop_if_not = TRUE) |>
               expect_error()
 
             m_P <-
@@ -77,11 +77,11 @@ test_that(desc = "check_trans_prob_mat should issue warnings (or errors) for inv
                 dimnames = list(v_hs_names, v_hs_names)
               )
 
-            check_trans_prob_mat(m_P, stop_if_not = F) |>
+            check_trans_prob_mat(m_P, stop_if_not = FALSE) |>
               capture_warnings() |>
               expect_equal(expected = "Rows of transition matrix don't sum to 1.")
 
-            check_trans_prob_mat(m_P, stop_if_not = T) |>
+            check_trans_prob_mat(m_P, stop_if_not = TRUE) |>
               expect_error()
 
             m_P <-
@@ -89,17 +89,17 @@ test_that(desc = "check_trans_prob_mat should issue warnings (or errors) for inv
                 data = c(-0.1, 0.5, 0.6,
                          0, 1, 0,
                          0, 0, 1),
-                byrow = T,
+                byrow = TRUE,
                 nrow = n_hs,
                 ncol = n_hs,
                 dimnames = list(v_hs_names, v_hs_names)
               )
 
-            check_trans_prob_mat(m_P, stop_if_not = F) |>
+            check_trans_prob_mat(m_P, stop_if_not = FALSE) |>
               capture_warnings() |>
               expect_equal(expected = "Transition matrix has values below 0 or above 1.")
 
-            check_trans_prob_mat(m_P, stop_if_not = T) |>
+            check_trans_prob_mat(m_P, stop_if_not = TRUE) |>
               expect_error()
 
 
@@ -111,11 +111,11 @@ test_that(desc = "check_trans_prob_mat should issue warnings (or errors) for inv
                 dimnames = list(v_hs_names, v_hs_names[c(1,3,2)])
               )
 
-            check_trans_prob_mat(m_P, stop_if_not = F) |>
+            check_trans_prob_mat(m_P, stop_if_not = FALSE) |>
               capture_warnings() |>
               expect_equal(expected = "Row and column names do not match.")
 
-            check_trans_prob_mat(m_P, stop_if_not = T) |>
+            check_trans_prob_mat(m_P, stop_if_not = TRUE) |>
               expect_error()
 
             m_P <-
@@ -123,17 +123,17 @@ test_that(desc = "check_trans_prob_mat should issue warnings (or errors) for inv
                 data = c(1, 0, 0,
                          0, 1, 0,
                          0, 0.2, 0.8),
-                byrow = T,
+                byrow = TRUE,
                 nrow = n_hs,
                 ncol = n_hs,
                 dimnames = list(v_hs_names, v_hs_names)
               )
 
-            check_trans_prob_mat(m_P, dead_state = "D", stop_if_not = F) |>
+            check_trans_prob_mat(m_P, dead_state = "D", stop_if_not = FALSE) |>
               capture_warnings() |>
               expect_equal(expected = "Death state row does not equal 1 in the death state column.")
 
-            check_trans_prob_mat(m_P, dead_state = "D", stop_if_not = T) |>
+            check_trans_prob_mat(m_P, dead_state = "D", stop_if_not = TRUE) |>
               expect_error()
           })
 
@@ -160,35 +160,35 @@ test_that(desc = "check_trans_prob_array is silent where no error and flags erro
             }
 
             expect_silent(
-              check_trans_prob_array(a_P = a_P, stop_if_not = F)
+              check_trans_prob_array(a_P = a_P, stop_if_not = FALSE)
             )
 
             # introduce error
             a_P["H", "S", 1:10] <- -10
 
-            check_trans_prob_array(a_P = a_P, stop_if_not = F) |>
+            check_trans_prob_array(a_P = a_P, stop_if_not = FALSE) |>
               capture_warnings() |>
               expect_length(n = 2)
 
             expect_error(
-              check_trans_prob_array(a_P = a_P, stop_if_not = T)
+              check_trans_prob_array(a_P = a_P, stop_if_not = TRUE)
             )
 
 
             a_P["H", "S", 1:10] <- 0.5
 
-            check_trans_prob_array(a_P = a_P, stop_if_not = F) |>
+            check_trans_prob_array(a_P = a_P, stop_if_not = FALSE) |>
               capture_warnings() |>
               expect_length(n = 1)
 
             a_P <- a_P[1:2, 2:3, 1:10]
 
-            check_trans_prob_array(a_P = a_P, stop_if_not = F) |>
+            check_trans_prob_array(a_P = a_P, stop_if_not = FALSE) |>
               capture_warnings() |>
               length_greater_than_zero() |>
               expect_true()
 
-            check_trans_prob_array(a_P = a_P, stop_if_not = T) |>
+            check_trans_prob_array(a_P = a_P, stop_if_not = TRUE) |>
               expect_error()
 
             # create array
@@ -212,7 +212,7 @@ test_that(desc = "check_trans_prob_array is silent where no error and flags erro
             a_P["D", "H", c(200, 201)] <- 0.2
 
             # expect only 1 warning because all previous checks should pass
-            check_trans_prob_array(a_P = a_P, dead_state = "D", stop_if_not = F) |>
+            check_trans_prob_array(a_P = a_P, dead_state = "D", stop_if_not = FALSE) |>
               capture_warnings() |>
               expect_length(n = 1)
           })

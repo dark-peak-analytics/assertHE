@@ -81,7 +81,7 @@ visualise_project(
   project_path = "path_to_project_directory",
   foo_path = "R",
   test_path = "tests/testthat",
-  run_coverage = T)
+  run_coverage = TRUE)
 ```
 
 The result is a visual representation of the model functions. This gives
@@ -150,9 +150,9 @@ for(x in 1:n_t){
 # Use the function from the package.
 # This check should return no error, the array is square, numeric, values 
 # are between 0 and 1 and all rows sum to 1.
-# Note: stop_if_not = F returns warnings, stop_if_not = T returns errors.
+# Note: stop_if_not = FALSE returns warnings, stop_if_not = TRUE returns errors.
 check_trans_prob_array(a_P = a_P, 
-                       stop_if_not = T)
+                       stop_if_not = TRUE)
 
 # We can introduce an error to see the output
 # In this case, we set the first 10 cycles of transition from H to S to 0.
@@ -160,7 +160,7 @@ check_trans_prob_array(a_P = a_P,
 a_P["H", "S", 1:10] <- 0
 
 check_trans_prob_array(a_P = a_P, 
-                       stop_if_not = F)
+                       stop_if_not = FALSE)
 
 # The output looks like this:
 

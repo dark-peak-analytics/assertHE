@@ -7,7 +7,7 @@
 find_function_calls_in_folder(
   test_folder,
   foo_strings,
-  filter_for_test_that = F
+  filter_for_test_that = FALSE
 )
 }
 \arguments{

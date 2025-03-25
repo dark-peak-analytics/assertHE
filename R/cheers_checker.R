@@ -43,8 +43,8 @@ find_next_vector_element <- function(value, vector, LTE=FALSE) {
 #' \dontrun{
 #' find_previous_vector_element(value = 5, vector = 1:10)
 #' find_previous_vector_element(value = 5, vector = 6:10)
-#' find_previous_vector_element(value = 5, vector = 5:10, LTE = F)
-#' find_previous_vector_element(value = 5, vector = 5:10, LTE = T)
+#' find_previous_vector_element(value = 5, vector = 5:10, LTE = FALSE)
+#' find_previous_vector_element(value = 5, vector = 5:10, LTE = TRUE)
 #' }
 #'
 find_previous_vector_element <- function(value, vector, LTE=FALSE){
@@ -184,14 +184,14 @@ find_folder_function_definitions <- function(foo_folder = ".", f_excl=NULL, d_ex
   # get a list of the files in the folder
   # l_files <- list.files(
   #   path = foo_folder,
-  #   recursive = T,
-  #   full.names = T,
+  #   recursive = TRUE,
+  #   full.names = TRUE,
   #   pattern = "\\.R$"
   # )
 
   l_files <- find_files(file_regx = "\\.R$",
                         path = foo_folder,
-                        recursive = T,
+                        recursive = TRUE,
                         exclude_files = f_excl,
                         exclude_dirs = d_excl)
 
@@ -358,7 +358,7 @@ df_foos <- do.call(rbind.data.frame,
                      tmp,
                      FUN = function(x) {
                        if (all(!is.na(x)))
-                         utils::stack(x, drop = T)
+                         utils::stack(x, drop = TRUE)
                        else
                          NULL
                      }

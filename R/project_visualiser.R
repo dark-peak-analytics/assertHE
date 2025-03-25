@@ -38,7 +38,7 @@ visualise_project <- function(project_path,
                               test_path = NULL,
                               exclude_files = NULL,
                               exclude_dirs = NULL,
-                              run_coverage = F,
+                              run_coverage = FALSE,
                               color_no_test = c("background" = "#fad1d0", "border" = "#9c0000", "highlight" = "#9c0000"),
                               color_with_test = c("background" = "#e6ffe6", "border" = "#65a765", "highlight" = "#65a765"),
                               color_mod_coverage = c("background" = "#FFD580", "border" = "#E49B0F", "highlight" = "#E49B0F"),
@@ -411,7 +411,7 @@ plotNetwork <- function(df_edges,
     merge(y = df_nodes,
           by.x = "foo_string",
           by.y =  "id",
-          all.y = T)
+          all.y = TRUE)
 
   # add in coverage
   foo_string_rename <- c("id" = "foo_string")
@@ -419,7 +419,7 @@ plotNetwork <- function(df_edges,
     df_node_info <- df_node_info |>
       merge(y = df_coverage,
             by = "foo_string",
-            all.x = T) |>
+            all.x = TRUE) |>
       dplyr::rename(dplyr::all_of(foo_string_rename))
   } else{
     df_node_info <- df_node_info |>

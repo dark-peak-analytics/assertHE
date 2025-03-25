@@ -4,7 +4,12 @@
 \alias{check_trans_prob_mat}
 \title{Check Transition Probability Matrix}
 \usage{
-check_trans_prob_mat(m_P, dead_state = NULL, confirm_ok = F, stop_if_not = F)
+check_trans_prob_mat(
+  m_P,
+  dead_state = NULL,
+  confirm_ok = FALSE,
+  stop_if_not = FALSE
+)
 }
 \arguments{
 \item{m_P}{The transition probability matrix to be checked.}
@@ -13,7 +18,7 @@ check_trans_prob_mat(m_P, dead_state = NULL, confirm_ok = F, stop_if_not = F)
 
 \item{confirm_ok}{if OK, return a message confirming all checks passed.}
 
-\item{stop_if_not}{return error messages. The default (F) returns warnings.}
+\item{stop_if_not}{return error messages. The default (FALSE) returns warnings.}
 }
 \value{
 A message indicating whether the matrix passed all the checks or a warning/error message if any check failed.

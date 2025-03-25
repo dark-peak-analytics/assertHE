@@ -120,7 +120,7 @@ run_sickSicker_model <- function(
       # ============================== #
       assertHE::check_markov_trace(m_TR = m_TR,
                          dead_state = "D",
-                         confirm_ok = T)
+                         confirm_ok = TRUE)
       # ============================== #
       # ============================== #
 

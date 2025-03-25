@@ -31,7 +31,7 @@ check_init <- function(x) {
   }
 
   # Check that the sum of values in x is equal to 1
-  if (abs(sum(x, na.rm = T) - 1) > 1e-12) {
+  if (abs(sum(x, na.rm = TRUE) - 1) > 1e-12) {
     message <- paste("Sum of values is not equal to 1. It is:", sum(x))
     warning(message)
   }

@@ -89,10 +89,10 @@ test_that("reproducing error message invalid transition probabiliies", {
   a_P["Dead_C", "Dead_C", ]  <- 1
 
   ## check if the correct input might produce unintended message
-  expect_silent(check_transition_probability(a_P, err_stop = F, verbose = F))
-  expect_silent(check_transition_probability(a_P, err_stop = F, verbose = T))
-  expect_silent(check_transition_probability(a_P, err_stop = T, verbose = F))
-  expect_silent(check_transition_probability(a_P, err_stop = T, verbose = T))
+  expect_silent(check_transition_probability(a_P, err_stop = FALSE, verbose = FALSE))
+  expect_silent(check_transition_probability(a_P, err_stop = FALSE, verbose = TRUE))
+  expect_silent(check_transition_probability(a_P, err_stop = TRUE, verbose = FALSE))
+  expect_silent(check_transition_probability(a_P, err_stop = TRUE, verbose = TRUE))
 
   ## check error messages of "check_transition_probability"
   a_P2 <- a_P
@@ -100,31 +100,31 @@ test_that("reproducing error message invalid transition probabiliies", {
   a_P2["CDX2pos", "Mets", ] <- -0.03
 
   # we expect there is a warning message
-  expect_warning(check_transition_probability(a_P2, err_stop = F, verbose = T))
+  expect_warning(check_transition_probability(a_P2, err_stop = FALSE, verbose = TRUE))
   # we expect there is an error message
-  expect_error(check_transition_probability(a_P2, err_stop = T, verbose = F))
+  expect_error(check_transition_probability(a_P2, err_stop = TRUE, verbose = FALSE))
   # we expect there is an error message instead of a warning message
-  expect_error(check_transition_probability(a_P2, err_stop = T, verbose = T))
+  expect_error(check_transition_probability(a_P2, err_stop = TRUE, verbose = TRUE))
 
   ## check error messages of "check_sum_of_transition_array"
   # we expect there is an warning message
-  expect_warning(check_sum_of_transition_array(a_P2, n_states, n_cycles, err_stop = F, verbose = T))
+  expect_warning(check_sum_of_transition_array(a_P2, n_states, n_cycles, err_stop = FALSE, verbose = TRUE))
   # we expect there is an error message
-  expect_error(check_sum_of_transition_array(a_P2, n_states, n_cycles, err_stop = T, verbose = F))
+  expect_error(check_sum_of_transition_array(a_P2, n_states, n_cycles, err_stop = TRUE, verbose = FALSE))
   # we expect there is an error message instead of a warning message
-  expect_error(check_sum_of_transition_array(a_P2, n_states, n_t, err_stop = T, verbose = T))
+  expect_error(check_sum_of_transition_array(a_P2, n_states, n_t, err_stop = TRUE, verbose = TRUE))
 
   ## testing whether the "check_" functions work properly in the decision_model function
   l_params_all2 <- l_params_all
   l_params_all2$r_DieMets <- -0.105
 
-  expect_silent(decision_model(l_params_all2, err_stop = F, verbose = F))
-  expect_error(decision_model(l_params_all2, err_stop = T, verbose = F))
+  expect_silent(decision_model(l_params_all2, err_stop = FALSE, verbose = FALSE))
+  expect_error(decision_model(l_params_all2, err_stop = TRUE, verbose = FALSE))
 })
 
 test_that("correct outputs", {
   ## generate output data from decision_model
-  output <- decision_model(l_params_all, err_stop = F, verbose = F)
+  output <- decision_model(l_params_all, err_stop = FALSE, verbose = FALSE)
 
   ## checking overall outputs
   # check the number of elements in the output

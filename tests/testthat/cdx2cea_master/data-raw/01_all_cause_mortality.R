@@ -2,7 +2,7 @@
 library(dplyr)
 file.init <- "data-raw/USA_bltper_1x1.csv" # Source: https://usa.mortality.org/uploads/lifetables/Nationals/USA/USA_bltper_1x1.csv
 
-df_hmd_USA  <- read.csv(file = file.init, stringsAsFactors = F)
+df_hmd_USA  <- read.csv(file = file.init, stringsAsFactors = FALSE)
 
 df_hmd_USA_2018 <- df_hmd_USA %>%
   dplyr::mutate(Age = as.numeric(Age)) %>%

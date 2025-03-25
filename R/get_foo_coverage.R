@@ -29,11 +29,11 @@ get_foo_coverage <- function(foo_folder,
   source_files <-
     list.files(foo_folder,
                pattern = ".R",
-               full.names = T)
+               full.names = TRUE)
   test_files   <-
     list.files(test_folder,
                pattern = ".R",
-               full.names = T)
+               full.names = TRUE)
 
   # Use file_coverage() to calculate test coverage
   tmp <- NULL
@@ -49,7 +49,7 @@ get_foo_coverage <- function(foo_folder,
     },
     error = function(cond) {
       if (grepl(pattern = "fail",
-                ignore.case = T,
+                ignore.case = TRUE,
                 conditionMessage(cond))) {
         message(
           "Code tests fail - please correct before proceeding \nRunning function without code coverage."

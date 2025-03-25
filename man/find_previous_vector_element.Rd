@@ -23,8 +23,8 @@ Find the previous element of the vector before a value
 \dontrun{
 find_previous_vector_element(value = 5, vector = 1:10)
 find_previous_vector_element(value = 5, vector = 6:10)
-find_previous_vector_element(value = 5, vector = 5:10, LTE = F)
-find_previous_vector_element(value = 5, vector = 5:10, LTE = T)
+find_previous_vector_element(value = 5, vector = 5:10, LTE = FALSE)
+find_previous_vector_element(value = 5, vector = 5:10, LTE = TRUE)
 }
 
 }

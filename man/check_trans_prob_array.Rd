@@ -4,14 +4,14 @@
 \alias{check_trans_prob_array}
 \title{Check Transition Probability Array}
 \usage{
-check_trans_prob_array(a_P, dead_state = NULL, stop_if_not = F)
+check_trans_prob_array(a_P, dead_state = NULL, stop_if_not = FALSE)
 }
 \arguments{
 \item{a_P}{The transition probability array to be checked.}
 
 \item{dead_state}{character vector length 1 denoting dead state (e.g. "D")}
 
-\item{stop_if_not}{return error messages. The default (F) returns warnings.}
+\item{stop_if_not}{return error messages. The default (FALSE) returns warnings.}
 }
 \value{
 A message indicating whether the array passed all the checks or a warning/error message if any check failed.
@@ -41,11 +41,11 @@ for(x in 1:1000){
   diag(a_P[,,x]) <- 1 - rowSums(a_P[,,x])
 }
 
-check_trans_prob_array(a_P = a_P, stop_if_not = F)
+check_trans_prob_array(a_P = a_P, stop_if_not = FALSE)
 # introduce error
 a_P["H", "S", 1:10] <- 0
 
-check_trans_prob_array(a_P = a_P, stop_if_not = F)
+check_trans_prob_array(a_P = a_P, stop_if_not = FALSE)
 
 }
 

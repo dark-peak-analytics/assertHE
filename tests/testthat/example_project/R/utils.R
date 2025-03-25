@@ -1,6 +1,6 @@
 # utility function
 
-utility_example <- function(x = T) {
+utility_example <- function(x = TRUE) {
   if (x) {
     if(!x){
     "not run"
