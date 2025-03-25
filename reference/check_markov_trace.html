@@ -45,7 +45,12 @@ Also allows users to check that the dead state is monotonically decreasing (if p
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_markov_trace</span><span class="op">(</span><span class="va">m_TR</span>, dead_state <span class="op">=</span> <span class="cn">NULL</span>, confirm_ok <span class="op">=</span> <span class="cn">F</span>, stop_if_not <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_markov_trace</span><span class="op">(</span></span>
+<span>  <span class="va">m_TR</span>,</span>
+<span>  dead_state <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  confirm_ok <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  stop_if_not <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -65,7 +70,7 @@ Also allows users to check that the dead state is monotonically decreasing (if p
 
 
 <dt id="arg-stop-if-not">stop_if_not<a class="anchor" aria-label="anchor" href="#arg-stop-if-not"></a></dt>
-<dd><p>return error messages. The default (F) returns warnings.</p></dd>
+<dd><p>return error messages. The default (FALSE) returns warnings.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -94,7 +99,7 @@ Also allows users to check that the dead state is monotonically decreasing (if p
 <span class="r-in"><span><span class="co"># the following results in an error because the trace has infeasible values</span></span></span>
 <span class="r-in"><span><span class="va">m_TR</span><span class="op">[</span><span class="fl">10</span>, <span class="st">"D"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span></span>
 <span class="r-in"><span><span class="va">m_TR</span><span class="op">[</span><span class="fl">9</span>, <span class="st">"S"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
-<span class="r-in"><span><span class="fu">check_markov_trace</span><span class="op">(</span>m_TR <span class="op">=</span> <span class="va">m_TR</span>, stop_if_not <span class="op">=</span> <span class="cn">T</span>, dead_state <span class="op">=</span> <span class="st">"D"</span>, confirm_ok <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">check_markov_trace</span><span class="op">(</span>m_TR <span class="op">=</span> <span class="va">m_TR</span>, stop_if_not <span class="op">=</span> <span class="cn">TRUE</span>, dead_state <span class="op">=</span> <span class="st">"D"</span>, confirm_ok <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>

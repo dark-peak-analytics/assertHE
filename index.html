@@ -89,7 +89,7 @@
 <span>  project_path <span class="op">=</span> <span class="st">"path_to_project_directory"</span>,</span>
 <span>  foo_path <span class="op">=</span> <span class="st">"R"</span>,</span>
 <span>  test_path <span class="op">=</span> <span class="st">"tests/testthat"</span>,</span>
-<span>  run_coverage <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
+<span>  run_coverage <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>The result is a visual representation of the model functions. This gives some indication of how to review the model since each function can be checked in isolation and in combination. It may also reveal redundant code.</p>
 <p>The below is an example of using the function on the cdx2cea model. The red nodes are the ones without tests, the green nodes are the ones with tests. When hovering over a function we can see more information including where it is defined (file and line number) and where the test (if any) resides. The coverage % of the function is also provided. Tests with coverage &lt;20% are in red, between 20-80% in orange, and above 80% in green. These are arbitrary cut-points, reviewers should assess sufficiency of testing.</p>
 <figure><img src="https://github.com/dark-peak-analytics/assertHE/assets/41961614/0d330730-1e0b-40d9-b18b-b2ee14511cb6" alt="Function network for cdx2cea"><figcaption aria-hidden="true">
@@ -135,9 +135,9 @@ Function network for cdx2cea
 <span><span class="co"># Use the function from the package.</span></span>
 <span><span class="co"># This check should return no error, the array is square, numeric, values </span></span>
 <span><span class="co"># are between 0 and 1 and all rows sum to 1.</span></span>
-<span><span class="co"># Note: stop_if_not = F returns warnings, stop_if_not = T returns errors.</span></span>
+<span><span class="co"># Note: stop_if_not = FALSE returns warnings, stop_if_not = TRUE returns errors.</span></span>
 <span><span class="fu"><a href="reference/check_trans_prob_array.html">check_trans_prob_array</a></span><span class="op">(</span>a_P <span class="op">=</span> <span class="va">a_P</span>, </span>
-<span>                       stop_if_not <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span>                       stop_if_not <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># We can introduce an error to see the output</span></span>
 <span><span class="co"># In this case, we set the first 10 cycles of transition from H to S to 0.</span></span>
@@ -145,7 +145,7 @@ Function network for cdx2cea
 <span><span class="va">a_P</span><span class="op">[</span><span class="st">"H"</span>, <span class="st">"S"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/check_trans_prob_array.html">check_trans_prob_array</a></span><span class="op">(</span>a_P <span class="op">=</span> <span class="va">a_P</span>, </span>
-<span>                       stop_if_not <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span>                       stop_if_not <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># The output looks like this:</span></span>
 <span></span>
