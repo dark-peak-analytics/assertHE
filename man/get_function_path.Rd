@@ -17,16 +17,3 @@ A character scalar
 \description{
 Remove artefacts from file path
 }
-\examples{
-\dontrun{
-cleaned_file_path <- get_function_path(
- file_location = "tests/testthat/example_project/R/calculate_QALYs.R#L41"
-)
-cleaned_file_path <- get_function_path(
- file_location = c(
-   "tests/testthat/example_project/R/calculate_QALYs.R#L41",
-   "tests/testthat/example_project/R/calculate_QALYs.R#L49"
- )
-)
-}
-}

@@ -25,10 +25,3 @@ they can no longer be listed, filtering out atomic values in the process.
 
 If \code{x} is not listable (e.g. a function), it is deparsed into a character string.
 }
-\examples{
-\dontrun{
-# Parse a simple expression
-tmp <- dplyr::across
-.parse_function(tmp)
-}
-}

@@ -32,15 +32,3 @@ A shiny app
 \description{
 Run a Shiny app to host a network visualization
 }
-\examples{
-\dontrun{
-network_object <- visualise_project(
-    project_path = "tests/testthat/example_project",
-    foo_path = "R",
-    test_path = "tests/testthat",
-    run_coverage = TRUE
- )
-
- run_shiny_app(network_object = network_object)
-}
-}
