@@ -175,14 +175,14 @@ source_files <- function( file_regx = ".R",
 
 
 #' @title source_lines
-#' @description Sources specified lines within a single file
+#' @description Sources specified lines within a single file.
 #' # IMPORTANT !!!
-#' sourcing *this* file is a mistake - may result in infinite recursion
-#' @param file = a connection object or a character string path to a file.
-#' @param lines = A vector of integers specifying the lines to be sourced.
-#' @param env the environment in which to source the lines
+#' Sourcing *this* file is a mistake - may result in infinite recursion.
+#' @param file a connection object or a character string path to a file.
+#' @param lines A vector of integers specifying the lines to be sourced.
+#' @param env the environment in which to source the lines.
 #'
-#' @return NULL
+#' @return No return value, called for side effects.
 #'
 #' @export
 #'
@@ -216,13 +216,13 @@ source_lines <- function(file, lines, env = .GlobalEnv){
 }
 
 #' @title source_funcs
-#' @description Sources *only* the functions discovered in an R file
+#' @description Sources *only* the functions discovered in an R file.
 #' # IMPORTANT !!!
-#' sourcing *this* file is a mistake - may result in infinite recursion
-#' @param file = a connection object or a character string path to a file.
-#' @param env the environment in which to source the functions
+#' Sourcing *this* file is a mistake - may result in infinite recursion.
+#' @param file a connection object or a character string path to a file.
+#' @param env the environment in which to source the functions.
 #'
-#' @return NULL
+#' @return No return value, called for side effects.
 #'
 #' @export
 #'
