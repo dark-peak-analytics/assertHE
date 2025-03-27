@@ -138,11 +138,6 @@ visualise_project <- function(project_path,
 #' @param df_edges A data.table with two columns ("from" and "to") representing the dependencies.
 #'
 #' @return A vector of isolated function names.
-#'
-#' @examples
-#' \dontrun{
-#' get_isolated_foo(df_edges = data.frame(from = c("a", "b", "c", "d"), to = c("b", "c", NA, NA)))
-#' }
 get_isolated_foo <- function(df_edges){
   # get all unique functions
   v_functions <- unique(c(df_edges$from, df_edges$to))
@@ -221,17 +216,6 @@ identify_dependencies <- function(v_unique_foo, pkg_env = environment()) {
 #'
 #' Note: This function may potentially miss calls if they are in attributes of the closure. For example
 #' when function is defined within another function, capturing the environment of the outer function.
-#'
-#' @examples
-#' \dontrun{
-#' # Identify functions called by a specific function
-#' .called_by(
-#' fname = "my_function",
-#' all_functions = c("function1", "function2", "function3"),
-#' pkg_env = environment())
-#' }
-#'
-#'
 .called_by <- function(fname,
                        all_functions,
                        pkg_env){
@@ -309,13 +293,6 @@ identify_dependencies <- function(v_unique_foo, pkg_env = environment()) {
 #' they can no longer be listed, filtering out atomic values in the process.
 #'
 #' If `x` is not listable (e.g. a function), it is deparsed into a character string.
-#'
-#' @examples
-#' \dontrun{
-#' # Parse a simple expression
-#' tmp <- dplyr::across
-#' .parse_function(tmp)
-#' }
 .parse_function <- function (x) {
   # If expression x is not an atomic value or symbol (i.e., name of object) or
   # an environment pointer then we can break x up into list of components
@@ -660,19 +637,6 @@ processNodes <- function(df_edges,
 #' @return A character scalar
 #'
 #' @importFrom here here
-#'
-#' @examples
-#' \dontrun{
-#' cleaned_file_path <- get_function_path(
-#'  file_location = "tests/testthat/example_project/R/calculate_QALYs.R#L41"
-#' )
-#' cleaned_file_path <- get_function_path(
-#'  file_location = c(
-#'    "tests/testthat/example_project/R/calculate_QALYs.R#L41",
-#'    "tests/testthat/example_project/R/calculate_QALYs.R#L49"
-#'  )
-#' )
-#' }
 get_function_path <- function(file_location, project_path) {
 
   get_function_path <- gsub("#.*", "", file_location)
@@ -691,19 +655,6 @@ get_function_path <- function(file_location, project_path) {
 #' @param file_location Character scalar specifying the path of a file.
 #'
 #' @return A numeric scalar
-#'
-#' @examples
-#' \dontrun{
-#' cleaned_function_line <- get_function_line(
-#'  file_location = "tests/testthat/example_project/R/calculate_QALYs.R:L41"
-#' )
-#' cleaned_function_line <- get_function_line(
-#'  file_location = c(
-#'    "tests/testthat/example_project/R/calculate_QALYs.R#L41",
-#'    "tests/testthat/example_project/R/calculate_QALYs.R#L49"
-#'  )
-#' )
-#' }
 get_function_line <- function(file_location) {
 
   function_line <- gsub(".*#L", "", file_location)
@@ -1250,18 +1201,6 @@ define_app_server <- function(network_object, project_path, foo_path) {
 #' @return A shiny app
 #'
 #' @importFrom rstudioapi navigateToFile
-#'
-#' @examples
-#' \dontrun{
-#' network_object <- visualise_project(
-#'     project_path = "tests/testthat/example_project",
-#'     foo_path = "R",
-#'     test_path = "tests/testthat",
-#'     run_coverage = TRUE
-#'  )
-#'
-#'  run_shiny_app(network_object = network_object)
-#' }
 run_shiny_app <- function(
     uiFunction = define_app_ui,
     serverFunction = define_app_server,

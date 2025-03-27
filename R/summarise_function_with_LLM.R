@@ -242,11 +242,6 @@ return_message <- function(API_response,
 #'
 #' @return text containing description
 #' @importFrom roxygen2 parse_file
-#' @examples
-#' \dontrun{
-#' source_files(path = "tests/testthat/example_project/R", keep_source = TRUE)
-#' get_roxygen_description_from_foo("calculate_costs")
-#' }
 get_roxygen_description_from_foo <- function(foo_name) {
   # get the name of the file containing the function
   filename <- utils::getSrcFilename(x = eval(parse(text = foo_name)),

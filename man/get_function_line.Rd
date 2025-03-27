@@ -15,16 +15,3 @@ A numeric scalar
 \description{
 Extract function line in file path
 }
-\examples{
-\dontrun{
-cleaned_function_line <- get_function_line(
- file_location = "tests/testthat/example_project/R/calculate_QALYs.R:L41"
-)
-cleaned_function_line <- get_function_line(
- file_location = c(
-   "tests/testthat/example_project/R/calculate_QALYs.R#L41",
-   "tests/testthat/example_project/R/calculate_QALYs.R#L49"
- )
-)
-}
-}

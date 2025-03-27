@@ -15,9 +15,3 @@ text containing description
 \description{
 Get roxygen title and description from function
 }
-\examples{
-\dontrun{
-source_files(path = "tests/testthat/example_project/R", keep_source = TRUE)
-get_roxygen_description_from_foo("calculate_costs")
-}
-}

@@ -15,8 +15,3 @@ A vector of isolated function names.
 \description{
 Get Isolated Functions
 }
-\examples{
-\dontrun{
-get_isolated_foo(df_edges = data.frame(from = c("a", "b", "c", "d"), to = c("b", "c", NA, NA)))
-}
-}

@@ -30,14 +30,3 @@ function and "to" as NA.
 Note: This function may potentially miss calls if they are in attributes of the closure. For example
 when function is defined within another function, capturing the environment of the outer function.
 }
-\examples{
-\dontrun{
-# Identify functions called by a specific function
-.called_by(
-fname = "my_function",
-all_functions = c("function1", "function2", "function3"),
-pkg_env = environment())
-}
-
-
-}
