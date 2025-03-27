@@ -7,15 +7,18 @@
 source_funcs(file, env = .GlobalEnv)
 }
 \arguments{
-\item{file}{= a connection object or a character string path to a file.}
+\item{file}{a connection object or a character string path to a file.}
 
-\item{env}{the environment in which to source the functions}
+\item{env}{the environment in which to source the functions.}
+}
+\value{
+No return value, called for side effects.
 }
 \description{
-Sources \emph{only} the functions discovered in an R file
+Sources \emph{only} the functions discovered in an R file.
 }
 \section{IMPORTANT !!!}{
-sourcing \emph{this} file is a mistake - may result in infinite recursion
+Sourcing \emph{this} file is a mistake - may result in infinite recursion.
 }
 
 \examples{

@@ -7,17 +7,20 @@
 source_lines(file, lines, env = .GlobalEnv)
 }
 \arguments{
-\item{file}{= a connection object or a character string path to a file.}
+\item{file}{a connection object or a character string path to a file.}
 
-\item{lines}{= A vector of integers specifying the lines to be sourced.}
+\item{lines}{A vector of integers specifying the lines to be sourced.}
 
-\item{env}{the environment in which to source the lines}
+\item{env}{the environment in which to source the lines.}
+}
+\value{
+No return value, called for side effects.
 }
 \description{
-Sources specified lines within a single file
+Sources specified lines within a single file.
 }
 \section{IMPORTANT !!!}{
-sourcing \emph{this} file is a mistake - may result in infinite recursion
+Sourcing \emph{this} file is a mistake - may result in infinite recursion.
 }
 
 \examples{
