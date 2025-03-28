@@ -80,14 +80,12 @@ locate_funcs <-  function(file) {
 #'
 #'
 #' @examples
-#' \dontrun{
 #' find_files(file_regx = ".*",  ## any file name
 #'  path = ".*",   # the current directory and all subdirectories
 #'  recursive = FALSE,  # don't recurse
 #'  exclude_files = ".*utility.*", # exclude "utility" anywhere in basename
-#'  exclude_dirs = "\/tmp\/"  # exclude any directory named "tmp", or subdirs
+#'  exclude_dirs = "\\<tmp\\>|/tmp/|/tmp\\>|\\<tmp/"  # exclude any directory named "tmp", or subdirs
 #'  )
-#' }
 #'
 find_files <- function( file_regx = ".R",
                           path = ".",
@@ -146,7 +144,7 @@ find_files <- function( file_regx = ".R",
 #'  path = ".*",   # the current directory and all subdirectories
 #'  recursive = FALSE,  # don't recurse
 #'  exclude_files = ".*utility.*", # exclude "utility" anywhere in basename
-#'  exclude_dirs = "\/tmp\/"  # exclude any directory named "tmp", or subdirs
+#'  exclude_dirs = "\\<tmp\\>|/tmp/|/tmp\\>|\\<tmp/"  # exclude any directory named "tmp", or subdirs
 #'  )
 #' }
 #'
