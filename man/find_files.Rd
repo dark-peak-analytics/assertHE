@@ -31,13 +31,11 @@ Find files based upon regular expression searching
 IMPORTANT - a Directory is NOT a file. (for most instances of file systems)
 }
 \examples{
-\dontrun{
 find_files(file_regx = ".*",  ## any file name
  path = ".*",   # the current directory and all subdirectories
  recursive = FALSE,  # don't recurse
  exclude_files = ".*utility.*", # exclude "utility" anywhere in basename
- exclude_dirs = "\/tmp\/"  # exclude any directory named "tmp", or subdirs
+ exclude_dirs = "\\\\<tmp\\\\>|/tmp/|/tmp\\\\>|\\\\<tmp/"  # exclude any directory named "tmp", or subdirs
  )
-}
 
 }
