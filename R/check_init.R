@@ -1,8 +1,8 @@
 #' Check and initialize a vector
 #'
 #' This function checks a given vector for several conditions, including values being
-#' within the range 0 to 1 inclusive, the sum of values being equal to 1, no duplicate names,
-#' and all elements having names.
+#' within the range 0 to 1 inclusive and the sum of values being equal to 1. If the vector
+#' is named, the function checks all elements have names and no names are duplicates.
 #'
 #' @param x A numeric vector with named elements.
 #'
