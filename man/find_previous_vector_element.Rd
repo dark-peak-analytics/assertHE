@@ -20,11 +20,9 @@ The previous element of the vector before the value
 Find the previous element of the vector before a value
 }
 \examples{
-\dontrun{
 find_previous_vector_element(value = 5, vector = 1:10)
 find_previous_vector_element(value = 5, vector = 6:10)
 find_previous_vector_element(value = 5, vector = 5:10, LTE = FALSE)
 find_previous_vector_element(value = 5, vector = 5:10, LTE = TRUE)
-}
 
 }

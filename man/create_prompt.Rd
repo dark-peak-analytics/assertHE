@@ -25,12 +25,11 @@ Uses the function arguments and function body as inputs to create a prompt
 for the LLM.
 }
 \examples{
-\dontrun{
 create_prompt(
 foo_arguments = LETTERS[1:3],
 foo_body = "D <- A+B+C; return(D)",
 foo_name = "calculate_QALYs",
 foo_desc = "This function calcs QALYs",
 foo_title = "Calculate the QALYs")
-}
+
 }
