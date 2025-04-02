@@ -27,7 +27,14 @@
 #'# the following results in an error because the trace has infeasible values
 #' m_TR[10, "D"] <- 0
 #' m_TR[9, "S"] <- 1
-#' try(check_markov_trace(m_TR = m_TR, stop_if_not = TRUE, dead_state = "D", confirm_ok = TRUE))
+#' tryCatch({
+#'   # Code that might cause an error
+#'   check_markov_trace(m_TR = m_TR, stop_if_not = TRUE, dead_state = "D", confirm_ok = TRUE)
+#'   },
+#' error = function(e) {
+#'   # Capture and print the error message instead of stopping execution
+#'   message("An error occurred: ", e$message)
+#' })
 #'
 #' @return A message indicating whether the matrix passed all the checks or an error message if any check failed.
 #'
