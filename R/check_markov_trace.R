@@ -27,7 +27,7 @@
 #'# the following results in an error because the trace has infeasible values
 #' m_TR[10, "D"] <- 0
 #' m_TR[9, "S"] <- 1
-#' check_markov_trace(m_TR = m_TR, stop_if_not = TRUE, dead_state = "D", confirm_ok = TRUE)
+#' try(check_markov_trace(m_TR = m_TR, stop_if_not = TRUE, dead_state = "D", confirm_ok = TRUE))
 #'
 #' @return A message indicating whether the matrix passed all the checks or an error message if any check failed.
 #'
