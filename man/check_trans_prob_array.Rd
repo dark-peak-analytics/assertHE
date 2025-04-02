@@ -24,7 +24,6 @@ If a dead state is provided, it checks that the dead state -> dead state probabi
 in each slice is equal to 1.
 }
 \examples{
-\dontrun{
 v_hs_names <- c("H", "S", "D")
 n_hs <- length(v_hs_names)
 a_P <- array(
@@ -45,8 +44,6 @@ check_trans_prob_array(a_P = a_P, stop_if_not = FALSE)
 # introduce error
 a_P["H", "S", 1:10] <- 0
 
-check_trans_prob_array(a_P = a_P, stop_if_not = FALSE)
-
-}
+try(check_trans_prob_array(a_P = a_P, stop_if_not = FALSE))
 
 }

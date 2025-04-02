@@ -41,10 +41,8 @@ m_P["S", "H"] <- 0.5
 diag(m_P) <- (1 - rowSums(m_P))
 check_trans_prob_mat(m_P)
 
-\dontrun{
 # introduce error
 m_P["H", "S"] <- 0.2
-check_trans_prob_mat(m_P,  confirm_ok = TRUE, stop_if_not = TRUE)
-}
+try(check_trans_prob_mat(m_P,  confirm_ok = TRUE, stop_if_not = TRUE))
 
 }

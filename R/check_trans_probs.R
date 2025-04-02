@@ -22,11 +22,9 @@
 #' diag(m_P) <- (1 - rowSums(m_P))
 #' check_trans_prob_mat(m_P)
 #'
-#' \dontrun{
 #' # introduce error
 #' m_P["H", "S"] <- 0.2
-#' check_trans_prob_mat(m_P,  confirm_ok = TRUE, stop_if_not = TRUE)
-#' }
+#' try(check_trans_prob_mat(m_P,  confirm_ok = TRUE, stop_if_not = TRUE))
 #'
 #' @return A message indicating whether the matrix passed all the checks or a warning/error message if any check failed.
 #'
@@ -276,7 +274,6 @@ check_dead_state_rows <- function(a_P, dead_state = NULL, stop_if_not = FALSE) {
 #' @param dead_state character vector length 1 denoting dead state (e.g. "D")
 #'
 #' @examples
-#' \dontrun{
 #' v_hs_names <- c("H", "S", "D")
 #' n_hs <- length(v_hs_names)
 #' a_P <- array(
@@ -297,9 +294,7 @@ check_dead_state_rows <- function(a_P, dead_state = NULL, stop_if_not = FALSE) {
 #' # introduce error
 #' a_P["H", "S", 1:10] <- 0
 #'
-#' check_trans_prob_array(a_P = a_P, stop_if_not = FALSE)
-#'
-#' }
+#' try(check_trans_prob_array(a_P = a_P, stop_if_not = FALSE))
 #'
 #' @return A message indicating whether the array passed all the checks or a warning/error message if any check failed.
 #'

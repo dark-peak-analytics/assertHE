@@ -16,9 +16,8 @@ A list containing the title and description.
 This function extracts the title and description from a parsed list.
 }
 \examples{
-\dontrun{
 parsed_list <- list(list(tag = "title", val = "Sample Title"),
                      list(tag = "description", val = "This is a sample description."))
 get_roxygen_description(parsed_list)
-}
+
 }

@@ -40,12 +40,10 @@ find_next_vector_element <- function(value, vector, LTE=FALSE) {
 #' @return The previous element of the vector before the value
 #' @export
 #' @examples
-#' \dontrun{
 #' find_previous_vector_element(value = 5, vector = 1:10)
 #' find_previous_vector_element(value = 5, vector = 6:10)
 #' find_previous_vector_element(value = 5, vector = 5:10, LTE = FALSE)
 #' find_previous_vector_element(value = 5, vector = 5:10, LTE = TRUE)
-#' }
 #'
 find_previous_vector_element <- function(value, vector, LTE=FALSE){
 

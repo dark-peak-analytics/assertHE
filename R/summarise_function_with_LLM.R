@@ -179,14 +179,13 @@ summarise_function_from_arguments_and_body <- function(foo_name,
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' create_prompt(
 #' foo_arguments = LETTERS[1:3],
 #' foo_body = "D <- A+B+C; return(D)",
 #' foo_name = "calculate_QALYs",
 #' foo_desc = "This function calcs QALYs",
 #' foo_title = "Calculate the QALYs")
-#' }
+#'
 create_prompt <- function(foo_arguments,
                           foo_body,
                           foo_name,
@@ -276,11 +275,10 @@ get_roxygen_description_from_foo <- function(foo_name) {
 #' @return A list containing the title and description.
 #' @export
 #' @examples
-#' \dontrun{
 #' parsed_list <- list(list(tag = "title", val = "Sample Title"),
 #'                      list(tag = "description", val = "This is a sample description."))
 #' get_roxygen_description(parsed_list)
-#' }
+#'
 get_roxygen_description <- function(parsed_list) {
   desc_index <- sapply(
     X = parsed_list,
