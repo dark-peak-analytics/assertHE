@@ -4,7 +4,7 @@
 \alias{source_lines}
 \title{source_lines}
 \usage{
-source_lines(file, lines, env = .GlobalEnv)
+source_lines(file, lines, env)
 }
 \arguments{
 \item{file}{a connection object or a character string path to a file.}

@@ -19,7 +19,6 @@
 #'
 #' @examples
 #' \dontrun{
-#' library("sicksickerPack")
 #' Markov_trace <- matrix(
 #'   data = c(1, 0, 0, 0,
 #'            0.845, 0.15, 0, 0.005,

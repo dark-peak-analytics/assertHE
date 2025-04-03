@@ -191,7 +191,7 @@ source_files <- function( file_regx = ".R",
 #'              lines = c(4, 5, 6) )     ## source lines 4-6
 #' }
 #'
-source_lines <- function(file, lines, env = .GlobalEnv){
+source_lines <- function(file, lines, env){
 
   # Check if 'file' is a character string
   if (is.character(file) && !file.exists(file)) {
@@ -231,7 +231,7 @@ source_lines <- function(file, lines, env = .GlobalEnv){
 #' source_funcs(file)
 #' }
 #'
-source_funcs <- function(file, env = .GlobalEnv){
+source_funcs <- function(file, env){
 
   # identify which lines of the file are defining functions
   func_locs <- locate_funcs(file)

@@ -21,7 +21,6 @@
 #'
 #' @examples
 #' \dontrun{
-#' library("sicksickerPack")
 #' transition_matrix <- matrix(
 #'   data = c(0.845, 0.15, 0, 0.005,
 #'            0.5, 0.3800749, 0.105, 0.01492512,
