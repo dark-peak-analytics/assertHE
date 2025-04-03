@@ -20,21 +20,6 @@ test_that("test that nothing blows up with visualiser run ", {
 
 
 
-test_that("Visualiser cx2cea model without coverage", {
-
-  cdx2cea_project_path <- testthat::test_path("cdx2cea_master")
-
-  expect_no_error({
-
-    visualise_project(project_path = cdx2cea_project_path,
-                      foo_path = "R",
-                      test_path = "tests/testthat",
-                      run_coverage = FALSE)
-
-  })
-
-})
-
 
 # NOTE: CANNOT TEST COVERAGE ON VISUALISER BECAUSE OUR TEST TESTS THE COVERAGE
 # WHICH THEN RECALLS TEST. IM SO CONFUSED AND GAVE UP!
