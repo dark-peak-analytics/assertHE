@@ -4,7 +4,7 @@
 \alias{source_funcs}
 \title{source_funcs}
 \usage{
-source_funcs(file, env = .GlobalEnv)
+source_funcs(file, env)
 }
 \arguments{
 \item{file}{a connection object or a character string path to a file.}
