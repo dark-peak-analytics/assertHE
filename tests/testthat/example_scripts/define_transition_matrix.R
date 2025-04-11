@@ -18,7 +18,6 @@
 #'
 #' @examples
 #' \dontrun{
-#' library("sicksickerPack")
 #' define_transition_matrix(
 #'   states_nms_ = c("A", "B"),
 #'   transition_probs_ = c(

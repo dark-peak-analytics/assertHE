@@ -20,7 +20,6 @@
 #'
 #' @examples
 #' \dontrun{
-#' library("sicksickerPack")
 #' calculate_discounting_weights(
 #'   discount_rate_ = 0.035,
 #'   time_horizon_ = 1,

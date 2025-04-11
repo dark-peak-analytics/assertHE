@@ -4,7 +4,7 @@
 \alias{source_funcs}
 \title{source_funcs}
 \usage{
-source_funcs(file, env = .GlobalEnv)
+source_funcs(file, env)
 }
 \arguments{
 \item{file}{a connection object or a character string path to a file.}
@@ -24,7 +24,11 @@ Sourcing \emph{this} file is a mistake - may result in infinite recursion.
 \examples{
 \dontrun{
 file <- "<PATH>/file.R"
-source_funcs(file)
+dummy_env <- new.env()
+
+source_funcs(file, env = dummy_env) # source the functions into a dummy environment
+
+ls(name = dummy_env) # print the objects in the dummy environment for inspection
 }
 
 }
