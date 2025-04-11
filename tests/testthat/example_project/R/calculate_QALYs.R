@@ -30,7 +30,7 @@
 #'   dimnames = list(1:5,
 #'                  c("H", "S1", "S2", "D"))
 #'  )
-#' )
+#'
 #' discounted_QALYs <- calculate_QALYs(
 #'   Markov_trace_ = Markov_trace,
 #'   utilities_ = c("u_H" = 1, "u_S1" = 0.75, "u_S2" = 0.5, "u_D" = 0),
