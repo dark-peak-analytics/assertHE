@@ -114,64 +114,6 @@ find_files <- function( file_regx = ".R",
 }
 
 
-
-
-
-
-
-
-#' @title source_files
-#' @description Source files based upon regular expression searching
-#' # IMPORTANT !!!
-#' sourcing *this* file is a mistake - may result in infinite recursion
-#' @param file_regx = ".*" - a regular expression for files to source
-#' @param path = "." - a path to search
-#' @param recursive = TRUE - recurse into subdirectories
-#' @param exclude_files = NULL - regx for files to exclude
-#' @param exclude_dirs = NULL - regx for directories to exclude
-#' @param funcs_only = FALSE - source *only* identified functions, not the whole file
-#' @param verbose = FALSE - whether to emit the sourced files.
-#' @param keep_source = FALSE - whether to keep the source data when using source.
-#'
-#' @return list of files sourced
-#'
-#' @export
-#'
-#'
-#' @examples
-#' \dontrun{
-#' source_files(file_regx = ".*",  ## any file name
-#'  path = ".*",   # the current directory and all subdirectories
-#'  recursive = FALSE,  # don't recurse
-#'  exclude_files = ".*utility.*", # exclude "utility" anywhere in basename
-#'  exclude_dirs = "\\<tmp\\>|/tmp/|/tmp\\>|\\<tmp/"  # exclude any directory named "tmp", or subdirs
-#'  )
-#' }
-#'
-source_files <- function( file_regx = ".R",
-                          path = ".",
-                          recursive = TRUE,
-                          exclude_files = NULL,
-                          exclude_dirs = NULL,
-                          funcs_only = FALSE,
-                          verbose=FALSE,
-                          keep_source=FALSE) {
-
-  # Get matching file names
-  file_paths <- find_files(file_regx, path, recursive, exclude_files, exclude_dirs)
-
-  # Source each file
-  for (f in file_paths) {
-    if(funcs_only){
-      source_funcs(file = f)
-    } else{
-      source(file = f, echo=verbose, keep.source = keep_source)
-    }
-  }
-  return (file_paths)
-}
-
-
 #' @title source_lines
 #' @description Sources specified lines within a single file.
 #' # IMPORTANT !!!
@@ -228,7 +170,11 @@ source_lines <- function(file, lines, env){
 #' @examples
 #' \dontrun{
 #' file <- "<PATH>/file.R"
-#' source_funcs(file)
+#' dummy_env <- new.env()
+#'
+#' source_funcs(file, env = dummy_env) # source the functions into a dummy environment
+#'
+#' ls(name = dummy_env) # print the objects in the dummy environment for inspection
 #' }
 #'
 source_funcs <- function(file, env){
