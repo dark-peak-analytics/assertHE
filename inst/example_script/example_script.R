@@ -1,4 +1,3 @@
-rm(list = ls())
 
 # basic information:
 Strategies     <- c("No Treatment", "Treatment")     # strategy names
