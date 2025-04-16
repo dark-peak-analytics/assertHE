@@ -43,7 +43,6 @@ Imports:
     officer,
     flextable,
     knitr,
-    here,
     shiny,
     shinyjs,
     rstudioapi,

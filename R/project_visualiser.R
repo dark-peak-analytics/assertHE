@@ -635,16 +635,14 @@ processNodes <- function(df_edges,
 #' @param project_path Character scalar specifying the path of the project.
 #'
 #' @return A character scalar
-#'
-#' @importFrom here here
 get_function_path <- function(file_location, project_path) {
 
-  get_function_path <- gsub("#.*", "", file_location)
+  function_path <- gsub("#.*", "", file_location)
 
   full_file_path <- ifelse(
-    test = is.na(get_function_path),
+    test = is.na(function_path),
     yes =  "",
-    no = paste0(project_path, "/", get_function_path)
+    no = paste0(project_path, "/", function_path)
   )
 
   return(full_file_path)

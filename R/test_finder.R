@@ -170,7 +170,6 @@ find_function_calls_in_folder <- function(test_folder,
 #' @importFrom knitr kable
 #' @importFrom flextable flextable body_add_flextable width
 #' @importFrom officer read_docx body_add_par
-#' @importFrom here here
 #'
 #' @examples
 #' \dontrun{
@@ -272,10 +271,9 @@ summarise_model <- function(project_path = ".",
 
     print(x = doc, target = "model_summary.docx")
 
-    return(paste0("Word document created at: ", here::here("model_summary.docx")))
+    return(paste0("Word document created at: ", project_path, "/", "model_summary.docx"))
   }
 
   return(df)
-
 }
 
