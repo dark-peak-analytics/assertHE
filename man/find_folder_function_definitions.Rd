@@ -27,8 +27,9 @@ Applies find_function_definitions to each file in a folder and aggregate results
 \dontrun{
 # Skip listed files "somefile.R", and "another_file.R"
 find_folder_function_definitions(
-foo_folder = "tests/testthat/example_project",
-f_excl = "\\\\b(somefile\\\\.R|another_file\\\\.R)\\\\b"
+   foo_folder = "tests/testthat/example_project",
+   f_excl = "\\\\b(somefile\\\\.R|another_file\\\\.R)\\\\b"
 )
 }
+
 }

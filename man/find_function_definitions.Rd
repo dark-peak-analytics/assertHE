@@ -18,7 +18,7 @@ by matching the FUNCTION keyword (i.e. "function")
 with it's associated SYMBOL (i.e the function name)
 }
 \examples{
-\dontrun{
-find_function_definitions(filename = "tests/testthat/example_scripts/example_tricky_functions.R")
-}
+file_path <- assertHE_example("example_scripts/example_tricky_functions.R")
+find_function_definitions(filename = file_path)
+
 }
