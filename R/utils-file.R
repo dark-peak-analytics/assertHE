@@ -63,8 +63,6 @@ locate_funcs <-  function(file) {
   return(ret)
 }
 
-
-
 #' @title find_files
 #' @description Find files based upon regular expression searching
 #' IMPORTANT - a Directory is NOT a file. (for most instances of file systems)
@@ -77,7 +75,6 @@ locate_funcs <-  function(file) {
 #' @return list of files
 #'
 #' @export
-#'
 #'
 #' @examples
 #' find_files(file_regx = ".*",  ## any file name
@@ -113,7 +110,6 @@ find_files <- function( file_regx = ".R",
   return (files)
 }
 
-
 #' @title source_lines
 #' @description Sources specified lines within a single file.
 #' # IMPORTANT !!!
@@ -125,7 +121,6 @@ find_files <- function( file_regx = ".R",
 #' @return No return value, called for side effects.
 #'
 #' @export
-#'
 #'
 #' @examples
 #' \dontrun{
@@ -166,7 +161,6 @@ source_lines <- function(file, lines, env){
 #'
 #' @export
 #'
-#'
 #' @examples
 #' \dontrun{
 #' file <- "<PATH>/file.R"
@@ -203,8 +197,21 @@ source_funcs <- function(file, env){
 
 }
 
-
-
-
-
-
+#' Get path to assertHE example
+#'
+#' assertHE comes bundled with a number of sample files in its `inst/extdata`
+#' directory. This function make them easy to access
+#'
+#' @param file Name of file. If `NULL`, the example files will be listed.
+#' @export
+#' @examples
+#' assertHE_example()
+#' assertHE_example("example_scripts/example_tricky_functions.R")
+#'
+assertHE_example <- function(file = NULL) {
+  if (is.null(file)) {
+    dir(system.file("extdata", package = "assertHE"))
+  } else {
+    system.file("extdata", file, package = "assertHE", mustWork = TRUE)
+  }
+}
