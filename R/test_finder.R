@@ -170,7 +170,6 @@ find_function_calls_in_folder <- function(test_folder,
 #' @importFrom knitr kable
 #' @importFrom flextable flextable body_add_flextable width
 #' @importFrom officer read_docx body_add_par
-#' @importFrom here here
 #'
 #' @examples
 #' \dontrun{
