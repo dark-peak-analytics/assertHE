@@ -15,5 +15,6 @@ directory. This function make them easy to access
 }
 \examples{
 assertHE_example()
-assertHE_example("challenge.csv")
+assertHE_example("example_scripts/example_tricky_functions.R")
+
 }
