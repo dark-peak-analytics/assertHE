@@ -272,10 +272,9 @@ summarise_model <- function(project_path = ".",
 
     print(x = doc, target = "model_summary.docx")
 
-    return(paste0("Word document created at: ", here::here("model_summary.docx")))
+    return(paste0("Word document created at: ", project_path, "/", "model_summary.docx"))
   }
 
   return(df)
-
 }
 
