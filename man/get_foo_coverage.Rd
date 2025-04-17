@@ -18,6 +18,8 @@ a dataframe with a column for functions and a column for coverage
 Get coverage by function
 }
 \examples{
+\donttest{
+# Example takes more than 5 seconds to run
 if(require(testthat)) {
   folder_path1 <- assertHE_example("example_project/R")
   folder_path2 <- assertHE_example("example_project/tests/testthat")
@@ -25,6 +27,7 @@ if(require(testthat)) {
     foo_folder = folder_path1,
     test_folder = folder_path2
   )
+}
 }
 
 }
