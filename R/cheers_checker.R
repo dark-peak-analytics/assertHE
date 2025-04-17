@@ -76,12 +76,11 @@ find_previous_vector_element <- function(value, vector, LTE=FALSE){
 #' @param string A string containing a function definition, this must contain the word 'function'
 #'
 #' @return A string containing the function name
-#' @importFrom stringr str_locate_all str_replace_all
 #'
 #' @export
 #' @examples
-#' extract_function_name("xyz <- function(input_x) {paste0(inputx, 'yz')}")
-#' extract_function_name("add_five <- function(x) {x + 5}")
+#' extract_function_name("better_name <- function(x){\n more code} asfdas <- function(x){}")
+#' extract_function_name("better_name <- function(x){\n more code}")
 #'
 extract_function_name <- function(string){
 
@@ -93,17 +92,39 @@ extract_function_name <- function(string){
   string <- gsub(pattern, "", string, perl = TRUE)
 
   # Convert newlines to spaces (remove newlines)
-  string <- stringr::str_replace_all(string, pattern = c("\n"), replacement = " ")
+  string <- gsub(pattern = "\n", replacement = " ", x = string)
 
-  assign_op <- stringr::str_locate_all(string, pattern = "(=|<-)\\s*function\\s*\\(")
-  assign_op <- unlist(x = assign_op)
-  assign_op <- assign_op[1]
+  # Identify function name string using function assignment pattern
+  l_assign_op <- gregexpr(pattern = "(=|<-)\\s*function\\s*\\(", text = string)
 
-  string <- substr(string, 1, assign_op-1)
-  string <- gsub("\\s*", "", string, perl = TRUE)
+  # Check if a match was found in the first (or only) element of string
+  if (all(length(l_assign_op) > 0, length(l_assign_op[1]) > 0)) {
+
+    strings <- vector()
+
+    for (i in 1:length(l_assign_op[[1]])) {
+      strings[i] <- NA_character_
+      # Extract the start position of the first match
+      assign_op <- l_assign_op[[1]][i]
+
+      # Extract the substring from the start up to *before* the match
+      # Use the extracted start position
+      strings[i] <- substr(string, 1, assign_op - 1)
+      # Trim leading/trailing whitespace
+      strings[i] <- trimws(strings[i])
+      # Remove everything up to the last space (\s+)
+      strings[i] <- sub("^.*\\s+", "", strings[i])
+    }
+
+    string <- strings
+  } else {
+    # Handle the case where the pattern was not found
+    string <- ""
+
+    warning("Function assignment pattern not found.")
+  }
 
   return(string)
-
 }
 
 #' @title Parses an R source file, returns function names defined within.
@@ -221,13 +242,13 @@ find_folder_function_definitions <- function(foo_folder = ".", f_excl=NULL, d_ex
 #' @param function_pattern A string containing the pattern to identify functions
 #' @return A list containing the cheers tags and the function names that follow them
 #' @family cheers
-#' @importFrom stringr str_replace str_replace_all
 #'
 #' @export
 #'
 get_file_cheers_classifications <- function(filename,
                                             cheers_pattern,
                                             function_pattern = "(\\s|=|-)function\\("){
+
   lines <- NULL
   # check files exists
   #if(file.exists(filename))
@@ -242,14 +263,14 @@ get_file_cheers_classifications <- function(filename,
   # remove the cheers pattern from that row name
   cheers_indices <- stats::setNames(
     object = cheers_indices,
-    nm = stringr::str_replace(
-      string = stringr::str_replace_all(
-        string = names(cheers_indices),
-        pattern = " ",
-        replacement = ""
-      ),
+    nm = sub(
       pattern = paste0("#'", cheers_pattern),
-      replacement = ""
+      replacement = "",
+      x = gsub(
+        pattern = " ",
+        replacement = "",
+        x = names(cheers_indices)
+      )
     )
   )
 

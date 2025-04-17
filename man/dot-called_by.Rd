@@ -14,7 +14,7 @@
 \item{pkg_env}{The package environment where the functions are defined (e.g. global).}
 }
 \value{
-A data.table with two columns ("from" and "to") representing the dependencies
+A dataframe with two columns ("from" and "to") representing the dependencies
 of the target function. Returns NA if no dependencies are found.
 }
 \description{
@@ -23,8 +23,8 @@ Identify functions called by a given function within a specified project folder
 \details{
 The function identifies functions called by the target function \code{fname} within the specified
 package environment \code{pkg_env}. It searches for dependencies within the literal code of the
-function body and returns a data.table with two columns ("from" and "to") representing the
-dependencies. If no dependencies are found, it returns a data.table with "from" as the target
+function body and returns a dataframe with two columns ("from" and "to") representing the
+dependencies. If no dependencies are found, it returns a dataframe with "from" as the target
 function and "to" as NA.
 
 Note: This function may potentially miss calls if they are in attributes of the closure. For example

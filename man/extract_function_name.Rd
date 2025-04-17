@@ -18,7 +18,7 @@ identifying "function(" in the string and then finding the operand before and sp
 on that before keeping the character there.
 }
 \examples{
-extract_function_name("xyz <- function(input_x) {paste0(inputx, 'yz')}")
-extract_function_name("add_five <- function(x) {x + 5}")
+extract_function_name("better_name <- function(x){\n more code} asfdas <- function(x){}")
+extract_function_name("better_name <- function(x){\n more code}")
 
 }

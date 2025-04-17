@@ -31,12 +31,8 @@ Depends:
 Imports: 
     assertthat,
     ggplot2,
-    scales,
-    tidyr,
-    stringr,
     dplyr,
     utils,
-    data.table,
     visNetwork,
     covr,
     htmltools,
