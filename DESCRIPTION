@@ -31,7 +31,6 @@ Depends:
 Imports: 
     assertthat,
     ggplot2,
-    scales,
     dplyr,
     utils,
     data.table,

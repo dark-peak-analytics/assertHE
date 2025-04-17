@@ -171,11 +171,21 @@ plot_PSA_stability <- function(m_eff,
       name = label,
       labels = ifelse(
         test = (output == "effects"),
-        yes = function(x) {
-          x
-        },
-        no = scales::dollar_format(prefix = currency_symbol,
-                                   big.mark = ",")
+        # If output is "effects", use default numeric labels
+        yes = function(x) { x },
+        # Otherwise, format as currency using base R
+        no = function(x) {
+          # Use prettyNum to add thousand separators (big.mark)
+          # scientific = FALSE prevents potential scientific notation
+          negative_values <- x < 0
+          formatted_nums <- prettyNum(abs(x), big.mark = ",", scientific = FALSE)
+          # Add the currency symbol prefix
+          paste0(
+            ifelse(negative_values, "-", ""),
+            currency_symbol,
+            formatted_nums
+          )
+        }
       )
     ) +
     ggplot2::geom_line() +
