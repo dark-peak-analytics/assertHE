@@ -249,27 +249,28 @@ get_file_cheers_classifications <- function(filename,
                                             cheers_pattern,
                                             function_pattern = "(\\s|=|-)function\\("){
 
-lines <- NULL
-# check files exists
-#if(file.exists(filename))
-lines <- readLines(filename) #else stop("Not a file")
+  lines <- NULL
+  # check files exists
+  #if(file.exists(filename))
+  lines <- readLines(filename) #else stop("Not a file")
 
-# find the rows on which the cheers pattern occurs
-cheers_indices <-
-  sapply(X = lines,
-         FUN = function(line) grepl(pattern = cheers_pattern, x =  line)
-  ) |> which()
+  # find the rows on which the cheers pattern occurs
+  cheers_indices <-
+    sapply(X = lines,
+           FUN = function(line) grepl(pattern = cheers_pattern, x =  line)
+    ) |> which()
 
-# remove the cheers pattern from that row name
-cheers_indices <- stats::setNames(
-  object = cheers_indices,
-  nm = sub(
-    pattern = paste0("#'", cheers_pattern),
-    replacement = "",
-    x = gsub(
-      pattern = " ",
+  # remove the cheers pattern from that row name
+  cheers_indices <- stats::setNames(
+    object = cheers_indices,
+    nm = sub(
+      pattern = paste0("#'", cheers_pattern),
       replacement = "",
-      x = names(cheers_indices)
+      x = gsub(
+        pattern = " ",
+        replacement = "",
+        x = names(cheers_indices)
+      )
     )
   )
 
