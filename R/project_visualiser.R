@@ -14,6 +14,8 @@
 #' @return A visNetwork object representing the network plot of function dependencies.
 #'
 #' @examples
+#' \donttest{
+#' # Example takes more than 5 seconds to run
 #' # Visualize project dependencies in HTML
 #' if(require(testthat)) {
 #'   folder_path <- assertHE_example("example_project")
@@ -34,6 +36,7 @@
 #'     run_coverage = TRUE,
 #'     show_in_shiny = TRUE
 #'   )
+#' }
 #' }
 #' @export
 #'
