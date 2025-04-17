@@ -19,7 +19,6 @@
 #'
 #' @export
 #'
-#' @importFrom tidyr pivot_longer
 #'
 #' @examples
 #' # create example matrices
@@ -131,9 +130,25 @@ plot_PSA_stability <- function(m_eff,
   df_plot$N <- 1:nrow(df_plot)
 
   # pivot longer format.
-  df_plot <- df_plot |> tidyr::pivot_longer(cols = -N,
-                                            names_to = "strategy",
-                                            values_to = "value")
+  ## Identify the columns to pivot (all except 'N')
+  varying_cols <- setdiff(names(df_plot), "N")
+  ## Use reshape
+  df_plot <- stats::reshape(
+    data = df_plot,
+    varying = varying_cols,             # Columns that contain the values to stack
+    v.names = "value",                  # Name of the new column for the values
+    timevar = "strategy",               # Name of the new column for the original column names
+    times = varying_cols,               # The actual values for the 'strategy' column
+    idvar = "N",                        # Column(s) that identify unique rows in the wide format
+    direction = "long"                  # Specify we are going from wide to long format
+  )
+  ## Reset row names for cleaner output (reshape might create complex ones)
+  rownames(df_plot) <- NULL
+  ## Reorder columns
+  df_plot <- df_plot[, c("N", "strategy", "value")]
+  ## Sort rows
+  df_plot <- df_plot[order(df_plot$N, df_plot$strategy), ]
+
   # filter out the comparator and the first 5 in the x axis.
   df_plot <- df_plot[df_plot$N > 5 & df_plot$strategy != comparator, ]
 
