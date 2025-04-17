@@ -256,7 +256,6 @@ find_folder_function_definitions <- function(foo_folder = ".", f_excl=NULL, d_ex
 #' @param function_pattern A string containing the pattern to identify functions
 #' @return A list containing the cheers tags and the function names that follow them
 #' @family cheers
-#' @importFrom stringr str_replace str_replace_all
 #'
 #' @export
 #'
@@ -277,14 +276,14 @@ cheers_indices <-
 # remove the cheers pattern from that row name
 cheers_indices <- stats::setNames(
   object = cheers_indices,
-  nm = stringr::str_replace(
-    string = stringr::str_replace_all(
-      string = names(cheers_indices),
-      pattern = " ",
-      replacement = ""
-    ),
+  nm = sub(
     pattern = paste0("#'", cheers_pattern),
-    replacement = ""
+    replacement = "",
+    x = gsub(
+      pattern = " ",
+      replacement = "",
+      x = names(cheers_indices)
+    )
   )
 )
 
