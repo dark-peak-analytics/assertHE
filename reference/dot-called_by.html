@@ -60,15 +60,15 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data.table with two columns ("from" and "to") representing the dependencies
+    <p>A dataframe with two columns ("from" and "to") representing the dependencies
 of the target function. Returns NA if no dependencies are found.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The function identifies functions called by the target function <code>fname</code> within the specified
 package environment <code>pkg_env</code>. It searches for dependencies within the literal code of the
-function body and returns a data.table with two columns ("from" and "to") representing the
-dependencies. If no dependencies are found, it returns a data.table with "from" as the target
+function body and returns a dataframe with two columns ("from" and "to") representing the
+dependencies. If no dependencies are found, it returns a dataframe with "from" as the target
 function and "to" as NA.</p>
 <p>Note: This function may potentially miss calls if they are in attributes of the closure. For example
 when function is defined within another function, capturing the environment of the outer function.</p>
