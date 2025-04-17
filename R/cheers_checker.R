@@ -77,7 +77,6 @@ find_previous_vector_element <- function(value, vector, LTE=FALSE){
 #' @param string A string containing a function definition, this must contain the word 'function'
 #'
 #' @return A string containing the function name
-#' @importFrom stringr str_locate_all str_replace_all
 #'
 #' @export
 #' @examples
