@@ -26,11 +26,11 @@ Runs find_function_calls_in_file on all files in a folder, and combined results 
 single dataframe
 }
 \examples{
-\dontrun{
-find_function_calls_in_folder(foo_strings = c("calculate_costs",
-"calculate_QALYs",
-"create_Markov_trace",
-"FOO_WITH_NO_TESTS"),
-test_folder = "./tests/testthat/example_project/tests/testthat")
-}
+folder_path <- assertHE_example("example_project/tests/testthat")
+find_function_calls_in_folder(
+  foo_strings = c("calculate_costs", "calculate_QALYs",
+    "create_Markov_trace", "FOO_WITH_NO_TESTS"),
+  test_folder = folder_path
+)
+
 }

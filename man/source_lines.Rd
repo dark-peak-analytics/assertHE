@@ -23,10 +23,3 @@ Sources specified lines within a single file.
 Sourcing \emph{this} file is a mistake - may result in infinite recursion.
 }
 
-\examples{
-\dontrun{
-source_lines(file = "PATH/filename",  ## any file name, or a Connection object
-             lines = c(4, 5, 6) )     ## source lines 4-6
-}
-
-}

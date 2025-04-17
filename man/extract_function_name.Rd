@@ -20,6 +20,4 @@ on that before keeping the character there.
 \examples{
 extract_function_name("better_name <- function(x){\n more code} asfdas <- function(x){}")
 extract_function_name("better_name <- function(x){\n more code}")
-
-
 }

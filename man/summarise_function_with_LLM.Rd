@@ -29,6 +29,8 @@ This function summarizes another function using a Language Model.
 \examples{
 \dontrun{
 summarise_function_with_LLM(foo_name = "get_active_functions",
+                            llm_api_url = Sys.getenv("LLM_API_URL"),
+                            llm_api_key = Sys.getenv("LLM_API_KEY"),
                             envir = rlang::ns_env("assertHE"))
 }
 

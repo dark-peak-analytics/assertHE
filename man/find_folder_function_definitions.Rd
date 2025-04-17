@@ -24,11 +24,11 @@ A dataframe containing a column for function string and a column for function lo
 Applies find_function_definitions to each file in a folder and aggregate results
 }
 \examples{
-\dontrun{
 # Skip listed files "somefile.R", and "another_file.R"
+folder_path <- assertHE_example("example_project")
 find_folder_function_definitions(
-foo_folder = "tests/testthat/example_project",
-f_excl = "\\\\b(somefile\\\\.R|another_file\\\\.R)\\\\b"
+   foo_folder = folder_path,
+   f_excl = "\\\\b(somefile\\\\.R|another_file\\\\.R)\\\\b"
 )
-}
+
 }

@@ -12,6 +12,8 @@
 #' @examples
 #' \dontrun{
 #' summarise_function_with_LLM(foo_name = "get_active_functions",
+#'                             llm_api_url = Sys.getenv("LLM_API_URL"),
+#'                             llm_api_key = Sys.getenv("LLM_API_KEY"),
 #'                             envir = rlang::ns_env("assertHE"))
 #' }
 #'
@@ -56,10 +58,7 @@ summarise_function_with_LLM <- function(foo_name,
 #' @return A list with elements for 'arguments' and 'body' of the specified function.
 #' @export
 #' @importFrom methods formalArgs
-#' @examples
-#' \dontrun{
-#' get_function_data(foo_name = "create_Markov_trace")
-#' }
+#'
 get_function_data <- function(foo_name, envir = environment()) {
 
   # get data on arguments and body

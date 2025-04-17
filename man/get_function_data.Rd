@@ -17,8 +17,3 @@ A list with elements for 'arguments' and 'body' of the specified function.
 \description{
 This function retrieves data about the arguments and body of a specified function.
 }
-\examples{
-\dontrun{
-get_function_data(foo_name = "create_Markov_trace")
-}
-}

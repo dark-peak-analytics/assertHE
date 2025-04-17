@@ -18,9 +18,3 @@ func_end: The line number of the function end.
 \description{
 locates the lines which define a function within a single file
 }
-\examples{
-\dontrun{
-locate_funcs(file)
-}
-
-}
