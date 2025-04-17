@@ -1,4 +1,3 @@
-
 #' Get coverage by function
 #'
 #' @param foo_folder folder containing functions
@@ -12,16 +11,13 @@
 #' @importFrom dplyr group_by summarise rename
 #'
 #' @examples
-#' \dontrun{
-#' get_foo_coverage(
-#' foo_folder = "tests/testthat/example_project/R",
-#' test_folder = "tests/testthat/example_project/tests/testthat"
-#' )
-#'
-#' get_foo_coverage(
-#' foo_folder = "R",
-#' test_folder = "tests/testthat"
-#' )
+#' if(require(testthat)) {
+#'   folder_path1 <- assertHE_example("example_project/R")
+#'   folder_path2 <- assertHE_example("example_project/tests/testthat")
+#'   get_foo_coverage(
+#'     foo_folder = folder_path1,
+#'     test_folder = folder_path2
+#'   )
 #' }
 #'
 get_foo_coverage <- function(foo_folder,
@@ -41,38 +37,35 @@ get_foo_coverage <- function(foo_folder,
   tryCatch(
     expr = {
       invisible({
-        tmp <- #capture.output(
-          covr::file_coverage(source_files = source_files,
-                                                  test_files = test_files)
-          #)
+        tmp <- covr::file_coverage(source_files = source_files,
+                                   test_files = test_files)
       })
     },
     error = function(cond) {
       if (grepl(pattern = "fail",
                 ignore.case = TRUE,
                 conditionMessage(cond))) {
-        message(
+        warning(
           "Code tests fail - please correct before proceeding \nRunning function without code coverage."
         )
       } else{
-        message(conditionMessage(cond))
+        warning(conditionMessage(cond))
       }
     }
   )
 
-  # convert to a dataframe
-  tmp <- as.data.frame(x = tmp)
+  if(!is.null(tmp)) {
+    # convert to a dataframe
+    tmp <- as.data.frame(x = tmp)
 
-  # group by function and then get proportion not 0
-  functions <- value <- NULL
-  tmp <- tmp |>
-    dplyr::group_by(functions) |>
-    dplyr::summarise(coverage = mean(value > 0))|>
-    dplyr::rename(foo_string = functions) |>
-    as.data.frame()
+    # group by function and then get proportion not 0
+    functions <- value <- NULL
+    tmp <- tmp |>
+      dplyr::group_by(functions) |>
+      dplyr::summarise(coverage = mean(value > 0))|>
+      dplyr::rename(foo_string = functions) |>
+      as.data.frame()
+  }
 
   return(tmp)
-
 }
-
-
