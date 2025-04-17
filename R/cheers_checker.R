@@ -80,11 +80,14 @@ find_previous_vector_element <- function(value, vector, LTE=FALSE){
 #' @importFrom stringr str_locate_all str_replace_all
 #'
 #' @export
+#' @examples
+#' extract_function_name("better_name <- function(x){\n more code} asfdas <- function(x){}")
+#' extract_function_name("better_name <- function(x){\n more code}")
 #'
 #'
 extract_function_name <- function(string){
 
-   # regex pattern to match comments (note: greedy match with '?')
+  # regex pattern to match comments (note: greedy match with '?')
   # assumes comments won't appear in quoted strings  (i.e. print("this # will match") )
   pattern <- "#.*?\\n"
 
@@ -92,17 +95,39 @@ extract_function_name <- function(string){
   string <- gsub(pattern, "", string, perl = TRUE)
 
   # Convert newlines to spaces (remove newlines)
-  string <- stringr::str_replace_all(string, pattern = c("\n"), replacement = " ")
+  string <- gsub(pattern = "\n", replacement = " ", x = string)
 
-  assign_op <- stringr::str_locate_all(string, pattern = "(=|<-)\\s*function\\s*\\(")
-  assign_op <- unlist(x = assign_op)
-  assign_op <- assign_op[1]
+  # Identify function name string using function assignment pattern
+  l_assign_op <- gregexpr(pattern = "(=|<-)\\s*function\\s*\\(", text = string)
 
-  string <- substr(string, 1, assign_op-1)
-  string <- gsub("\\s*", "", string, perl = TRUE)
+  # Check if a match was found in the first (or only) element of string
+  if (all(length(l_assign_op) > 0, length(l_assign_op[1]) > 0)) {
+
+    strings <- vector()
+
+    for (i in 1:length(l_assign_op[[1]])) {
+      strings[i] <- NA_character_
+      # Extract the start position of the first match
+      assign_op <- l_assign_op[[1]][i]
+
+      # Extract the substring from the start up to *before* the match
+      # Use the extracted start position
+      strings[i] <- substr(string, 1, assign_op - 1)
+      # Trim leading/trailing whitespace
+      strings[i] <- trimws(strings[i])
+      # Remove everything up to the last space (\s+)
+      strings[i] <- sub("^.*\\s+", "", strings[i])
+    }
+
+    string <- strings
+  } else {
+    # Handle the case where the pattern was not found
+    string <- ""
+
+    warning("Function assignment pattern not found.")
+  }
 
   return(string)
-
 }
 
 

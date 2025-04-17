@@ -17,3 +17,9 @@ Extract function name from a long string. This works by
 identifying "function(" in the string and then finding the operand before and splitting
 on that before keeping the character there.
 }
+\examples{
+extract_function_name("better_name <- function(x){\n more code} asfdas <- function(x){}")
+extract_function_name("better_name <- function(x){\n more code}")
+
+
+}
