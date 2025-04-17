@@ -135,7 +135,7 @@ visualise_project <- function(project_path,
 
 #' Get Isolated Functions
 #'
-#' @param df_edges A data.table with two columns ("from" and "to") representing the dependencies.
+#' @param df_edges A dataframe with two columns ("from" and "to") representing the dependencies.
 #'
 #' @return A vector of isolated function names.
 get_isolated_foo <- function(df_edges){
@@ -179,21 +179,23 @@ load_functions_into_env <- function(path, env) {
 #' @param pkg_env The package environment where the functions are defined
 #'   (e.g. global).
 #'
-#' @return A data.table with two columns ("from" and "to") representing the dependencies.
-#'
-#' @importFrom data.table rbindlist
+#' @return A dataframe with two columns ("from" and "to") representing the dependencies.
 #'
 #' @export
 identify_dependencies <- function(v_unique_foo, pkg_env = environment()) {
-  lapply(
+  # Loop over functions identifying dependencies
+  l_dependencies <- lapply(
     X = v_unique_foo,
     FUN = .called_by,
     all_functions = v_unique_foo,
     pkg_env = pkg_env
-  ) |>
-    data.table::rbindlist(fill = TRUE) |>
-    unique() |>
-    as.data.frame()
+  )
+
+  # Bind list contents into a dataframe and drop recurrencies
+  df_dependencies <- do.call(rbind, args = l_dependencies) |>
+    unique()
+
+  return(df_dependencies)
 }
 
 #' Called By
@@ -204,26 +206,28 @@ identify_dependencies <- function(v_unique_foo, pkg_env = environment()) {
 #' @param all_functions A character vector of all function names in the project.
 #' @param pkg_env The package environment where the functions are defined (e.g. global).
 #'
-#' @return A data.table with two columns ("from" and "to") representing the dependencies
+#' @return A dataframe with two columns ("from" and "to") representing the dependencies
 #'         of the target function. Returns NA if no dependencies are found.
 #'
 #' @details
 #' The function identifies functions called by the target function `fname` within the specified
 #' package environment `pkg_env`. It searches for dependencies within the literal code of the
-#' function body and returns a data.table with two columns ("from" and "to") representing the
-#' dependencies. If no dependencies are found, it returns a data.table with "from" as the target
+#' function body and returns a dataframe with two columns ("from" and "to") representing the
+#' dependencies. If no dependencies are found, it returns a dataframe with "from" as the target
 #' function and "to" as NA.
 #'
 #' Note: This function may potentially miss calls if they are in attributes of the closure. For example
 #' when function is defined within another function, capturing the environment of the outer function.
+#'
 .called_by <- function(fname,
                        all_functions,
                        pkg_env){
 
+  # Santiy checks
   assertthat::assert_that(
-    is.environment(pkg_env)
-    , is.character(all_functions)
-    , assertthat::is.string(fname)
+    is.environment(pkg_env),
+    is.character(all_functions),
+    assertthat::is.string(fname)
   )
 
   # Get only the body of the function
@@ -246,9 +250,10 @@ identify_dependencies <- function(v_unique_foo, pkg_env = environment()) {
       if (length(matches) == 0){
         #return(invisible(NULL))
         return(
-          data.table::data.table(
+          data.frame(
             from = fname,
-            to = NA)
+            to = NA
+          )
         )
       }
 
@@ -269,11 +274,11 @@ identify_dependencies <- function(v_unique_foo, pkg_env = environment()) {
       return(
         data.frame(
           from = fname,
-          to = NA)
+          to = NA
+        )
       )
     }
   )
-
 }
 
 #' Parse Function

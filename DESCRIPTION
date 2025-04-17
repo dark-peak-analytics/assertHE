@@ -33,7 +33,6 @@ Imports:
     ggplot2,
     dplyr,
     utils,
-    data.table,
     visNetwork,
     covr,
     htmltools,

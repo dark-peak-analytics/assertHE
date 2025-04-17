@@ -13,7 +13,7 @@ identify_dependencies(v_unique_foo, pkg_env = environment())
 (e.g. global).}
 }
 \value{
-A data.table with two columns ("from" and "to") representing the dependencies.
+A dataframe with two columns ("from" and "to") representing the dependencies.
 }
 \description{
 Identify dependencies between functions.

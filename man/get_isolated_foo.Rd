@@ -7,7 +7,7 @@
 get_isolated_foo(df_edges)
 }
 \arguments{
-\item{df_edges}{A data.table with two columns ("from" and "to") representing the dependencies.}
+\item{df_edges}{A dataframe with two columns ("from" and "to") representing the dependencies.}
 }
 \value{
 A vector of isolated function names.
