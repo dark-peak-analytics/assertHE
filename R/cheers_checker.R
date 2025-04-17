@@ -168,13 +168,12 @@ find_function_definitions <- function(filename){
 #' @import dplyr
 #'
 #' @examples
-#' \dontrun{
 #' # Skip listed files "somefile.R", and "another_file.R"
+#' folder_path <- assertHE_example("example_project")
 #' find_folder_function_definitions(
-#'    foo_folder = "tests/testthat/example_project",
+#'    foo_folder = folder_path,
 #'    f_excl = "\\b(somefile\\.R|another_file\\.R)\\b"
 #' )
-#' }
 #'
 find_folder_function_definitions <- function(foo_folder = ".", f_excl=NULL, d_excl=NULL) {
   # get a list of the files in the folder

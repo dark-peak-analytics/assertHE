@@ -13,12 +13,12 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' file_path <- assertHE_example("example_project/tests/testthat/test-calculate_costs.R")
 #' find_function_calls_in_file(
-#' relative_path = "tests/testthat/example_project/tests/testthat/test-calculate_costs.R",
+#' relative_path = file_path,
 #' foo_strings = "calculate_costs"
 #' )
-#' }
+#'
 find_function_calls_in_file <- function(relative_path = NULL,
                                         foo_strings,
                                         filter_for_test_that = FALSE){
