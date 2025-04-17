@@ -52,10 +52,3 @@ A visNetwork object representing the network plot.
 \description{
 Visualize a network plot using the visNetwork package.
 }
-\examples{
-\dontrun{
-# Plot a network from a data frame of edges
-plotNetwork(df_edges)
-}
-
-}

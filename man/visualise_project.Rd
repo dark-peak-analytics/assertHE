@@ -59,22 +59,25 @@ A visNetwork object representing the network plot of function dependencies.
 Visualize the dependencies between functions in a project using a network plot.
 }
 \examples{
-\dontrun{
 # Visualize project dependencies in HTML
-visualise_project(
-  project_path = "tests/testthat/example_project",
-  foo_path = "R",
-  test_path = "tests/testthat",
-  run_coverage = TRUE
-)
+if(require(testthat)) {
+  folder_path <- assertHE_example("example_project")
+  visualise_project(
+    project_path = folder_path,
+    foo_path = "R",
+    test_path = "tests/testthat",
+    run_coverage = TRUE
+  )
+}
 
 # Visualize project dependencies in shiny
-visualise_project(
-  project_path = "tests/testthat/example_project",
-  foo_path = "R",
-  test_path = "tests/testthat",
-  run_coverage = TRUE,
-  show_in_shiny = TRUE
-)
+if(interactive()) {
+  visualise_project(
+    project_path = folder_path,
+    foo_path = "R",
+    test_path = "tests/testthat",
+    run_coverage = TRUE,
+    show_in_shiny = TRUE
+  )
 }
 }

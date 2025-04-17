@@ -14,25 +14,29 @@
 #' @return A visNetwork object representing the network plot of function dependencies.
 #'
 #' @examples
-#' \dontrun{
 #' # Visualize project dependencies in HTML
-#' visualise_project(
-#'   project_path = "tests/testthat/example_project",
-#'   foo_path = "R",
-#'   test_path = "tests/testthat",
-#'   run_coverage = TRUE
-#' )
+#' if(require(testthat)) {
+#'   folder_path <- assertHE_example("example_project")
+#'   visualise_project(
+#'     project_path = folder_path,
+#'     foo_path = "R",
+#'     test_path = "tests/testthat",
+#'     run_coverage = TRUE
+#'   )
+#' }
 #'
 #' # Visualize project dependencies in shiny
-#' visualise_project(
-#'   project_path = "tests/testthat/example_project",
-#'   foo_path = "R",
-#'   test_path = "tests/testthat",
-#'   run_coverage = TRUE,
-#'   show_in_shiny = TRUE
-#' )
+#' if(interactive()) {
+#'   visualise_project(
+#'     project_path = folder_path,
+#'     foo_path = "R",
+#'     test_path = "tests/testthat",
+#'     run_coverage = TRUE,
+#'     show_in_shiny = TRUE
+#'   )
 #' }
 #' @export
+#'
 visualise_project <- function(project_path,
                               foo_path = "R",
                               test_path = NULL,
@@ -347,17 +351,12 @@ identify_dependencies <- function(v_unique_foo, pkg_env = environment()) {
 #'
 #' @return A visNetwork object representing the network plot.
 #'
-#' @examples
-#' \dontrun{
-#' # Plot a network from a data frame of edges
-#' plotNetwork(df_edges)
-#' }
-#'
 #' @export
 #' @importFrom visNetwork visNetwork visEdges visOptions
 #' @importFrom dplyr rename
 #' @importFrom htmltools a
 #' @importFrom igraph graph_from_data_frame degree V
+#'
 plotNetwork <- function(df_edges,
                         from_col = "from",
                         to_col = "to",
