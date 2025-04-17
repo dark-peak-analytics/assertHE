@@ -15,8 +15,8 @@
 #' @examples
 #' file_path <- assertHE_example("example_project/tests/testthat/test-calculate_costs.R")
 #' find_function_calls_in_file(
-#' relative_path = file_path,
-#' foo_strings = "calculate_costs"
+#'   relative_path = file_path,
+#'   foo_strings = "calculate_costs"
 #' )
 #'
 find_function_calls_in_file <- function(relative_path = NULL,
@@ -76,9 +76,6 @@ find_function_calls_in_file <- function(relative_path = NULL,
 
 }
 
-
-
-
 #' Find specific function calls in a folder
 #'
 #' Runs find_function_calls_in_file on all files in a folder, and combined results into a
@@ -93,13 +90,13 @@ find_function_calls_in_file <- function(relative_path = NULL,
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' find_function_calls_in_folder(foo_strings = c("calculate_costs",
-#' "calculate_QALYs",
-#' "create_Markov_trace",
-#' "FOO_WITH_NO_TESTS"),
-#' test_folder = "./tests/testthat/example_project/tests/testthat")
-#' }
+#' folder_path <- assertHE_example("example_project/tests/testthat")
+#' find_function_calls_in_folder(
+#'   foo_strings = c("calculate_costs", "calculate_QALYs",
+#'     "create_Markov_trace", "FOO_WITH_NO_TESTS"),
+#'   test_folder = folder_path
+#' )
+#'
 find_function_calls_in_folder <- function(test_folder,
                                           foo_strings,
                                           filter_for_test_that = FALSE) {
@@ -149,10 +146,6 @@ find_function_calls_in_folder <- function(test_folder,
 
 }
 
-
-
-
-
 #' Summarise the model functions in a single folder.
 #'
 #' @param foo_folder path to folder containing all functions for the model
@@ -172,18 +165,22 @@ find_function_calls_in_folder <- function(test_folder,
 #' @importFrom officer read_docx body_add_par
 #'
 #' @examples
-#' \dontrun{
-#' project_path <- "tests/testthat/example_project"
+#' project_path <- assertHE_example("example_project")
 #' foo_folder  <- "R"
 #' test_folder <- "tests/testthat"
 #'
-#' summarise_model(project_path = "./tests/testthat/example_project",
-#' foo_folder = foo_folder,
-#' test_folder =  test_folder)
+#' summarise_model(
+#'   project_path = project_path,
+#'   foo_folder = foo_folder,
+#'   test_folder =  test_folder
+#' )
 #'
-#' summarise_model(foo_folder = foo_folder, test_folder =  NULL)
+#' summarise_model(
+#'   project_path = project_path,
+#'   foo_folder = foo_folder,
+#'   test_folder =  NULL
+#' )
 #'
-#' }
 summarise_model <- function(project_path = ".",
                             foo_folder = "R",
                             exclude_files = NULL,
@@ -276,4 +273,3 @@ summarise_model <- function(project_path = ".",
 
   return(df)
 }
-

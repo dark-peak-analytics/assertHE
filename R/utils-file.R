@@ -9,11 +9,6 @@
 #'
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' locate_funcs(file)
-#' }
-#'
 locate_funcs <-  function(file) {
   df <- utils::getParseData(parse(file, keep.source = TRUE), includeText = TRUE)
 
@@ -122,12 +117,6 @@ find_files <- function( file_regx = ".R",
 #'
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' source_lines(file = "PATH/filename",  ## any file name, or a Connection object
-#'              lines = c(4, 5, 6) )     ## source lines 4-6
-#' }
-#'
 source_lines <- function(file, lines, env){
 
   # Check if 'file' is a character string
@@ -160,16 +149,6 @@ source_lines <- function(file, lines, env){
 #' @return No return value, called for side effects.
 #'
 #' @export
-#'
-#' @examples
-#' \dontrun{
-#' file <- "<PATH>/file.R"
-#' dummy_env <- new.env()
-#'
-#' source_funcs(file, env = dummy_env) # source the functions into a dummy environment
-#'
-#' ls(name = dummy_env) # print the objects in the dummy environment for inspection
-#' }
 #'
 source_funcs <- function(file, env){
 

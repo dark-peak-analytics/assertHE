@@ -35,16 +35,20 @@ of tests for each function (both file and line number).
 Summarise the model functions in a single folder.
 }
 \examples{
-\dontrun{
-project_path <- "tests/testthat/example_project"
+project_path <- assertHE_example("example_project")
 foo_folder  <- "R"
 test_folder <- "tests/testthat"
 
-summarise_model(project_path = "./tests/testthat/example_project",
-foo_folder = foo_folder,
-test_folder =  test_folder)
+summarise_model(
+  project_path = project_path,
+  foo_folder = foo_folder,
+  test_folder =  test_folder
+)
 
-summarise_model(foo_folder = foo_folder, test_folder =  NULL)
+summarise_model(
+  project_path = project_path,
+  foo_folder = foo_folder,
+  test_folder =  NULL
+)
 
-}
 }

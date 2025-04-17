@@ -21,14 +21,3 @@ Sources \emph{only} the functions discovered in an R file.
 Sourcing \emph{this} file is a mistake - may result in infinite recursion.
 }
 
-\examples{
-\dontrun{
-file <- "<PATH>/file.R"
-dummy_env <- new.env()
-
-source_funcs(file, env = dummy_env) # source the functions into a dummy environment
-
-ls(name = dummy_env) # print the objects in the dummy environment for inspection
-}
-
-}
