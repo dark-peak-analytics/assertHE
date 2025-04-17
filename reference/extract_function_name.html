@@ -61,6 +61,15 @@ on that before keeping the character there.</p>
     <p>A string containing the function name</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">extract_function_name</span><span class="op">(</span><span class="st">"xyz &lt;- function(input_x) {paste0(inputx, 'yz')}"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "xyz"</span>
+<span class="r-in"><span><span class="fu">extract_function_name</span><span class="op">(</span><span class="st">"add_five &lt;- function(x) {x + 5}"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "add_five"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
