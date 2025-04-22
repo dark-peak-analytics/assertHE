@@ -45,10 +45,6 @@ colnames(m_TR_missing_column_name) <- c("H", "S", NA)
 m_TR_duplicate_column_name <- m_TR
 colnames(m_TR_duplicate_column_name) <- c("H", "S", "H")
 
-# remove unnecessary objects
-rm(n_hs, n_t, v_hs_names)
-
-
 #===========#
 # Run tests #
 #===========#

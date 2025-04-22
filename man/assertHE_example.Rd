@@ -9,6 +9,13 @@ assertHE_example(file = NULL)
 \arguments{
 \item{file}{Name of file. If \code{NULL}, the example files will be listed.}
 }
+\value{
+If \code{file} is \code{NULL}, returns a character vector containing the names of all
+files and directories available in the package's directory (\code{extdata}).
+If \code{file} specifies the name of an existing example file, returns a character
+vector of length one containing the full path to that file. Stops with an
+error if the specified \code{file} does not exist within the example directory.
+}
 \description{
 assertHE comes bundled with a number of sample files in its \code{inst/extdata}
 directory. This function make them easy to access

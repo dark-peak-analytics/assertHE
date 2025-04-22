@@ -1,5 +1,3 @@
-rm(list = ls())
-
 # basic information:
 Strategies     <- c("No Treatment", "Treatment")     # strategy names
 n_age_init     <- 25                                 # age at baseline

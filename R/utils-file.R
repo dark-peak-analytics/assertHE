@@ -183,6 +183,14 @@ source_funcs <- function(file, env){
 #'
 #' @param file Name of file. If `NULL`, the example files will be listed.
 #' @export
+#'
+#' @return
+#' If `file` is `NULL`, returns a character vector containing the names of all
+#' files and directories available in the package's directory (`extdata`).
+#' If `file` specifies the name of an existing example file, returns a character
+#' vector of length one containing the full path to that file. Stops with an
+#' error if the specified `file` does not exist within the example directory.
+#'
 #' @examples
 #' assertHE_example()
 #' assertHE_example("example_scripts/example_tricky_functions.R")
