@@ -26,12 +26,12 @@ find_matches <- function(list1, list2) {
   return(matches)
 }
 
-# Messy function 4: Global variables, side effects
-global_var <- 0
-perform_task <- function(input) {
-  global_var <<- global_var + input  # Modifying global variable
-  return(global_var)
-}
+# # Messy function 4: Global variables, side effects - commented-out: CRAN sub
+# global_var <- 0
+# perform_task <- function(input) {
+#   global_var <<- global_var + input  # Modifying global variable
+#   return(global_var)
+# }
 
 # Messy function 5: Long lines, no comments
 combine_strings <- function(str1, str2, sep = " ") {

@@ -375,7 +375,7 @@ get_folder_cheers_classifications <- function(path,
 #' @export
 #'
 get_active_functions <- function(packages = "assertHE") {
-  # set environment to global
+  # get object names from global environment
   v_global_objects <- ls(envir = .GlobalEnv)
 
   v_global <- v_global_objects[sapply(v_global_objects,
