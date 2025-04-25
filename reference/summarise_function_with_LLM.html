@@ -29,7 +29,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Summarize a function using a Large Language Model</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dark-peak-analytics/assertHE/blob/v1.0.0/R/summarise_function_with_LLM.R" class="external-link"><code>R/summarise_function_with_LLM.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dark-peak-analytics/assertHE/blob/main/R/summarise_function_with_LLM.R" class="external-link"><code>R/summarise_function_with_LLM.R</code></a></small>
       <div class="d-none name"><code>summarise_function_with_LLM.Rd</code></div>
     </div>
 
@@ -76,6 +76,8 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="fu">summarise_function_with_LLM</span><span class="op">(</span>foo_name <span class="op">=</span> <span class="st">"get_active_functions"</span>,</span></span>
+<span class="r-in"><span>                            llm_api_url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"LLM_API_URL"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                            llm_api_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"LLM_API_KEY"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                            envir <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/ns_env.html" class="external-link">ns_env</a></span><span class="op">(</span><span class="st">"assertHE"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
@@ -86,7 +88,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Robert Smith, Wael Mohammed, Jack Smith, Dark Peak Analytics Ltd.</p>
+  <p>Developed by Robert Smith, Wael Mohammed, Jack Smith, Oliver Dolin, Dark Peak Analytics Ltd.</p>
 </div>
 
 <div class="pkgdown-footer-right">

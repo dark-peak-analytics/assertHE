@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Visualisation and Verification of Health Economic Decision Models">
-<meta name="description" content="An R package designed to help health economic modellers when building and reviewing models. The visualisation functions allow users to more easily review the network of functions in a project, and get lay summaries of them. The asserts included are intended to check for common errors, thereby freeing up time for modellers to focus on tests specific to the individual model in development or review.">
-<meta property="og:description" content="An R package designed to help health economic modellers when building and reviewing models. The visualisation functions allow users to more easily review the network of functions in a project, and get lay summaries of them. The asserts included are intended to check for common errors, thereby freeing up time for modellers to focus on tests specific to the individual model in development or review.">
+<meta name="description" content="Designed to help health economic modellers when building and reviewing models. The visualisation functions allow users to more easily review the network of functions in a project, and get lay summaries of them. The asserts included are intended to check for common errors, thereby freeing up time for modellers to focus on tests specific to the individual model in development or review. For more details see Smith and colleagues (2024)&lt;doi:10.12688/wellcomeopenres.23180.1&gt;.">
+<meta property="og:description" content="Designed to help health economic modellers when building and reviewing models. The visualisation functions allow users to more easily review the network of functions in a project, and get lay summaries of them. The asserts included are intended to check for common errors, thereby freeing up time for modellers to focus on tests specific to the individual model in development or review. For more details see Smith and colleagues (2024)&lt;doi:10.12688/wellcomeopenres.23180.1&gt;.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -54,8 +54,6 @@
 </div>
 <!-- badges: start -->
 
-
-<!-- badges: end -->
 <p>This work is now published in Wellcome Open Research, please cite as:</p>
 <blockquote>
 <p>Smith RA, Samyshkin Y, Mohammed W et al. assertHE: an R package to improve quality assurance of HTA models. Wellcome Open Res 2024, 9:701. <a href="https://doi.org/10.12688/wellcomeopenres.23180.1" class="external-link uri">https://doi.org/10.12688/wellcomeopenres.23180.1</a></p>
@@ -91,7 +89,7 @@
 <span>  project_path <span class="op">=</span> <span class="st">"path_to_project_directory"</span>,</span>
 <span>  foo_path <span class="op">=</span> <span class="st">"R"</span>,</span>
 <span>  test_path <span class="op">=</span> <span class="st">"tests/testthat"</span>,</span>
-<span>  run_coverage <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
+<span>  run_coverage <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>The result is a visual representation of the model functions. This gives some indication of how to review the model since each function can be checked in isolation and in combination. It may also reveal redundant code.</p>
 <p>The below is an example of using the function on the cdx2cea model. The red nodes are the ones without tests, the green nodes are the ones with tests. When hovering over a function we can see more information including where it is defined (file and line number) and where the test (if any) resides. The coverage % of the function is also provided. Tests with coverage &lt;20% are in red, between 20-80% in orange, and above 80% in green. These are arbitrary cut-points, reviewers should assess sufficiency of testing.</p>
 <figure><img src="https://github.com/dark-peak-analytics/assertHE/assets/41961614/0d330730-1e0b-40d9-b18b-b2ee14511cb6" alt="Function network for cdx2cea"><figcaption aria-hidden="true">
@@ -137,9 +135,9 @@ Function network for cdx2cea
 <span><span class="co"># Use the function from the package.</span></span>
 <span><span class="co"># This check should return no error, the array is square, numeric, values </span></span>
 <span><span class="co"># are between 0 and 1 and all rows sum to 1.</span></span>
-<span><span class="co"># Note: stop_if_not = F returns warnings, stop_if_not = T returns errors.</span></span>
+<span><span class="co"># Note: stop_if_not = FALSE returns warnings, stop_if_not = TRUE returns errors.</span></span>
 <span><span class="fu"><a href="reference/check_trans_prob_array.html">check_trans_prob_array</a></span><span class="op">(</span>a_P <span class="op">=</span> <span class="va">a_P</span>, </span>
-<span>                       stop_if_not <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span>                       stop_if_not <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># We can introduce an error to see the output</span></span>
 <span><span class="co"># In this case, we set the first 10 cycles of transition from H to S to 0.</span></span>
@@ -147,7 +145,7 @@ Function network for cdx2cea
 <span><span class="va">a_P</span><span class="op">[</span><span class="st">"H"</span>, <span class="st">"S"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/check_trans_prob_array.html">check_trans_prob_array</a></span><span class="op">(</span>a_P <span class="op">=</span> <span class="va">a_P</span>, </span>
-<span>                       stop_if_not <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span>                       stop_if_not <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># The output looks like this:</span></span>
 <span></span>
@@ -247,6 +245,7 @@ Function network for cdx2cea
 <li>Robert Smith <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0003-0245-3217" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Wael Mohammed <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-0370-4903" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Jack Smith <br><small class="roles"> Author </small>  </li>
+<li>Oliver Dolin <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-0766-1277" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Dark Peak Analytics Ltd <br><small class="roles"> Copyright holder, funder </small>  </li>
 </ul>
 </div>
@@ -256,6 +255,7 @@ Function network for cdx2cea
 <ul class="list-unstyled">
 <li><a href="https://doi.org/10.5281/zenodo.13969179" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.13969179.svg" alt="DOI"></a></li>
 <li><a href="https://github.com/dark-peak-analytics/assertHE/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/dark-peak-analytics/assertHE/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/dark-peak-analytics/assertHE" class="external-link"><img src="https://codecov.io/gh/dark-peak-analytics/assertHE/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 
@@ -264,7 +264,7 @@ Function network for cdx2cea
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Robert Smith, Wael Mohammed, Jack Smith, Dark Peak Analytics Ltd.</p>
+  <p>Developed by Robert Smith, Wael Mohammed, Jack Smith, Oliver Dolin, Dark Peak Analytics Ltd.</p>
 </div>
 
 <div class="pkgdown-footer-right">

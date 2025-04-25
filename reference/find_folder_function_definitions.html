@@ -29,7 +29,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Creates summary of R files in folder with functions defined within and locations.</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dark-peak-analytics/assertHE/blob/v1.0.0/R/cheers_checker.R" class="external-link"><code>R/cheers_checker.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dark-peak-analytics/assertHE/blob/main/R/cheers_checker.R" class="external-link"><code>R/cheers_checker.R</code></a></small>
       <div class="d-none name"><code>find_folder_function_definitions.Rd</code></div>
     </div>
 
@@ -69,14 +69,41 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Skip listed files "somefile.R", and "another_file.R"</span></span></span>
+<span class="r-in"><span><span class="va">folder_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="assertHE_example.html">assertHE_example</a></span><span class="op">(</span><span class="st">"example_project"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">find_folder_function_definitions</span><span class="op">(</span></span></span>
+<span class="r-in"><span>   foo_folder <span class="op">=</span> <span class="va">folder_path</span>,</span></span>
+<span class="r-in"><span>   f_excl <span class="op">=</span> <span class="st">"\\b(somefile\\.R|another_file\\.R)\\b"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      foo_string</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1               calculate_QALYs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                      mat_mult</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3               calculate_costs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 calculate_discounting_weights</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5           create_Markov_trace</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      define_transition_matrix</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7          run_sickSicker_model</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8               utility_example</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9              utility_example2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                             foo_location</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1               /home/runner/work/_temp/Library/assertHE/extdata/example_project/R/calculate_QALYs.R#L40</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2              /home/runner/work/_temp/Library/assertHE/extdata/example_project/R/calculate_QALYs.R#L107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3               /home/runner/work/_temp/Library/assertHE/extdata/example_project/R/calculate_costs.R#L39</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 /home/runner/work/_temp/Library/assertHE/extdata/example_project/R/calculate_discounting_weights.R#L29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5           /home/runner/work/_temp/Library/assertHE/extdata/example_project/R/create_markov_trace.R#L44</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      /home/runner/work/_temp/Library/assertHE/extdata/example_project/R/define_transition_matrix.R#L29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7          /home/runner/work/_temp/Library/assertHE/extdata/example_project/R/run_sickSicker_model.R#L36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8                          /home/runner/work/_temp/Library/assertHE/extdata/example_project/R/utils.R#L3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9                         /home/runner/work/_temp/Library/assertHE/extdata/example_project/R/utils.R#L14</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Robert Smith, Wael Mohammed, Jack Smith, Dark Peak Analytics Ltd.</p>
+  <p>Developed by Robert Smith, Wael Mohammed, Jack Smith, Oliver Dolin, Dark Peak Analytics Ltd.</p>
 </div>
 
 <div class="pkgdown-footer-right">

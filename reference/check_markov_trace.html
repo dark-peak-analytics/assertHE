@@ -33,7 +33,7 @@ Also allows users to check that the dead state is monotonically decreasing (if p
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Check Markov Trace</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dark-peak-analytics/assertHE/blob/v1.0.0/R/check_markov_trace.R" class="external-link"><code>R/check_markov_trace.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dark-peak-analytics/assertHE/blob/main/R/check_markov_trace.R" class="external-link"><code>R/check_markov_trace.R</code></a></small>
       <div class="d-none name"><code>check_markov_trace.Rd</code></div>
     </div>
 
@@ -45,7 +45,12 @@ Also allows users to check that the dead state is monotonically decreasing (if p
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_markov_trace</span><span class="op">(</span><span class="va">m_TR</span>, dead_state <span class="op">=</span> <span class="cn">NULL</span>, confirm_ok <span class="op">=</span> <span class="cn">F</span>, stop_if_not <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_markov_trace</span><span class="op">(</span></span>
+<span>  <span class="va">m_TR</span>,</span>
+<span>  dead_state <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  confirm_ok <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  stop_if_not <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -65,7 +70,7 @@ Also allows users to check that the dead state is monotonically decreasing (if p
 
 
 <dt id="arg-stop-if-not">stop_if_not<a class="anchor" aria-label="anchor" href="#arg-stop-if-not"></a></dt>
-<dd><p>return error messages. The default (F) returns warnings.</p></dd>
+<dd><p>return error messages. The default (FALSE) returns warnings.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -90,13 +95,13 @@ Also allows users to check that the dead state is monotonically decreasing (if p
 <span class="r-in"><span><span class="fu">check_markov_trace</span><span class="op">(</span>m_TR <span class="op">=</span> <span class="va">m_TR</span>, dead_state <span class="op">=</span> <span class="st">"D"</span>, confirm_ok <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Markov Trace passed all checks."</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># the following results in an error because the trace has infeasible values</span></span></span>
 <span class="r-in"><span><span class="va">m_TR</span><span class="op">[</span><span class="fl">10</span>, <span class="st">"D"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span></span>
 <span class="r-in"><span><span class="va">m_TR</span><span class="op">[</span><span class="fl">9</span>, <span class="st">"S"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
-<span class="r-in"><span><span class="fu">check_markov_trace</span><span class="op">(</span>m_TR <span class="op">=</span> <span class="va">m_TR</span>, stop_if_not <span class="op">=</span> <span class="cn">T</span>, dead_state <span class="op">=</span> <span class="st">"D"</span>, confirm_ok <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">check_markov_trace</span><span class="op">(</span>m_TR <span class="op">=</span> <span class="va">m_TR</span>, stop_if_not <span class="op">=</span> <span class="cn">TRUE</span>, dead_state <span class="op">=</span> <span class="st">"D"</span>, confirm_ok <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in check_markov_trace(m_TR = m_TR, stop_if_not = TRUE, dead_state = "D",  : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Rows of Markov Trace don't sum to 1.</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -104,7 +109,7 @@ Also allows users to check that the dead state is monotonically decreasing (if p
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Robert Smith, Wael Mohammed, Jack Smith, Dark Peak Analytics Ltd.</p>
+  <p>Developed by Robert Smith, Wael Mohammed, Jack Smith, Oliver Dolin, Dark Peak Analytics Ltd.</p>
 </div>
 
 <div class="pkgdown-footer-right">
