@@ -29,7 +29,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Called By</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dark-peak-analytics/assertHE/blob/main/R/project_visualiser.R" class="external-link"><code>R/project_visualiser.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dark-peak-analytics/assertHE/blob/v1.0.0/R/project_visualiser.R" class="external-link"><code>R/project_visualiser.R</code></a></small>
       <div class="d-none name"><code>dot-called_by.Rd</code></div>
     </div>
 
@@ -60,26 +60,39 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A dataframe with two columns ("from" and "to") representing the dependencies
+    <p>A data.table with two columns ("from" and "to") representing the dependencies
 of the target function. Returns NA if no dependencies are found.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The function identifies functions called by the target function <code>fname</code> within the specified
 package environment <code>pkg_env</code>. It searches for dependencies within the literal code of the
-function body and returns a dataframe with two columns ("from" and "to") representing the
-dependencies. If no dependencies are found, it returns a dataframe with "from" as the target
+function body and returns a data.table with two columns ("from" and "to") representing the
+dependencies. If no dependencies are found, it returns a data.table with "from" as the target
 function and "to" as NA.</p>
 <p>Note: This function may potentially miss calls if they are in attributes of the closure. For example
 when function is defined within another function, capturing the environment of the outer function.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># Identify functions called by a specific function</span></span></span>
+<span class="r-in"><span><span class="fu">.called_by</span><span class="op">(</span></span></span>
+<span class="r-in"><span>fname <span class="op">=</span> <span class="st">"my_function"</span>,</span></span>
+<span class="r-in"><span>all_functions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"function1"</span>, <span class="st">"function2"</span>, <span class="st">"function3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>pkg_env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environment</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Robert Smith, Wael Mohammed, Jack Smith, Oliver Dolin, Dark Peak Analytics Ltd.</p>
+  <p>Developed by Robert Smith, Wael Mohammed, Jack Smith, Dark Peak Analytics Ltd.</p>
 </div>
 
 <div class="pkgdown-footer-right">

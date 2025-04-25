@@ -31,7 +31,7 @@ single dataframe"></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Find specific function calls in a folder</h1>
-      <small class="dont-index">Source: <a href="https://github.com/dark-peak-analytics/assertHE/blob/main/R/test_finder.R" class="external-link"><code>R/test_finder.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dark-peak-analytics/assertHE/blob/v1.0.0/R/test_finder.R" class="external-link"><code>R/test_finder.R</code></a></small>
       <div class="d-none name"><code>find_function_calls_in_folder.Rd</code></div>
     </div>
 
@@ -45,7 +45,7 @@ single dataframe</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">find_function_calls_in_folder</span><span class="op">(</span></span>
 <span>  <span class="va">test_folder</span>,</span>
 <span>  <span class="va">foo_strings</span>,</span>
-<span>  filter_for_test_that <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  filter_for_test_that <span class="op">=</span> <span class="cn">F</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -73,25 +73,13 @@ contains the location of the tests for each function (file and line number).</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">folder_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="assertHE_example.html">assertHE_example</a></span><span class="op">(</span><span class="st">"example_project/tests/testthat"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">find_function_calls_in_folder</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  foo_strings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"calculate_costs"</span>, <span class="st">"calculate_QALYs"</span>,</span></span>
-<span class="r-in"><span>    <span class="st">"create_Markov_trace"</span>, <span class="st">"FOO_WITH_NO_TESTS"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  test_folder <span class="op">=</span> <span class="va">folder_path</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            foo_string</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   FOO_WITH_NO_TESTS</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     calculate_QALYs</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     calculate_costs</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     calculate_costs</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 create_Markov_trace</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                    test_location</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                                                                                                           &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     /home/runner/work/_temp/Library/assertHE/extdata/example_project/tests/testthat/test-calculate_QALYs.R#L26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     /home/runner/work/_temp/Library/assertHE/extdata/example_project/tests/testthat/test-calculate_costs.R#L26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     /home/runner/work/_temp/Library/assertHE/extdata/example_project/tests/testthat/test-calculate_costs.R#L33</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 /home/runner/work/_temp/Library/assertHE/extdata/example_project/tests/testthat/test-create_Markov_trace.R#L30</span>
-<span class="r-in"><span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="fu">find_function_calls_in_folder</span><span class="op">(</span>foo_strings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"calculate_costs"</span>,</span></span>
+<span class="r-in"><span><span class="st">"calculate_QALYs"</span>,</span></span>
+<span class="r-in"><span><span class="st">"create_Markov_trace"</span>,</span></span>
+<span class="r-in"><span><span class="st">"FOO_WITH_NO_TESTS"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>test_folder <span class="op">=</span> <span class="st">"./tests/testthat/example_project/tests/testthat"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -99,7 +87,7 @@ contains the location of the tests for each function (file and line number).</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Robert Smith, Wael Mohammed, Jack Smith, Oliver Dolin, Dark Peak Analytics Ltd.</p>
+  <p>Developed by Robert Smith, Wael Mohammed, Jack Smith, Dark Peak Analytics Ltd.</p>
 </div>
 
 <div class="pkgdown-footer-right">
