@@ -305,38 +305,44 @@ identify_dependencies <- function(v_unique_foo, pkg_env = environment()) {
 #' they can no longer be listed, filtering out atomic values in the process.
 #'
 #' If `x` is not listable (e.g. a function), it is deparsed into a character string.
-.parse_function <- function (x) {
+.parse_function <- function(x) {
   # If expression x is not an atomic value or symbol (i.e., name of object) or
   # an environment pointer then we can break x up into list of components
   listable <- (!is.atomic(x) && !is.symbol(x) && !is.environment(x))
-
+  
   if (!is.list(x) && listable) {
     x <- as.list(x)
-
+    
     # Check for expression of the form foo$bar
     # We still want to split it up because foo might be a function
     # but we want to get rid of bar, because it's a symbol in foo's namespace
     # and not a symbol that could be reliably matched to the package namespace
-    if (identical(x[[1]], quote(`$`))) {
+    if (length(x) >= 1 && identical(x[[1]], quote(`$`))) {
       x <- x[1:2]
     }
   }
-
-
-
-  if (listable){
+  
+  if (listable) {
     # Filter out atomic values because we don't care about them
-    x <- Filter(f = Negate(is.atomic), x = x)
-
+    x <- Filter(f = Negate(is.atomic), x)
+    
     # Parse each listed expression recursively until
     # they can't be listed anymore
     out <- unlist(lapply(x, .parse_function), use.names = FALSE)
+  } else if (is.call(x) && length(x) >= 1) {
+    # Capture this function name
+    this_fun <- as.character(x[[1]])
+    # Also parse any arguments to find nested calls
+    args <- as.list(x)[-1]
+    nested <- unlist(lapply(args, .parse_function), use.names = FALSE)
+    out <- c(this_fun, nested)
+  } else if (is.symbol(x)) {
+    out <- as.character(x)
   } else {
-
-    # If not listable, deparse into a character string
-    out <- paste(deparse(x), collapse = "\n")
+    out <- character(0)
   }
-  return(out)
+  
+  out[nzchar(out)]
 }
 
 #' Plot Network
