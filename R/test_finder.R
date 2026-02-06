@@ -1,3 +1,10 @@
+# This roxygen tag imports the .data pronoun from rlang.
+# It allows us to write .data$location / .data$id inside dplyr verbs.
+# It silences the common "no visible binding for global variable" NOTES
+# from R CMD check / codetools when using data-masking.
+#' @importFrom rlang .data
+NULL
+
 #' Find all function calls in file
 #'
 #' Searches through a file for function calls using SYMBOL_FUNCTION_CALL
@@ -132,7 +139,7 @@ find_function_calls_in_folder <- function(test_folder,
   # get summary dataframe
   df_summary <- dplyr::bind_rows(l_foo_test_paths) |>
                   as.data.frame() |>
-                  dplyr::rename(test_location = location)
+                  dplyr::rename(test_location = .data$location)
 
   # ensure all function inputs are included in dataframe of outputs
   df_out <- merge(

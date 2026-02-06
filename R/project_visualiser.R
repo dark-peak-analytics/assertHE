@@ -1,3 +1,10 @@
+# This roxygen tag imports the .data pronoun from rlang.
+# It allows us to write .data$location / .data$id inside dplyr verbs.
+# It silences the common "no visible binding for global variable" NOTES
+# from R CMD check / codetools when using data-masking.
+#' @importFrom rlang .data
+NULL
+
 #' Visualize Project
 #'
 #' Visualize the dependencies between functions in a project using a network plot.
@@ -631,7 +638,7 @@ processNodes <- function(df_edges,
       unique() |>
       stats::na.omit()
   ) |>
-    dplyr::mutate(label = id)
+    dplyr::mutate(label = .data$id)
 
   return(df_nodes)
 }

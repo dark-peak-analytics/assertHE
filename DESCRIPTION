@@ -19,7 +19,7 @@ Description: Designed to help health economic modellers when building and review
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Suggests: 
     testthat (>= 3.0.0),
     colourpicker,
@@ -30,22 +30,23 @@ Depends:
     R (>= 4.1.0)
 Imports: 
     assertthat,
-    ggplot2,
-    dplyr,
-    utils,
-    visNetwork,
     covr,
-    htmltools,
-    officer,
+    dplyr,
     flextable,
+    ggplot2,
+    httr,
+    htmltools,
+    igraph,
     knitr,
+    methods,
+    officer,
+    rlang,
+    roxygen2,
+    rstudioapi,
     shiny,
     shinyjs,
-    rstudioapi,
-    roxygen2,
-    methods,
-    waiter,
-    igraph,
-    httr
+    utils,
+    visNetwork,
+    waiter
 URL: https://dark-peak-analytics.github.io/assertHE/, https://github.com/dark-peak-analytics/assertHE
 BugReports: https://github.com/dark-peak-analytics/assertHE/issues
