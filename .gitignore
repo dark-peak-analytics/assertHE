@@ -52,3 +52,5 @@ rsconnect/
 
 *.docx
 docs
+.DS_Store
+.quarto

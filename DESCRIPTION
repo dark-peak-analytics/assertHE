@@ -1,6 +1,6 @@
 Package: assertHE
 Title: Visualisation and Verification of Health Economic Decision Models
-Version: 1.0.0.9000
+Version: 1.0.1
 Authors@R: c(
     person("Robert", "Smith", , "rsmith@darkpeakanalytics.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0003-0245-3217")),
