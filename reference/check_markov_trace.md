@@ -1,0 +1,66 @@
+# Check Markov Trace
+
+This function checks the properties of a markov trace conform to
+expectations. That it is: numeric, values are between 0 and 1 with all
+rows summing to 1. Also allows users to check that the dead state is
+monotonically decreasing (if provided)
+
+## Usage
+
+``` r
+check_markov_trace(
+  m_TR,
+  dead_state = NULL,
+  confirm_ok = FALSE,
+  stop_if_not = FALSE
+)
+```
+
+## Arguments
+
+- m_TR:
+
+  The markov trace to be checked.
+
+- dead_state:
+
+  character vector length 1 denoting dead state (e.g. "D")
+
+- confirm_ok:
+
+  if OK, return a message confirming all checks passed.
+
+- stop_if_not:
+
+  return error messages. The default (FALSE) returns warnings.
+
+## Value
+
+A message indicating whether the matrix passed all the checks or an
+error message if any check failed.
+
+## Examples
+
+``` r
+v_hs_names <- c("H", "S", "D")
+n_hs <- length(v_hs_names)
+n_t <- 10
+
+m_TR <- matrix(data = NA,
+               nrow = n_t,
+               ncol = n_hs,
+               dimnames = list(NULL, v_hs_names))
+
+m_TR[, "H"] <- seq(1, 0, length.out = n_t)
+m_TR[, "S"] <- seq(0, 0.5, length.out = n_t)
+m_TR[, "D"] <- 1 - m_TR[, "H"] - m_TR[, "S"]
+check_markov_trace(m_TR = m_TR, dead_state = "D", confirm_ok = TRUE)
+#> [1] "Markov Trace passed all checks."
+
+# the following results in an error because the trace has infeasible values
+m_TR[10, "D"] <- 0
+m_TR[9, "S"] <- 1
+try(check_markov_trace(m_TR = m_TR, stop_if_not = TRUE, dead_state = "D", confirm_ok = TRUE))
+#> Error in check_markov_trace(m_TR = m_TR, stop_if_not = TRUE, dead_state = "D",  : 
+#>   Rows of Markov Trace don't sum to 1.
+```
