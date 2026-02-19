@@ -37,7 +37,7 @@ We are continuing to work to improve the package and welcome contributions. To g
 
 ## Installation
 
-You can install the CRAN version of assertHE from [CRAN](https://cran.r-project.org/web/packages/assertHE/) with:
+You can install the CRAN version of assertHE from [CRAN](https://CRAN.R-project.org/package=assertHE) with:
 
 ``` r
 install.packages("assertHE")
