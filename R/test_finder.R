@@ -6,7 +6,7 @@
 #' @param foo_strings string vector of function names to search for
 #' @param filter_for_test_that whether to filter for only functions used after the call to test_that. Default FALSE.
 #'
-#' @return a dataframe with the columns 'foo' for function name and 'location' which gives
+#' @return a dataframe with the columns 'foo' for function name and 'test_location' which gives
 #' the file in which the function is called with the line in which the function is called
 #' appended.
 #'
@@ -69,10 +69,10 @@ find_function_calls_in_file <- function(relative_path = NULL,
   if(nrow(df) == 0) return(NULL)
 
   # combine file path & line number in single string
-  df$location <- paste0(relative_path, "#L", df$line)
+  df$test_location <- paste0(relative_path, "#L", df$line)
   df$foo_string  <- df$text
 
-  return(df[, c("foo_string", "location")])
+  return(df[, c("foo_string", "test_location")])
 
 }
 
@@ -85,7 +85,7 @@ find_function_calls_in_file <- function(relative_path = NULL,
 #' @param test_folder folder containing all tests
 #' @inheritParams find_function_calls_in_file
 #'
-#' @return dataframe with two columns. 'foo' contains function names, location
+#' @return dataframe with two columns. 'foo' contains function names, test_location
 #' contains the location of the tests for each function (file and line number).
 #' @export
 #'
@@ -131,8 +131,7 @@ find_function_calls_in_folder <- function(test_folder,
 
   # get summary dataframe
   df_summary <- dplyr::bind_rows(l_foo_test_paths) |>
-                  as.data.frame() |>
-                  dplyr::rename(test_location = location)
+                  as.data.frame()
 
   # ensure all function inputs are included in dataframe of outputs
   df_out <- merge(

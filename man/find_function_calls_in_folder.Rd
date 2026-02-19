@@ -18,7 +18,7 @@ find_function_calls_in_folder(
 \item{filter_for_test_that}{whether to filter for only functions used after the call to test_that. Default FALSE.}
 }
 \value{
-dataframe with two columns. 'foo' contains function names, location
+dataframe with two columns. 'foo' contains function names, test_location
 contains the location of the tests for each function (file and line number).
 }
 \description{
