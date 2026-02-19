@@ -46,7 +46,7 @@ wiki](https://github.com/dark-peak-analytics/assertHE/wiki/assertHE:-an-R-packag
 ## Installation
 
 You can install the CRAN version of assertHE from
-[CRAN](https://cran.r-project.org/web/packages/assertHE/) with:
+[CRAN](https://CRAN.R-project.org/package=assertHE) with:
 
 ``` r
 install.packages("assertHE")

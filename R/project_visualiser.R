@@ -468,7 +468,13 @@ plotNetwork <- function(df_edges,
           )
         ),
         "<br><b>Coverage</b>: ",
-        paste0(df_node_info$coverage[index] * 100, "%")
+        paste0(
+          ifelse(
+            test = is.na(df_node_info$coverage[index]),
+            yes = paste0(0, "%"),
+            no = paste0(df_node_info$coverage[index] * 100, "%")
+          )
+        )
       )
     }
   } else {
@@ -485,7 +491,13 @@ plotNetwork <- function(df_edges,
         no = df_node_info$test_location
         ),
       "<br><b>Coverage</b>: ",
-      paste0(df_node_info$coverage * 100, "%")
+      paste0(
+        ifelse(
+          test = is.na(df_node_info$coverage),
+          yes = paste0(0, "%"),
+          no = paste0(df_node_info$coverage * 100, "%")
+        )
+      )
     )
   }
 
@@ -630,8 +642,9 @@ processNodes <- function(df_edges,
       unlist(use.names = FALSE) |>
       unique() |>
       stats::na.omit()
-  ) |>
-    dplyr::mutate(label = id)
+  )
+
+  df_nodes[["label"]] <- df_nodes$id
 
   return(df_nodes)
 }

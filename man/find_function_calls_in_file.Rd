@@ -18,7 +18,7 @@ find_function_calls_in_file(
 \item{filter_for_test_that}{whether to filter for only functions used after the call to test_that. Default FALSE.}
 }
 \value{
-a dataframe with the columns 'foo' for function name and 'location' which gives
+a dataframe with the columns 'foo' for function name and 'test_location' which gives
 the file in which the function is called with the line in which the function is called
 appended.
 }
