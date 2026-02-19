@@ -642,8 +642,9 @@ processNodes <- function(df_edges,
       unlist(use.names = FALSE) |>
       unique() |>
       stats::na.omit()
-  ) |>
-    dplyr::mutate(label = id)
+  )
+
+  df_nodes[["label"]] <- df_nodes$id
 
   return(df_nodes)
 }
