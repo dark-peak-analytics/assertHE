@@ -16,7 +16,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/dark-peak-analytics/assertHE/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/dark-peak-analytics/assertHE/blob/v1.0.1/DESCRIPTION)
 
 Smith R, Mohammed W, Smith J, Dolin O (2026). *assertHE: Visualisation
 and Verification of Health Economic Decision Models*. R package version

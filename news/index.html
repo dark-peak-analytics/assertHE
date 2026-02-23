@@ -29,11 +29,11 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/dark-peak-analytics/assertHE/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/dark-peak-analytics/assertHE/blob/v1.0.1/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.0.1" id="asserthe-101">assertHE 1.0.1<a class="anchor" aria-label="anchor" href="#asserthe-101"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.0.1" id="asserthe-101">assertHE 1.0.1<a class="anchor" aria-label="anchor" href="#asserthe-101"></a></h2><p class="text-muted">CRAN release: 2026-02-20</p>
 <ul><li>Fixes issue arising from <code>dplyr</code> updates. <code>dplyr</code> recently removed <code>dplyr::location()</code>. <code>assertHE</code> referenced a column named <code>location</code> but does not note this as a global variable with <code>utils::globalVariables("location")</code> which did not cause an issue because <code>dplyr</code> was exporting a function with the same name <code>location()</code>.</li>
 <li>Unifies coverage percentage where test location/folder is <code>NA</code>.</li>
 </ul></div>

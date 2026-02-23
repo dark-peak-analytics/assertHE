@@ -2,6 +2,8 @@
 
 ## assertHE 1.0.1
 
+CRAN release: 2026-02-20
+
 - Fixes issue arising from `dplyr` updates. `dplyr` recently removed
   `dplyr::location()`. `assertHE` referenced a column named `location`
   but does not note this as a global variable with
