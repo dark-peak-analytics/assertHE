@@ -16,16 +16,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/dark-peak-analytics/assertHE/blob/v1.0.1/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/dark-peak-analytics/assertHE/blob/main/DESCRIPTION)
 
 Smith R, Mohammed W, Smith J, Dolin O (2026). *assertHE: Visualisation
 and Verification of Health Economic Decision Models*. R package version
-1.0.1, <https://dark-peak-analytics.github.io/assertHE/>.
+1.0.1.9000, <https://dark-peak-analytics.github.io/assertHE/>.
 
     @Manual{,
       title = {assertHE: Visualisation and Verification of Health Economic Decision Models},
       author = {Robert Smith and Wael Mohammed and Jack Smith and Oliver Dolin},
       year = {2026},
-      note = {R package version 1.0.1},
+      note = {R package version 1.0.1.9000},
       url = {https://dark-peak-analytics.github.io/assertHE/},
     }

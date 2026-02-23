@@ -1,5 +1,7 @@
 # Changelog
 
+## assertHE (development version)
+
 ## assertHE 1.0.1
 
 CRAN release: 2026-02-20
